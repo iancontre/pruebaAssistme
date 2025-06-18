@@ -1,0 +1,464 @@
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  margin-top: 13%;
+}
+
+.section-number-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.section-number {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 6rem;
+  line-height: 1;
+  color: #0f384c;
+  -webkit-text-stroke: 1px #0f384c;
+  margin-bottom: 10px;
+}
+
+.vertical-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.vertical-line {
+  width: 12px;
+  height: 16px;
+  background-color: #0f384c;
+}
+
+/* Nuevos estilos agregados */
+.title-content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-title {
+  font-family: 'Michroma', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center; 
+  color: #0f384c;  
+}
+.service-tittle{
+  font-family: 'Michroma', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  line-height: 1.2;
+  font-weight: bold;
+  text-align: center; 
+  color: #0f384c;  
+  margin-top: 6%;
+}
+
+.section-description {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.8); 
+  margin-top: 0;
+  max-width: 800px;
+  text-align: justify;
+}
+.text-and-card-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 1rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.text-content {
+  flex: 1 1 350px;
+}
+
+.service-card,
+.service-carddos,
+.service-card-tow {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card {
+  flex: 420px;
+  background-color: #0f384c;
+  border: 1px solid #0f384c;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 7%; 
+  height: 300px;
+  width: 600px;
+}
+
+.service-card:hover,
+.service-carddos:hover,
+.service-card-tow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-carddos{
+  flex: 266px;
+  background-color: #0f384c;
+  border: 1px solid #0f384c;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 7%; 
+  height: 302px;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: white!important;
+  text-align: center;
+  
+}
+
+.card-description {
+  font-size: 1rem;
+  color: white;
+  line-height: 1.5;
+  margin-top: 6%;
+  text-justify: inter-word;
+  hyphens: auto;
+  text-align: justify;
+}
+
+.container-card{
+  background-color: #8DA9C9;
+  margin-bottom: 4px;
+  position: relative;
+  width: 300px;
+  height: 60px;
+  top:1px ;
+  left: 42.6%;
+  margin-top: 14.9%;
+  z-index: 2;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.container-cardmedial{
+  background-color: #8DA9C9;
+  margin-bottom: 4px;
+  position: relative;
+  width: 300px;
+  height: 60px;
+  top:1px ;
+  left: 26.2%;
+  margin-top: 20.8%;
+  z-index: 2;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.container-ligt{
+  background-color: #8DA9C9;
+  margin-bottom: 4px;
+  position: relative;
+  width: 100px;
+  height: 60px;
+  top:1px ;
+  left: 65.5%;
+  margin-top: 3%;
+  z-index: 2;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.container-towcard {
+  background-color: #8DA9C9;
+  margin-bottom: 4px;
+  position: relative;
+  width: 300px;
+  height: 60px;
+  top:1px ;
+  left: 37.9%;
+  margin-top: 16.3%;
+  z-index: 2;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.container-towcard-c{
+  background-color: #8DA9C9;
+  margin-bottom: 4px;
+  position: relative;
+  width: 300px;
+  height: 60px;
+  top:1px ;
+  left: 38.2%;
+  margin-top: 10.9%;
+  z-index: 2;
+  border-top-left-radius: 50px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+.container-card img {
+  width: 40px ;
+  height: 40px;
+}
+.container-towcard-c img{
+  width: 40px ;
+  height: 40px;
+}
+
+.container-cardmedial img {
+  width: 40px ;
+  height: 40px;
+}
+.container-ligt img {
+  width: 40px ;
+  height: 40px;
+}
+.container-towcard img{
+  width: 40px ;
+  height: 40px;
+}
+.container-towcarddos img{
+  width: 40px ;
+  height: 40px;
+}
+
+.service-card-tow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 300px;
+  width: 600px;
+  /* el resto de estilos que quieras heredar de .service-card */
+}
+/* =======================
+   Responsive Styles
+========================== */
+
+/* Tablets: ≤1024px */
+@media (max-width: 1024px) {
+  .section-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-number-container {
+    flex-direction: row;
+    margin-bottom: 20px;
+    margin-right: 0;
+    gap: 1rem;
+  }
+
+  .vertical-lines {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .section-title,
+  .service-tittle {
+    font-size: 2rem;
+  }
+
+  .section-description {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .text-and-card-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .text-content {
+    width: 100%;
+  }
+
+  .service-card,
+  .service-carddos {
+    width: 100% !important;
+    max-width: 500px;
+    margin-bottom: 2rem;
+  }
+
+  .container-card,
+  .container-ligt,
+  .container-cardmedial,
+  .container-towcard,
+  .container-towcard-c {
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .icon-requiest,
+  .icon-email,
+  .icon-calling,
+  .icon-videoMe,
+  .icon-received,
+  .icon-support,
+  .icon-push,
+  .icon-requies {
+    width: 50px;
+    height: auto;
+  }
+}
+
+/* Large phones: ≤768px */
+@media (max-width: 768px) {
+  .section-title,
+  .service-tittle {
+    font-size: 1.8rem;
+  }
+
+  .section-number {
+    font-size: 4rem;
+  }
+
+  .service-card,
+  .service-carddos {
+    width: 90% !important;
+  }
+
+  .section-description {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+
+  
+  .container-towcard, .container-towcard-c {
+    align-items: center;
+    display: flex;
+}
+
+}
+
+@media (max-width: 480px) {
+  .vertical-line {
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    width: 6px;
+    height: 100px;
+    background-color: #000;
+    visibility: hidden;
+  }
+
+  .section-title,
+  .service-tittle {
+    font-size: 1.5rem;
+  }
+
+  .section-number {
+    font-size: 3rem;
+  }
+
+  .section-description {
+    font-size: 0.9rem;
+    padding: 0 1rem;
+  }
+
+  .container-card{
+    width: 65%;           
+    margin-top: 10rem;   
+    margin-right: 0;       
+    float: none;          
+    position: relative;   
+    left: 40.5%;
+  }
+  .container-cardmedial{
+    width: 65%;           
+    margin-top: 11.5rem;   
+    margin-right: 0;      
+    float: none;           
+    position: relative;  
+    left: 41%;
+  }
+  .container-ligt{         
+    margin-top: 4.2rem;    
+    margin-right: 0;       
+    float: none;          
+    position: relative;    
+    left: 75%;
+  }
+  .container-towcard{
+    width: 65%;           
+    margin-top: 10rem;   
+    margin-right: 0;      
+    float: none;           
+    position: relative;  
+    left: 40.5%;
+  }
+  .container-towcard-c{
+    width: 65%;           
+    margin-top: 8.5rem;   
+    margin-right: 0;      
+    float: none;           
+    position: relative;  
+    left: 41%;
+  }
+ 
+  .service-card,
+  .service-carddos {
+    width: 100% !important;
+    padding: 1rem;
+    box-sizing: border-box; 
+  }
+
+  .text-and-card-container {
+    display: flex;         
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .container-card img,
+  .container-ligt img,
+  .container-cardmedial img,
+  .container-towcard img,
+  .container-towcard-c img {
+    width: 40px;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+}
+
+
+

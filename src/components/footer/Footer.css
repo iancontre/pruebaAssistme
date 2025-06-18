@@ -1,0 +1,192 @@
+.footer-container {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 60px 40px; /* Keep horizontal padding for content */
+  font-family: Arial, sans-serif;
+  position: relative; /* Needed for positioning the background logo */
+  overflow-x: hidden;
+  width: 100%;
+  min-height: 70vh;
+  margin-top: 10%; /* Ensure container takes full width */
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  /* max-width: 1400px; */ /* Remove max-width to allow full width */
+  width: 100%; /* Ensure content div takes full width of its container */
+  margin: 0 auto;
+  position: relative; /* Ensure content is above background logo */
+  z-index: 1;
+  gap: 120px; /* Increased gap between left and right sections */
+  padding: 0 80px; /* Increased horizontal padding again */
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  /* align-items: flex-start; *//* Remove align-items to allow content to center */
+  flex-shrink: 0;
+  /* Remove width or max-width if set, rely on content */
+}
+
+.pricing-button {
+  background-color: white;
+  color: #1a1a1a;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  font-weight: bold;
+  /* align-self: flex-start; *//* Removed to allow centering */
+  align-self: center; /* Center the button horizontally */
+  margin-top: 8%;
+}
+
+.social-icons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+  /* align-self: flex-start; *//* Removed to allow centering */
+  align-self: center; /* Center the icons horizontally */
+}
+
+.icon-placeholder {
+  width: 35px; /* Increased size */
+  height: 35px; /* Increased size */
+  background-color: grey; /* Placeholder background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-size: 1em; /* Adjusted font size */
+}
+
+.contact-info h4 {
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  align-self: flex-start; 
+}
+
+.phone-number {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Increased margin */
+  font-size: 0.95em;
+  color: white;
+  /* align-self: flex-start; *//* Align phone numbers to the left */
+}
+
+.phone-number span {
+  margin-left: 10px;
+}
+
+.footer-right {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 8%; /* Align top with the pricing button */
+}
+
+.footer-nav li {
+  margin-bottom: 30px; /* Increased margin further */
+}
+
+.footer-nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1em; /* Adjusted font size */
+}
+
+.footer-nav a:hover {
+  text-decoration: underline;
+}
+
+.footer-background-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; /* Reduced width */
+  height: 75%; /* Adjusted height */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.2; /* Slightly reduced opacity */
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Position tagline at the bottom */
+  align-items: center;
+  padding-bottom: 40px; /* Keep current padding */
+}
+
+.footer-tagline {
+  color: white; /* Lighter color for tagline */
+  font-size: 1em; /* Adjusted font size */
+  text-align: center;
+  margin-top: 20px; /* Added margin top */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center; /* Center content vertically in column layout */
+    text-align: center;
+    gap: 40px; /* Adjusted gap */
+    width: 100%;
+    padding: 0 40px; /* Adjusted padding for smaller screens */
+  }
+
+  .footer-left,
+  .footer-right {
+    align-items: center; /* Center items in columns for smaller screens */
+  }
+
+  .pricing-button,
+  .social-icons,
+  .contact-info,
+  .footer-nav ul {
+    margin-bottom: 20px;
+  }
+
+  .footer-right {
+    margin-top: 0;
+  }
+
+  .footer-background-logo {
+    width: 80%; /* Adjusted size for smaller screens */
+    height: 90%;
+    opacity: 0.2; /* Adjusted height for smaller screens */
+  }
+
+  .footer-tagline {
+    font-size: 0.9em; /* Adjusted font size for smaller screens */
+    margin-top: 10px; /* Adjusted margin top */
+  }
+
+  .footer-nav ul {
+    margin-bottom: 20px; /* Keep previous adjustment or increase if needed */
+    margin-top: 0; /* Reset margin-top in responsive to avoid issues in column layout */
+  }
+
+  .social-icons {
+    margin-bottom: 20px;
+    align-items: center; /* Ensure centering in column layout */
+    justify-content: center; /* Ensure centering in column layout */
+  }
+
+  .pricing-button {
+    margin-bottom: 20px;
+    /* align-self: flex-start; *//* Removed */
+    align-self: center; /* Ensure centering in column layout */
+  }
+} 

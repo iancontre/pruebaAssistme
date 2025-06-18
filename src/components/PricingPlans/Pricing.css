@@ -1,0 +1,232 @@
+.pricing-section {
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    top: 200px;
+    left: 0;
+    right: 0;
+    margin-top: 30.4%;
+    z-index: 7;
+    padding: 0 1rem;
+    background:
+        radial-gradient(ellipse 40% 30% at 50% 100%, #e3f0fa 0%, transparent 100%),
+        linear-gradient(to bottom, transparent 50%, #f5fafd 100%);
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+.pricing-section::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 30rem;
+    width: 90%; 
+    height: 100%;
+    background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.4) 80%,
+        #f5fafd 100%
+    ),
+    url('../../assets/images/fondo.png') center/cover no-repeat;
+    z-index: 0.1;
+    margin-top: 1.1%;
+    opacity: 0.6;
+    backdrop-filter: opacy 0.6;
+}
+  
+  
+.pricing-card {
+    border-radius: 16px !important;
+    padding: 1px;
+    width: 235px;
+    background-color: rgba(248, 249, 250, 0.63) !important;
+    min-height: 100%;
+    overflow: hidden;
+    position: relative; /* Necesario para márgenes negativos */
+}
+
+.price-container {
+    background-color: #b59b7d96;
+    color: #0b1e2d;
+    padding: 1px 0;
+    text-align: center;
+    margin: 12px -24px; 
+    width: calc(100% + 48px); 
+    box-sizing: border-box; 
+    height: 80px;
+}
+.container-pricetwo{
+    background-color: white;
+    color: #0b1e2d;
+    padding: 1px 0;
+    text-align: center;
+    margin: 12px -24px; 
+    width: calc(100% + 48px); 
+    box-sizing: border-box; 
+    height: 80px;
+}
+/* Estilos adicionales (opcional) */
+.featured-card {
+    transform: scale(1.08);
+    z-index: 10;
+    background-color: rgba(248, 249, 250, 0.63) !important;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+}
+
+.plan-title {
+    font-weight: 900;
+    font-style: italic;
+    font-size: 2.1rem;
+    color: #0F384C;
+}
+.plan-price {
+    font-weight: 900; /* Extra bold */
+    font-size: 2.2rem; /* Tamaño de fuente */
+    margin: 5px; 
+    line-height: 1.3; 
+    color: #0F384C;
+
+}
+.plan-minutes{
+    font-family: 'Michroma', sans-serif ;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #0F384C;
+}
+.plan-sub{
+    color: #0F384C;
+}
+.bi-check2-circle{
+    color: #0F384C;
+}
+.plan-rate{
+    color: #0F384C;
+}
+.text-start{
+    color: #0F384C;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+}
+.btn-dark{
+    background-color: #0F384C!important;
+    border-color: #0F384C !important;
+}
+.btn-warning{
+    background-color: #C3A98C !important;
+    border-color: #C3A98C !important;
+   
+}
+.btn-small {
+    width: 30px !important;
+    height: 47px;
+    font-size: 0.85rem;
+    padding: 0;
+    line-height: 30px; /* Para centrar verticalmente el texto */
+    text-align: center;
+   
+  }
+
+ 
+@media (max-width: 768px) {
+    .featured-card {
+        transform: none;
+    }
+}
+
+@media (max-width: 900px) {
+    .pricing-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+        position: relative;
+        margin-top: 12%;
+        top: 0;
+        background:
+            radial-gradient(ellipse 60% 30% at 50% 100%, #e3f0fa 0%, transparent 100%),
+            linear-gradient(to bottom, transparent 60%, #f5fafd 100%);
+    }
+    .pricing-card {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto 0.5rem auto;
+        min-height: 400px;
+    }
+    .plan-title {
+        font-size: 1.5rem;
+    }
+    .plan-price {
+        font-size: 1.8rem;
+    }
+    .price-container, .container-pricetwo {
+        font-size: 1rem;
+        margin: 0 -12px;
+        width: calc(100% + 24px);
+        padding: 10px 0;
+        margin-bottom: 1rem;
+    }
+    .plan-minutes {
+        margin-bottom: 1rem;
+    }
+    .plan-sub {
+        margin-bottom: 1rem;
+    }
+    .text-start {
+        margin-bottom: 0.6rem;
+    }
+    .pricing-card .btn {
+        margin-top: 1.5rem;
+    }
+    .pricing-section::before {
+        width: 100%;
+        right: 0;
+        background: linear-gradient(to bottom, 
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0.4) 80%,
+            #f5fafd 100%
+        ),
+        url('../../assets/images/fondo.png') center/cover no-repeat;
+    }
+}
+
+@media (max-width: 600px) {
+    .pricing-section {
+        top: 0;
+        padding: 0 0.2rem;
+        background:
+            radial-gradient(ellipse 90% 35% at 50% 100%, #e3f0fa 0%, transparent 100%),
+            linear-gradient(to bottom, transparent 70%, #f5fafd 100%);
+    }
+    .pricing-card {
+        max-width: 98vw;
+        padding:  0.5rem;
+        margin-bottom: 0.3rem;
+        min-height: 380px;
+    }
+    .plan-title {
+        font-size: 1.1rem;
+    }
+    .plan-price {
+        font-size: 1.3rem;
+    }
+    .price-container, .container-pricetwo {
+        font-size: 0.95rem;
+        margin: 0 -6px;
+        width: calc(100% + 12px);
+        padding: 8px 0;
+        margin-bottom: 0.8rem;
+    }
+    .plan-minutes {
+        margin-bottom: 0.8rem;
+    }
+    .plan-sub {
+        margin-bottom: 0.8rem;
+    }
+    .text-start {
+        margin-bottom: 0.5rem;
+    }
+    .pricing-card .btn {
+        margin-top: 1.2rem;
+    }
+}

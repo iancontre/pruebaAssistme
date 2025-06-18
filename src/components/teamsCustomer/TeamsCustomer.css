@@ -1,0 +1,118 @@
+.teams-customer-section {
+  width: 100%;
+  padding: 3rem 0;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+ 
+}
+
+.teams-customer-title {
+  font-family: 'Michroma', sans-serif;
+  font-size: 2.5rem;
+  color: #0F384C;
+  font-weight: bold;
+  margin-bottom: 5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.teams-customer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1300px;
+  width: 100%;
+}
+
+.teams-customer-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.teams-customer-image {
+  width: 600px;
+  max-width: 600px;
+  height: auto;
+  object-fit: cover;
+}
+
+.teams-customer-text {
+  margin-left: 2.3rem;
+  text-align: justify;
+}
+
+.teams-customer-description {
+  font-size: 1rem;
+  color: #222;
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.6;
+  word-spacing: -0.05em;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 1200px) {
+  .teams-customer-content {
+    max-width: 900px;
+    gap: 2.3rem;
+  }
+  .teams-customer-image-wrapper {
+    flex: 0 0 400px;
+    max-width: 400px;
+  }
+  .teams-customer-image {
+    max-width: 400px;
+    width: 100%;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 900px) {
+  .teams-customer-content {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+  .teams-customer-image {
+    width: 90vw;
+    max-width: 350px;
+    margin-bottom: 1.5rem;
+  }
+  .teams-customer-text {
+    margin-left: 0;
+    text-align: center;
+  }
+  .teams-customer-title {
+    text-align: center;
+    font-size: 2rem;
+  }
+  .teams-customer-description {
+    font-size: 1.05rem;
+    text-align: justify;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .teams-customer-section {
+    padding: 1.5rem 0;
+  }
+  .teams-customer-title {
+    font-size: 1.3rem;
+    margin-top: 10%;
+    
+  }
+  .teams-customer-description {
+    font-size: 0.95rem;
+    margin-top: -60%;
+  }
+  .teams-customer-image {
+    max-width: 90vw;
+    margin-top: -60%;
+  }
+} 

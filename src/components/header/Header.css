@@ -1,0 +1,540 @@
+.header-fullscreen {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 80vh;
+    margin-top: 8%;
+    animation: fadeInUp 1s ease-out;
+  }
+ 
+  .header-fullscreen::before {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 20%;
+    width: 110%; 
+    height: 100%;
+    background: url('../../assets/images/fondo.png') center/cover no-repeat;
+    opacity: 0.4;
+    z-index: 0;
+  }
+  .header-no-background::before {
+    display: none !important;
+  }
+  
+  
+  .header-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding-left: 0;
+    z-index: 2;
+  }
+  
+  .header-image {
+    width: 550px;
+    height: auto;
+    object-fit: cover;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    z-index: 2;
+    animation: fadeInUp 1s ease-out 0.3s both;
+  }
+  
+  .header-text {
+    max-width: 40%;
+    margin-left: 3rem;
+    z-index: 2;
+    animation: fadeInUp 1s ease-out 0.6s both;
+  }
+  
+  .header-text h1 {
+    font-family: 'Michroma', sans-serif ;
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: #0F384C;
+
+  }
+  .center-blog {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .header-text p {
+    font-size: 1.3rem;
+    color: #0F384C;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  
+  .header-buttons {
+    display: flex;
+    gap: 1rem;
+    height: 45px
+    
+  }
+  
+  @keyframes shine {
+    from {
+      background-position: -100% center;
+    }
+    to {
+      background-position: 100% center;
+    }
+  }
+  
+  .btn {
+    padding: 0.8em 1.5em;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 180px; 
+    text-align: center;
+  }
+  
+  .btn.primary {
+    background-color: #0F384C;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .btn.primary:hover {
+    background: linear-gradient(
+        90deg,
+        #0F384C 0%,
+        rgba(141, 169, 201, 0.1) 48%,
+        rgba(141, 169, 201, 0.1) 30%,
+        #0F384C 100%
+    );
+    background-size: 200% 100%;
+    animation: shine 1.5s ease-in-out forwards;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: #0F384C;
+  }
+  
+  .btn.secondary {
+    background-color: #fff;
+    color: #0F384C;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn.secondary:hover {
+    background: linear-gradient(
+        90deg,
+        #fff 0%,
+        #8DA9C9 15%,
+        #8DA9C9 90%,
+        #fff 100%
+    );
+    background-size: 200% 100%;
+    animation: shine 1.5s ease-in-out forwards;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+    border-color: #8DA9C9;
+  }
+  
+  /* Botón exclusivo para Customer Service */
+  .btn.customer-service {
+    background-color: #ccb295;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .btn.customer-service:hover {
+    background-color: #b89e7d;
+    color: #fff;
+  }
+  
+  /* Responsive para pantallas pequeñas (móviles) */
+  @media (max-width: 480px) {
+    
+    .header-fullscreen {
+      height: 690px;
+      padding: 2rem 1rem;
+    }
+  
+    .header-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .header-image {
+      width: 90%;
+      max-width: 320px;
+      margin-bottom: 1.5rem;
+    }
+  
+    .header-text {
+      max-width: 100%;
+      margin-left: 0;
+    }
+  
+    .header-text h1 {
+      font-size: 1.8rem;
+    }
+  
+    .header-text p {
+      font-size: 0.9rem;
+    }
+  
+    .header-buttons {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  
+    .btn {
+      font-size: 0.9rem;
+      padding: 0.6em 1.2em;
+    }
+  
+    .btn.secondary {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  /* Responsive para tabletas */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .header-fullscreen {
+      height: 700px;
+      padding: 3rem 2rem;
+    }
+  
+    .header-content {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 44%;
+    }
+  
+    .header-image {
+      width: 80%;
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+  
+    .header-text {
+      max-width: 100%;
+      margin-left: 0;
+    }
+  
+    .header-text h1 {
+      font-size: 2.5rem;
+    }
+  
+    .header-text p {
+      font-size: 1.1rem;
+    }
+  
+    .header-buttons {
+      justify-content: center;
+      height: 100%;
+    }
+  
+    .btn {
+      font-size: 1rem;
+      padding: 0.7em 1.4em;
+    }
+  
+    .btn.secondary {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  
+  /* Responsive para laptops y desktop medianos */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .header-fullscreen {
+      height: 70vh;
+      padding: 2rem 4rem;
+    }
+  
+    .header-content {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  
+    .header-image {
+      width: 500px;
+      margin-bottom: 0;
+    }
+  
+    .header-text {
+      max-width: 50%;
+      margin-left: 2rem;
+    }
+  
+    .header-text h1 {
+      font-size: 2.8rem;
+    }
+  
+    .header-text p {
+      font-size: 1.1rem;
+    }
+  
+    .header-buttons {
+      justify-content: flex-start;
+    }
+  }
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Estilos específicos para FAQs */
+  .header-faqs .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    flex-direction: row-reverse;
+  }
+
+  .header-faqs .header-image {
+    width: 550px;
+    height: auto;
+    object-fit: cover;
+    margin-left: 3rem;
+    margin-right: 0;
+  }
+
+  /* Estilos específicos para Customer Service */
+  .header-no-background .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4rem;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header-no-background .header-image {
+    width: 550px;
+    height: auto;
+    object-fit: cover;
+    margin: 0;
+    margin-left: -2rem;
+  }
+
+  .header-faqs .faqs-text,
+  .header-no-background .faqs-text {
+    max-width: 50%;
+    margin-left: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header-faqs .faqs-title,
+  .header-no-background .faqs-title {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #0F384C;
+    text-align: center;
+    width: 100%;
+  }
+
+  .header-faqs .faqs-description,
+  .header-no-background .faqs-description {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.8);
+    margin-bottom: 2rem;
+    text-align: justify;
+    text-justify: inter-word;
+    max-width: 800px;
+    line-height: 1.6;
+    word-spacing: -0.05em;
+    letter-spacing: -0.01em;
+  }
+
+  /* Mantener el tamaño original solo para la homepage */
+  .header-text p:not(.faqs-description) {
+    font-size: 1.3rem;
+  }
+  
+  /* Responsive para FAQs */
+  @media (max-width: 768px) {
+    .header-faqs .header-content {
+      flex-direction: column;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .header-faqs .header-image {
+      width: 80%;
+      max-width: 400px;
+      margin-left: 0;
+      margin-bottom: 2rem;
+      margin-top: 35%;
+    }
+
+    .header-faqs .faqs-text {
+      max-width: 100%;
+      align-items: center;
+    }
+
+    .header-faqs .faqs-title {
+      font-size: 2rem;
+    }
+
+    .header-faqs .faqs-description {
+      font-size: 1.1rem;
+      text-align: justify;
+      text-justify: inter-word;
+      word-spacing: -0.05em;
+      letter-spacing: -0.01em;
+    }
+
+    .header-no-background .header-content {
+      flex-direction: column;
+      gap: 2rem;
+      justify-content: center;
+    }
+
+    .header-no-background .header-image {
+      width: 80%;
+      max-width: 550px;
+      margin-left: 0;
+    }
+
+    .header-no-background .faqs-text {
+      max-width: 100%;
+    }
+
+    .header-no-background .faqs-title {
+      font-size: 2rem;
+    }
+
+    .header-no-background .faqs-description {
+      font-size: 1.1rem;
+      text-align: justify;
+      text-justify: inter-word;
+      word-spacing: -0.05em;
+      letter-spacing: -0.01em;
+    }
+
+    .header-no-background .faqs-description {
+      word-break: break-word;
+      hyphens: auto;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header-faqs .header-image {
+      width: 90%;
+      max-width: 320px;
+      margin-top: 25%;
+    }
+
+    .header-faqs .faqs-title {
+      font-size: 1.8rem;
+    }
+
+    .header-faqs .faqs-description {
+      font-size: 0.9rem;
+      text-align: justify;
+      text-justify: inter-word;
+      word-spacing: -0.05em;
+      letter-spacing: -0.01em;
+    }
+
+    .header-no-background .header-content {
+      gap: 1.5rem;
+    }
+
+    .header-no-background .header-image {
+      width: 90%;
+      max-width: 320px;
+    }
+
+    .header-no-background .faqs-title {
+      font-size: 1.8rem;
+    }
+
+    .header-no-background .faqs-description {
+      font-size: 0.9rem;
+      text-align: justify;
+      text-justify: inter-word;
+      word-spacing: -0.05em;
+      letter-spacing: -0.01em;
+      word-break: break-word;
+      hyphens: auto;
+    }
+  }
+  
+  .btn.customer-service-blue {
+    background-color: #0F384C;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .btn.customer-service-blue:hover {
+    background-color: #08202a;
+    color: #fff;
+  }
+  
+  .header-no-background .header-buttons {
+    gap: 3rem;
+  }
+  

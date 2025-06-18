@@ -1,0 +1,311 @@
+.contact-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 2.5rem 2rem;
+  margin-top: 2.5rem;
+}
+
+.contact-title {
+  font-family: 'Michroma', sans-serif;
+  font-size: 2.6rem;
+  color: #0f384c;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  margin-top: 5%;
+}
+
+.contact-subtitle {
+  text-align: center;
+  color: #222;
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  margin-top: 5%;
+}
+
+.contact-content {
+  display: flex;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  margin-top: 10%;
+}
+
+.contact-info {
+  background: #c3a98c;
+  color: #fff;
+  flex: 1.1;
+  padding: 2.5rem 2rem 2rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  border-radius:12px;
+  position: relative;
+  min-width: 440px;
+  width: 200px;
+  height: 75vh;
+
+}
+
+.contact-info h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  
+}
+.contact-info-desc {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 5%;
+}
+.contact-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 1.5rem 0;
+}
+.contact-info-list li {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-bottom: 0.8rem;
+  color: #fff;
+  line-height: 1.1;
+}
+.contact-info-list a {
+  color: #fff;
+  text-decoration: underline;
+}
+.contact-text {
+  flex: 1;
+  color: #fff;
+  font-size: 0.75rem;
+}
+.contact-info .contact-icon {
+  display: inline-block !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 0.4rem;
+  flex-shrink: 0;
+  background-size: 20px 20px !important;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.contact-info .contact-icon.phone {
+  background: url('data:image/svg+xml;utf8,<svg fill="%23fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.21.49 2.53.76 3.88.76a1 1 0 011 1v3.5a1 1 0 01-1 1C10.07 22 2 13.93 2 4.5A1 1 0 013 3.5h3.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.21 1.11l-2.2 2.2z"/></svg>') no-repeat center/contain;
+}
+.contact-info .contact-icon.email {
+  background: url('data:image/svg+xml;utf8,<svg fill="%23fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2v.01L12 13 4 6.01V6h16zM4 20V8.99l8 6.99 8-6.99V20H4z"/></svg>') no-repeat center/contain;
+}
+.contact-info .contact-icon.location {
+  background: url('data:image/svg+xml;utf8,<svg fill="%23fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1112 6a2.5 2.5 0 010 5.5z"/></svg>') no-repeat center/contain;
+}
+
+.contact-circles {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+.circle {
+  display: inline-block;
+  border-radius: 50%;
+
+}
+.circle.white {
+  width: 20px;
+  height: 20px;
+  background: #0f384c;
+  margin-top: 9%;
+}
+.circle.dark {
+  width: 20px;
+  height: 20px;
+  background: white;
+  margin-top: 9%;
+}
+.circle.light {
+  width: 20px;
+  height: 20px;
+  background: #0f384c;
+  margin-top: 9%;
+}
+.contact-decor {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 2.5rem;
+}
+.circle.big {
+  width: 190px;
+  height: 190px;
+  background: #0f384c;
+  position: absolute;
+  left: 180px;
+  bottom: 1px;
+  z-index: 1;
+ 
+}
+.circle.small {
+  width: 90px;
+  height: 90px;
+  background: #fff;
+  position: absolute;
+  left: 170px;
+  bottom: 120px;
+  z-index: 2;
+}
+
+.contact-form {
+  flex: 2;
+  background: #fff;
+  padding: 2.5rem 2.5rem 2.5rem 2rem;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.form-row {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.form-group label {
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+.form-group input,
+.form-group textarea {
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  background: transparent;
+  outline: none;
+  margin-bottom: 0.5rem;
+  color: #222;
+  resize: none;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-bottom: 2px solid #0f384c;
+}
+.form-group.full-width {
+  flex: 2;
+}
+.send-btn {
+  margin-top: 1.5rem;
+  align-self: flex-end;
+  background: #0f384c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.8em 2.2em;
+  font-size: 0.99rem;
+  font-family: 'Open Sans', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s;
+}
+.send-btn:hover {
+  background: #1b3547;
+
+}
+
+@media (max-width: 900px) {
+  .contact-content {
+    flex-direction: column;
+  }
+
+  .contact-info {
+    border-radius: 12px 12px 0 0;
+    min-width: unset;
+    width: 100%; /* asegurar que ocupe todo el ancho */
+    padding: 2rem 1.5rem;
+    height: auto; /* para que se adapte al contenido */
+  }
+
+  .contact-form {
+    border-radius: 0 0 12px 12px;
+    padding: 2rem 1.5rem;
+    width: 100%;
+  }
+
+  /* Ajuste intermedio opcional para círculos */
+  .circle.big {
+    width: 140px;
+    height: 140px;
+    bottom: 20px;
+    right: 20px;
+    justify-content: center;
+  }
+
+  .circle.small {
+    width: 50px;
+    height: 50px;
+    bottom: 55px;
+    right: 50px;
+  }
+  .contact-circles {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 1rem 0.2rem;
+  }
+
+  .contact-title {
+    font-size: 1.5rem;
+  }
+
+  .contact-content {
+    padding: 0;
+  }
+
+  .contact-info,
+  .contact-form {
+    padding: 1.2rem 0.5rem;
+    height: auto; /* importante para que no quede muy alta */
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+  }
+
+  .send-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.7em 0;
+  }
+
+  /* Círculos decorativos en móviles */
+  .circle.big {
+    width: 120px;
+    height: 120px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .circle.small {
+    width: 40px;
+    height: 40px;
+    bottom: 95px;
+    right: 45px;
+  }
+}

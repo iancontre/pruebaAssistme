@@ -1,0 +1,138 @@
+.wizard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 3.5rem 2.5rem 2.5rem 0;
+  max-width: 900px;
+  min-width: 0;
+  margin: 0 auto;
+  position: relative;
+}
+
+.wizard-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-width: 0;
+  margin-left: 0;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 2px 4px 18px rgba(0,0,0,0.13);
+}
+
+.wizard-form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.wizard-form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wizard-form-group label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.wizard-form-group input,
+.wizard-form-group select {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.wizard-form-group input:focus,
+.wizard-form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.wizard-form-group input.error,
+.wizard-form-group select.error {
+  border-color: #dc3545;
+  background-color: #fff8f8;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.error-message::before {
+  content: "•";
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.wizard-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  color: #856404;
+}
+
+.wizard-alert img {
+  flex-shrink: 0;
+}
+
+.wizard-alert span {
+  font-size: 0.9rem;
+}
+
+.wizard-form-bg {
+  position: absolute;
+  top: 60px;
+  left: -80px;
+  width: calc(100% + 160px);
+  height: 102%;
+  background: #f5f5f5;
+  border-radius: 32px;
+  box-shadow: 0 12px 32px 0 rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.13);
+  z-index: 0;
+  transform: translate(40px, 40px);
+  opacity: 1;
+}
+
+.wizard-form-foreground {
+  position: relative;
+  z-index: 1;
+  left: 0;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.wizard-form-shadow-card {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 99%;
+  background: #e0e0e0;
+  border-radius: 32px;
+  box-shadow: 18px 24px 40px 0 rgba(0,0,0,0.16);
+  z-index: 1;
+  transform: translate(80px, 36px);
+  opacity: 1;
+} 

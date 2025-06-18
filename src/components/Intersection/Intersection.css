@@ -1,0 +1,180 @@
+.intersection-container {
+  background:#C3A98C;
+  padding: 2rem 2rem 4rem 2rem;
+  margin: 4rem 0;
+  position: relative;
+  overflow-x: hidden;
+  min-height: 70vh;
+}
+
+.intersection-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.intersection-image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -10rem;
+}
+
+.intersection-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.intersection-text-section {
+  flex: 1;
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.intersection-title {
+  font-family: 'Michroma', sans-serif;
+  font-size: 3.1rem;
+  font-weight: 400;
+  color: white;
+  margin-bottom: 3rem;
+  line-height: 1.2;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.intersection-btn {
+  background: #0F384C;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(15, 56, 76, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  border-color: #0F384C;
+}
+
+.intersection-btn:hover {
+  background: #2c5f75;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 56, 76, 0.4);
+  border-color:#2c5f75; ;
+}
+
+.btn-cursor {
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+}
+
+.btn-icon {
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  right: 10px;
+  bottom: -19px;
+  filter: brightness(0) invert(1); /* Makes the icon white to match button text */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .intersection-container {
+    padding: 3rem 1.5rem 0 1.5rem;
+    margin: 2rem 0;
+    height: auto;
+  }
+
+  .intersection-content {
+    flex-direction: column;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .intersection-text-section {
+    padding-left: 0;
+    order: 1; /* Texto aparece primero */
+  }
+
+  .intersection-image-section {
+    order: 2; /* Imagen aparece después */
+    margin-left: 0;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+  }
+
+  .intersection-title {
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .circular-image-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .intersection-image {
+    width: 90vw;
+    max-width: 300px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: bottom center;
+  }
+
+  .intersection-btn {
+    font-size: 1rem;
+    padding: 0.9rem 2rem;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .intersection-container {
+    padding: 2rem 1rem 0 1rem;
+    height: auto;
+  }
+
+  .intersection-content {
+    gap: 2rem;
+  }
+
+  .intersection-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .circular-image-container {
+    width: 100%;
+    height: auto;
+  }
+
+  .intersection-image {
+    width: 95vw;
+    max-width: 280px;
+  }
+
+  .intersection-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+} 

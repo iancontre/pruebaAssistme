@@ -1,0 +1,429 @@
+.blog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.title {
+  font-family: 'Michroma', sans-serif;
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: #0F384C;
+  text-align: center;
+  margin-top: 4%;
+  margin-bottom: 3%;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #0F384C, #8DA9C9);
+  border-radius: 2px;
+}
+.post-content h2{
+  color: #00303f !important;
+  font-size: 1.2rem !important;
+}
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-left: calc((105% - 1200px)/2 + 2rem); /* Ajuste mágico para alineación */
+  width: calc(330px * 2 + 20px); /
+  
+ 
+}
+.search-container {
+  display: flex;
+  align-items: stretch; /* Asegura que todos los elementos tengan la misma altura */
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 720px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin-top: 5%; /* Para que el botón no sobresalga del borde redondeado */
+
+ 
+}
+
+.search-bar {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.75rem;
+  font-size: 1rem;
+  min-width: 0;
+  border-radius: 13px 0 0 13px; 
+}
+
+.search-icon {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0 0.5rem;
+  align-self: center; /* Centra verticalmente el icono */
+}
+
+.search-button {
+  background-color: #00303f;
+  color: white;
+  border: none;
+  padding: 0 2rem; /* Más padding horizontal */
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border-radius:  15px; /* Redondea solo el lado derecho */
+  margin: 0; 
+  
+}
+.container-btn{
+  justify-content: center;
+  text-align: center;
+  margin-top: 3%;
+}
+
+.blog-content-layout {
+  display: flex;
+  gap: 2rem;
+  margin-top: 6%;
+}
+
+.featured-posts {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 70%;
+  justify-content: center; 
+}
+
+.post-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 330px; /* ancho reducido pero razonable */
+  margin: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.post-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.post-image {
+  width: 90%;
+  height: 160px;
+  object-fit:cover;
+  border-radius: 10px;
+  margin: 15px auto 0;
+  
+}
+
+.post-content {
+  padding: 20px;
+  text-align: left;
+}
+
+.post-meta {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.post-meta span {
+  margin: 0 5px;
+}
+
+.post-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #0F384C;
+  margin-bottom: 8px;
+}
+
+.post-description {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.see-more {
+  background: #0F384C;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.see-more:hover {
+  background: #8DA9C9;
+  box-shadow: 0 4px 12px rgba(141, 169, 201, 0.3);
+}
+
+.additional-posts {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.additional-post {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.additional-post:hover {
+  background: rgba(141, 169, 201, 0.1);
+  transform: translateX(5px);
+}
+
+.thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.additional-post-content {
+  flex: 1;
+}
+
+.additional-post-content .post-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0F384C;
+}
+
+.additional-post-content .post-meta {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+/* ... tus estilos existentes (sin cambios) ... */
+
+/* General responsive: hasta 1200px (laptops más pequeños) */
+@media (max-width: 1200px) {
+  .search-container {
+    width: 80%;
+    max-width: 700px;
+  }
+
+  .post-card {
+    width: 40%;
+  }
+}
+
+/* Tablets y laptops pequeños (≤ 992px) */
+@media (max-width: 992px) {
+  .blog-content-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .featured-posts {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .post-card {
+    width: 90%;
+    max-width: 400px;
+    margin: 1rem auto;
+  }
+
+  .additional-posts {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 0 1rem;
+  }
+
+  .search-wrapper {
+    justify-content: center;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .search-container {
+    width: 90%;
+    max-width: 600px;
+    flex-direction: row;
+  }
+
+  .search-bar {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  .search-button {
+    font-size: 1rem;
+    padding: 0 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+    margin-top: 2% !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+/* Móviles (≤ 768px) */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.8rem;
+    margin-top: 8% !important;
+    margin-bottom: 0.10rem !important;
+  }
+
+  .blog-description {
+    margin: 0.2rem 0 !important;
+  }
+
+  .search-container {
+    width: 95%;
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .search-bar {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  .search-button {
+    font-size: 0.9rem;
+    padding: 0 1.2rem;
+  }
+
+  .post-card {
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 160px;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+  }
+
+  .post-meta {
+    font-size: 0.9rem;
+  }
+
+  .see-more {
+    font-size: 0.9rem;
+    padding: 8px 14px;
+  }
+
+  .additional-post {
+    gap: 10px;
+  }
+
+  .thumb {
+    width: 60px;
+    height: 60px;
+  }
+
+  .additional-post-content .post-title {
+    font-size: 1rem;
+  }
+
+  .additional-post-content .post-meta {
+    font-size: 0.75rem;
+  }
+}
+
+/* Móviles pequeños (≤ 576px) */
+@media (max-width: 576px) {
+  .title {
+    font-size: 1.6rem;
+    margin-top: 1% !important;
+    margin-bottom: 0.3rem !important;
+    text-align: center;
+  }
+
+  .blog-description {
+    margin: 0.2rem 0 !important;
+  }
+
+  .search-container {
+    flex-direction: row;
+    width: 95%;
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  .search-bar {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .search-button {
+    font-size: 0.85rem;
+    padding: 0 1rem;
+  }
+
+  .post-card {
+    width: 100%;
+    margin: 1rem 0;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 140px;
+  }
+
+  .post-title {
+    font-size: 1rem;
+  }
+
+  .post-meta {
+    font-size: 0.8rem;
+  }
+
+  .see-more {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+
+  .additional-post {
+    gap: 8px;
+  }
+
+  .thumb {
+    width: 50px;
+    height: 50px;
+  }
+
+  .additional-post-content .post-title {
+    font-size: 0.85rem;
+  }
+
+  .additional-post-content .post-meta {
+    font-size: 0.7rem;
+  }
+}

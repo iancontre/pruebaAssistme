@@ -1,0 +1,309 @@
+.wizard-main-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8f9fa;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.wizard-sidebar {
+  width: 320px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 2.5rem 0 2.5rem 2.5rem;
+  position: relative;
+}
+
+.wizard-steps-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+.wizard-steps-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  flex: 1;
+}
+
+.wizard-step-circles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 80px;
+  margin-left: 2.2rem;
+}
+.wizard-step-circles::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: #e6e6e6;
+  z-index: 0;
+  transform: translateX(-50%);
+}
+
+.wizard-step-circle {
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
+  min-height: 80px;
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: 50%;
+  background: #e6e6e6;
+  color: #0F384C;
+  font-size: 2.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6px solid #e6e6e6;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  margin: 0 auto 4.9rem auto;
+  background-clip: padding-box;
+}
+.wizard-step-circle:last-child {
+  margin-bottom: 0;
+}
+.wizard-step-circle.active {
+  background: #0F384C;
+  color: #fff;
+  border: 6px solid #0F384C;
+}
+
+.wizard-step-info {
+  background: #0F384C;
+  color: #fff;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  min-width: 300px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.wizard-step-label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+.wizard-step-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+.wizard-step-desc {
+  font-size: 0.95rem;
+  color: #cfd8dc;
+  font-weight: 400;
+}
+
+.wizard-step-lines {
+  position: absolute;
+  left: 38px;
+  top: 70px;
+  width: 4px;
+  height: calc(100% - 120px);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wizard-step-line {
+  width: 4px;
+  height: 70px;
+  background: #e6e6e6;
+  margin: 0 auto;
+}
+
+.wizard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 3.5rem 2.5rem 2.5rem 0;
+}
+
+.wizard-form {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.08);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  min-width: 700px;
+  max-width: 900px;
+  margin-left: 12rem;
+  position: relative;
+  z-index: 2;
+}
+
+.wizard-form-row {
+  display: flex;
+  gap: 2rem;
+}
+
+.wizard-form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 1.5rem;
+}
+.wizard-form-group label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0F384C;
+  margin-bottom: 0.5rem;
+}
+.wizard-form-group input,
+.wizard-form-group select {
+  padding: 0.9rem 1.2rem;
+  border-radius: 7px;
+  border: 1.5px solid #e6e6e6;
+  background: #f5f5f5;
+  font-size: 1rem;
+  font-family: 'Open Sans', sans-serif;
+  color: #222;
+  outline: none;
+  transition: border 0.2s;
+}
+.wizard-form-group input:focus,
+.wizard-form-group select:focus {
+  border: 1.5px solid #0F384C;
+}
+
+.wizard-next-btn {
+  background: #0F384C;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 220px;
+  text-align: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.wizard-next-btn:hover {
+  background: #8DA9C9;
+  transform: scale(1.04);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+.wizard-next-arrow {
+  font-size: 1.3rem;
+  margin-left: 0.5rem;
+}
+
+.wizard-prev-btn-circular {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #0F384C;
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  margin-right: 0.5rem;
+}
+.wizard-prev-btn-circular:hover {
+  background: #8DA9C9;
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .wizard-form {
+    min-width: 500px;
+    max-width: 98vw;
+    margin-left: 0.5rem;
+  }
+}
+@media (max-width: 900px) {
+  .wizard-main-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .wizard-sidebar {
+    flex-direction: row;
+    width: 100vw;
+    padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  .wizard-step-block {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+    margin-right: 1.5rem;
+  }
+  .wizard-step-info {
+    min-width: 120px;
+    padding: 0.7rem 1rem;
+  }
+  .wizard-step-lines {
+    display: none;
+  }
+  .wizard-content {
+    padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+  }
+  .wizard-form {
+    min-width: 90vw;
+    max-width: 99vw;
+    padding: 1.5rem 0.7rem 1rem 0.7rem;
+  }
+  .wizard-form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .wizard-form {
+    min-width: 98vw;
+    max-width: 99vw;
+    padding: 1rem 0.2rem 0.5rem 0.2rem;
+  }
+  .wizard-form-group label {
+    font-size: 0.98rem;
+  }
+  .wizard-next-btn {
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+  }
+}
+
+.wizard-step-info.active {
+  background: #fff !important;
+  color: #0F384C !important;
+  box-shadow: 0 4px 18px rgba(15,56,76,0.13), 0 1.5px 6px rgba(0,0,0,0.08);
+  font-weight: bold;
+}
+.wizard-step-info.active .wizard-step-label,
+.wizard-step-info.active .wizard-step-title,
+.wizard-step-info.active .wizard-step-desc {
+  color: #0F384C !important;
+} 

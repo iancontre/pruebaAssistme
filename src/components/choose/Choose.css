@@ -1,0 +1,124 @@
+.choose-fullscreen {
+    position: relative;
+    background-color: #0F384C;
+    width: 100vw; /* 100% del ancho visible */
+    left: 50%;
+    right: 50%;
+    height: auto; /* Allow height to adjust based on content */
+    margin-left: -50vw;
+    margin-right: -50vw;
+    padding: 3rem 0;
+    margin-top: -32px; /* Keep this for now if needed for vertical flow */
+    overflow-x: hidden;
+    min-height: 500px; /* Ensure minimum height for the blue section */
+  }
+  
+  .choose-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+  }
+  
+  .choose-image {
+    width: 540px; /* Restore the width that looked good */
+    height: auto; /* Allow height to adjust */
+    object-fit: contain; /* Use contain to show the whole image */
+    object-position: bottom; /* Align the bottom of the image */
+    margin-left: 3.8rem; /* Keep margin for spacing with text */
+    flex-shrink: 0;
+
+    /* Absolute positioning */
+    position: absolute;
+    left: 2rem; /* Align to the left padding of choose-content */
+    bottom: 0; /* Anchor to the bottom of choose-fullscreen */
+    z-index: 0; /* Place behind the content */
+  }
+  
+  .choose-text {
+    color: white;
+    text-align: justify;
+    flex-grow: 1;
+    /* Adjust margin-left based on the fixed image width and gap */
+    margin-left: calc(540px + 2rem);
+    position: relative; /* Ensure text is above the absolute image */
+    z-index: 1;
+  }
+  
+  .choose-text h1 {
+    font-family: 'Michroma', sans-serif;
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+    margin-top: 2%;
+  }
+  
+  .choose-text p {
+    font-size: 0.99rem;
+    margin-bottom: 2rem;
+    
+  }
+  
+  @media (max-width: 900px) {
+    .choose-fullscreen {
+      height: auto;
+      padding: 2rem 0 0 0; /* Eliminar padding inferior */
+      min-height: auto; 
+    }
+    .choose-content {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+    .choose-text {
+      margin-left: 0; /* Remove margin in column layout */
+      position: static;
+      z-index: auto;
+    }
+    .choose-image {
+      width: 90vw;
+      max-width: 350px;
+      height: auto; /* Keep height auto in responsive */
+      margin: 0 auto 0 auto; /* Center image and remove bottom margin */
+      display: block;
+      order: 2;
+      margin-top: auto; /* Usar auto margin para empujar hacia abajo si hay espacio */
+
+      /* Reset positioning in responsive */
+      position: relative; /* Mantener en flujo normal */
+      left: auto;
+      bottom: auto;
+      z-index: auto;
+      object-position: center; /* Center object position in responsive */
+    }
+    .choose-text h1 {
+      font-size: 2rem;
+      margin-top: 1rem;
+    }
+    .choose-text p, .choose-text li {
+      font-size: 0.95rem;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .choose-fullscreen {
+      padding: 1rem 0 0 0; /* Eliminar padding inferior */
+      min-height: auto;
+    }
+    .choose-image {
+      max-width: 98vw;
+      /* Asegurar que el margen inferior sea 0 también aquí si hay una regla específica */
+      margin-bottom: 0;
+    }
+    .choose-text h1 {
+      font-size: 1.3rem;
+    }
+    .choose-text p, .choose-text li {
+      font-size: 0.9rem;
+    }
+  }
+  
