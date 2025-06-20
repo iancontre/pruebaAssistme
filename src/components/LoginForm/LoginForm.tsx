@@ -47,11 +47,7 @@ const LoginForm: React.FC = () => {
   return (
     <form className="login-form" onSubmit={handleSubmit} autoComplete="off">
       <h2>Welcome to <span className="brand"> <br />Assist-Me</span></h2>
-      <div className="social-buttons">
-        <button type="button" className="social google"><span className="icon-google"/> Login with Google</button>
-        <button type="button" className="social facebook"><span className="icon-facebook"/> Login with Facebook</button>
-      </div>
-      <div className="divider"><span>OR</span></div>
+      <div className="divider"><span>Login</span></div>
       <div className="input-group">
         <label htmlFor="email">Email</label>
         <div className="input-icon">

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import "./Header.css";
 
 // Importar imágenes directamente
@@ -7,6 +7,7 @@ import imagenHome from "../../assets/images/imagenPrincipal.png";
 import imagenBlog from "../../assets/images/blog.png";
 import imagenFaqs from "../../assets/images/imageFaqs.png";
 import imagenCustomerService from "../../assets/images/imageCostomer.png";
+import iconDown from "../../assets/images/icons/iconDown.png";
 
 // Definir correctamente el objeto con una firma de índice
 const headersData: Record<string, { title: string; description: string; image: string; showButtons: boolean }> = {
@@ -30,15 +31,28 @@ const headersData: Record<string, { title: string; description: string; image: s
   },
   "/customerService": {
     title: "Customer Service",
-    description: "Due to the growing number of Spanish-speaking Americans, it can be very useful to have a 24/7 bilingual answering service for your business or practice. At Assist-me, we’ll make sure that you don’t miss out on any important calls or lose potential clients because of language barriers. Contact us today to learn more about the many benefits of using Assist-me virtual services.",
+    description: "Due to the growing number of Spanish-speaking Americans, it can be very useful to have a 24/7 bilingual answering service for your business or practice. At Assist-me, we'll make sure that you don't miss out on any important calls or lose potential clients because of language barriers. Contact us today to learn more about the many benefits of using Assist-me virtual services.",
     image: imagenCustomerService, // Using imagenHome temporarily as requested
     showButtons: true,
   },
 };
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  title?: string;
+  description?: string;
+  image?: string;
+  showButtons?: boolean;
+  isWizard?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = (props) => {
   const location = useLocation();
-  const { title, description, image, showButtons } = headersData[location.pathname] || headersData["/"];
+  const headerData = headersData[location.pathname] || headersData["/"];
+  const title = props.title ?? headerData.title;
+  const description = props.description ?? headerData.description;
+  const image = props.image ?? headerData.image;
+  const showButtons = props.showButtons ?? headerData.showButtons;
+  const isWizard = props.isWizard ?? false;
 
   // Detectar si estamos en el blog, FAQs o Customer Service
   const isBlog = location.pathname === "/blog";
@@ -81,7 +95,14 @@ const Header: React.FC = () => {
       <div className="header-content">
         <img src={image} alt="Encabezado" className="header-image" />
         <div className={`header-text ${isBlog ? "center-blog" : ""} ${isFaqs ? "faqs-text" : ""} ${isCustomerService ? "faqs-text" : ""}`}>
-          <h1 className={`tittle-header ${isFaqs ? "faqs-title" : ""} ${isCustomerService ? "faqs-title" : ""}`}>{title}</h1>
+          <h1 className={`tittle-header ${isFaqs ? "faqs-title" : ""} ${isCustomerService ? "faqs-title" : ""} ${isWizard ? "wizard-title" : ""}`}>
+            {title}
+            {isWizard && (
+              <div className="wizard-icon-container">
+                <img src={iconDown} alt="Down Icon" className="wizard-down-icon" />
+              </div>
+            )}
+          </h1>
           <p className={isFaqs || isCustomerService ? "faqs-description" : ""}>{description}</p>
           {showButtons && (
             <div className="header-buttons">
@@ -91,9 +112,9 @@ const Header: React.FC = () => {
               >
                 Contact us
               </button>
-              <button className={`btn ${isCustomerService ? "customer-service-blue" : "secondary"}`}>
+              <Link to="/compra" className={`btn ${isCustomerService ? "customer-service-blue" : "secondary"}`}>
                 Pricing and Plans
-              </button>
+              </Link>
             </div>
           )}
         </div>

@@ -12,56 +12,50 @@ import AdvantagesCustomer from '../components/advantagesCustomer/AdvantagesCusto
 import './CustomerService.css';
 
 const CustomerService: React.FC = () => {
+  const motionProps = {
+    initial: "hidden",
+    whileInView: "visible",
+    viewport: { once: true, margin: '-150px' },
+    variants: {
+      hidden: { opacity: 0, y: 100 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: 1.2,
+          ease: [0.4, 0, 0.2, 1],
+        },
+      },
+    },
+  };
+
   return (
     <>
       <Nav />
       
       <Container maxWidth="lg" sx={{ mt: '100px', mb: 4 }}>
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
-          variants={{
-            hidden: { opacity: 0, y: 100 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: {
-                duration: 1.2,
-                ease: [0.4, 0, 0.2, 1],
-              },
-            },
-          }}
-        >
+        <motion.div {...motionProps}>
           <Header />
         </motion.div>
 
-        <TeamsCustomer />
-        <BenefitCustomer />
-        <AdvantagesCustomer />
-       
+        <motion.div {...motionProps}>
+          <TeamsCustomer />
+        </motion.div>
+
+        <motion.div {...motionProps}>
+          <BenefitCustomer />
+        </motion.div>
+        
+        <motion.div {...motionProps}>
+          <AdvantagesCustomer />
+        </motion.div>
 
         <div className="customer-service-content">
           {/* Add your customer service page content here */}
         </div>
       </Container>
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-100px' }}
-        variants={{
-          hidden: { opacity: 0, y: 100 },
-          visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-              duration: 1.2,
-              ease: [0.4, 0, 0.2, 1],
-            },
-          },
-        }}
-      >
+      <motion.div {...motionProps}>
         <Footer />
       </motion.div>
 

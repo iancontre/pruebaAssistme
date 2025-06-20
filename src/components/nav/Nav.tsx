@@ -90,6 +90,9 @@ const CustomNav = () => {
               <NavDropdown.Item href="/customerService">
                 <i className="bi bi-chevron-right"></i> Customer Service
               </NavDropdown.Item>
+              <NavDropdown.Item onClick={() => handleSectionNavigation('pricing')}>
+                <i className="bi bi-chevron-right"></i> Pricing and Plans
+              </NavDropdown.Item>
             </NavDropdown>
 
             <Nav.Link href="/#tutorials" className="menu-item">Tutorials</Nav.Link>

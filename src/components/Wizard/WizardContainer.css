@@ -1,55 +1,62 @@
+.wizard-main-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+  background: #fff;
+}
+
 .wizard-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 3.5rem 2.5rem 2.5rem 0;
-  max-width: 900px;
-  min-width: 0;
+  width: 100%;
+  padding: 2rem;
+}
+
+.wizard-form-foreground {
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
-  position: relative;
 }
 
 .wizard-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
   width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
   padding: 2rem;
-  min-width: 0;
-  margin-left: 0;
   background: #fff;
-  border-radius: 18px;
-  box-shadow: 2px 4px 18px rgba(0,0,0,0.13);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .wizard-form-row {
   display: flex;
   gap: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .wizard-form-group {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  min-width: 0;
 }
 
 .wizard-form-group label {
+  display: block;
   font-size: 0.9rem;
   color: #666;
+  margin-bottom: 0.5rem;
 }
 
 .wizard-form-group input,
 .wizard-form-group select {
+  width: 100%;
   padding: 0.8rem;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
 }
 
 .wizard-form-group input:focus,
@@ -63,7 +70,6 @@
 .wizard-form-group select.error {
   border-color: #dc3545;
   background-color: #fff8f8;
-  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
 }
 
 .error-message {
@@ -107,20 +113,12 @@
   left: -80px;
   width: calc(100% + 160px);
   height: 102%;
-  background: #f5f5f5;
+  background: white;
   border-radius: 32px;
   box-shadow: 0 12px 32px 0 rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.13);
   z-index: 0;
   transform: translate(40px, 40px);
   opacity: 1;
-}
-
-.wizard-form-foreground {
-  position: relative;
-  z-index: 1;
-  left: 0;
-  width: 75%;
-  margin: 0 auto;
 }
 
 .wizard-form-shadow-card {
@@ -135,4 +133,216 @@
   z-index: 1;
   transform: translate(80px, 36px);
   opacity: 1;
+}
+
+.wizard-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.wizard-navigation {
+  display: none !important; /* Oculto por defecto */
+}
+
+/* En desktop, mostrar solo el botón del sidebar */
+.wizard-next-btn.desktop {
+  width: 100%;
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.wizard-next-btn.desktop img {
+  margin-left: auto;
+}
+
+/* En mobile, mostrar solo el botón del formulario */
+@media screen and (max-width: 768px) {
+  .wizard-main-layout {
+    flex-direction: column;
+  }
+
+  .wizard-content {
+    padding: 1rem;
+  }
+
+  .wizard-form-container {
+    width: 100%;
+  }
+
+  .wizard-form-foreground {
+    width: 100%;
+    max-width: none;
+  }
+
+  .wizard-form {
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 0 auto;
+    width: 90%;
+  }
+
+  .wizard-form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .wizard-form-group {
+    width: 100%;
+  }
+
+  .wizard-form-group input,
+  .wizard-form-group select {
+    font-size: 16px;
+    padding: 0.9rem;
+  }
+
+  .wizard-navigation {
+    order: 2;
+    justify-content: center;
+    padding: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .wizard-next-btn.desktop {
+    display: none !important; /* Ocultar botón del sidebar en móvil */
+  }
+
+  .wizard-navigation.mobile {
+    display: flex !important; /* Mostrar SOLO en móvil */
+    justify-content: center;
+    padding: 1rem;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    gap: 1rem;
+    z-index: 1000;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .wizard-content {
+    padding: 0.5rem;
+  }
+
+  .wizard-form {
+    padding: 1rem;
+    width: 95%;
+    margin: 0 auto;
+    box-shadow: none;
+  }
+
+  .wizard-form-group label {
+    font-size: 0.95rem;
+  }
+
+  .wizard-form-group input,
+  .wizard-form-group select {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+
+  .wizard-navigation {
+    padding: 1rem 0.5rem;
+  }
+}
+
+/* Específico para iPhone */
+@media screen and (max-width: 430px) {
+  .wizard-main-layout {
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+
+  .wizard-content {
+    width: 100%;
+    padding: 1rem 0.5rem;
+  }
+
+  .wizard-form {
+    width: 92%;
+    margin: 0 auto;
+    padding: 1rem;
+    box-shadow: none;
+  }
+
+  .wizard-form-group {
+    margin-bottom: 1rem;
+  }
+
+  .wizard-form-group input,
+  .wizard-form-group select {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+}
+
+/* Ocultar completamente el botón móvil en desktop */
+.wizard-navigation.mobile {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  position: absolute !important;
+  pointer-events: none !important;
+}
+
+/* Estilos del botón móvil */
+.wizard-next-btn.mobile {
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .wizard-next-btn.desktop {
+    display: none !important;
+  }
+
+  .wizard-navigation.mobile {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    pointer-events: auto !important;
+    justify-content: center;
+    padding: 1rem;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+    gap: 1rem;
+    z-index: 1000;
+  }
 } 
