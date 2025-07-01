@@ -7,6 +7,9 @@ import imagenHome from "../../assets/images/imagenPrincipal.png";
 import imagenBlog from "../../assets/images/blog.png";
 import imagenFaqs from "../../assets/images/imageFaqs.png";
 import imagenCustomerService from "../../assets/images/imageCostomer.png";
+import wizzardImageUno from "../../assets/images/wizzardimageuno.png";
+import pasoDos from "../../assets/images/paso dos.png";
+import pasoTres from "../../assets/images/pasotres.png";
 import iconDown from "../../assets/images/icons/iconDown.png";
 
 // Definir correctamente el objeto con una firma de índice
@@ -37,21 +40,69 @@ const headersData: Record<string, { title: string; description: string; image: s
   },
 };
 
+// Datos específicos para cada paso del wizard
+const wizardHeaders = [
+  {
+    title: '¡Fill out our form!',
+    description: '',
+    image: wizzardImageUno,
+    showButtons: false,
+  },
+  {
+    title: 'What options do we have in the industry?',
+    description: '',
+    image: pasoDos,
+    showButtons: false,
+  },
+  {
+    title: "You're Almost Done!",
+    description: '',
+    image: pasoTres,
+    showButtons: false,
+  },
+  {
+    title: "Let's get started setting up your account",
+    description: '',
+    image: wizzardImageUno, // Puedes cambiar esta imagen si tienes una específica para el paso 4
+    showButtons: false,
+  },
+];
+
 interface HeaderProps {
   title?: string;
   description?: string;
   image?: string;
   showButtons?: boolean;
   isWizard?: boolean;
+  wizardStep?: number;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
   const location = useLocation();
   const headerData = headersData[location.pathname] || headersData["/"];
-  const title = props.title ?? headerData.title;
-  const description = props.description ?? headerData.description;
-  const image = props.image ?? headerData.image;
-  const showButtons = props.showButtons ?? headerData.showButtons;
+  
+  // Debug: verificar que el wizardStep se está actualizando
+  console.log('Header - wizardStep:', props.wizardStep, 'isWizard:', props.isWizard);
+  
+  // Si es wizard, usar los datos del paso específico
+  let title, description, image, showButtons;
+  
+  if (props.isWizard && props.wizardStep !== undefined) {
+    const wizardData = wizardHeaders[props.wizardStep] || wizardHeaders[0];
+    title = props.title ?? wizardData.title;
+    description = props.description ?? wizardData.description;
+    image = props.image ?? wizardData.image;
+    showButtons = props.showButtons ?? wizardData.showButtons;
+    
+    // Debug: verificar qué datos se están usando
+    console.log('Header - Using wizard data for step:', props.wizardStep, wizardData);
+  } else {
+    title = props.title ?? headerData.title;
+    description = props.description ?? headerData.description;
+    image = props.image ?? headerData.image;
+    showButtons = props.showButtons ?? headerData.showButtons;
+  }
+  
   const isWizard = props.isWizard ?? false;
 
   // Detectar si estamos en el blog, FAQs o Customer Service

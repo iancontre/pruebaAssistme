@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Pricing.css';
 import PlanButton from './PlanButton';
+import { pricingPlans, PricingPlan } from '../../services/taxService';
 
 const Plans = () => {
   const navigate = useNavigate();
@@ -71,7 +72,13 @@ const Plans = () => {
     }
   };
 
-  const goToWizard = () => navigate('/compra');
+  const goToWizard = (plan: PricingPlan) => {
+    navigate('/compra', { 
+      state: { 
+        selectedPlan: plan 
+      } 
+    });
+  };
 
   return (
     <section className="pricing-section container">
@@ -107,7 +114,11 @@ const Plans = () => {
                 <li><i className="bi bi-check2-circle me-2"></i>24/7/365 Answering</li>
                 <li><i className="bi bi-check2-circle me-2"></i>Advanced Features</li>
               </ul>
-              <PlanButton text="Sign Up" variant="dark" onClick={goToWizard} />
+              <PlanButton 
+                text="Sign Up" 
+                variant="dark" 
+                onClick={() => goToWizard(pricingPlans[0])} 
+              />
             </div>
           </motion.div>
         </motion.div>
@@ -143,7 +154,11 @@ const Plans = () => {
                 <li><i className="bi bi-check2-circle me-2"></i>24/7/365 Answering</li>
                 <li><i className="bi bi-check2-circle me-2"></i>Advanced Features</li>
               </ul>
-              <PlanButton text="Sign Up" variant="warning" onClick={goToWizard} />
+              <PlanButton 
+                text="Sign Up" 
+                variant="warning" 
+                onClick={() => goToWizard(pricingPlans[1])} 
+              />
             </div>
           </motion.div>
         </motion.div>
@@ -179,7 +194,11 @@ const Plans = () => {
                 <li><i className="bi bi-check2-circle me-2"></i>24/7/365 Answering</li>
                 <li><i className="bi bi-check2-circle me-2"></i>Advanced Features</li>
               </ul>
-              <PlanButton text="Sign Up" variant="dark" onClick={goToWizard} />
+              <PlanButton 
+                text="Sign Up" 
+                variant="dark" 
+                onClick={() => goToWizard(pricingPlans[2])} 
+              />
             </div>
           </motion.div>
         </motion.div>

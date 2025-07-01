@@ -3,9 +3,10 @@ import { toast } from 'react-toastify';
 
 interface ProfileFormProps {
   onValidityChange: (isValid: boolean) => void;
+  onDataChange?: (data: { name: string; email: string }) => void;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChange }) => {
   const [fields, setFields] = useState({
     fullName: '',
     lastName: '',
@@ -32,7 +33,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange }) => {
 
   useEffect(() => {
     onValidityChange(isValid);
-  }, [isValid, onValidityChange]);
+    
+    // Pasar datos al componente padre cuando el formulario sea válido
+    if (isValid && onDataChange) {
+      onDataChange({
+        name: `${fields.fullName} ${fields.lastName}`.trim(),
+        email: fields.email
+      });
+    }
+  }, [isValid, onValidityChange, onDataChange, fields.fullName, fields.lastName, fields.email]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

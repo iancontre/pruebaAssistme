@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { PricingPlan } from '../../services/taxService';
+import { formatCurrency, calculateTax } from '../../services/taxService';
 
 interface BusinessFormProps {
   onValidityChange: (isValid: boolean) => void;
+  onDataChange?: (data: { state: string }) => void;
+  selectedPlan?: PricingPlan;
 }
 
-const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
+const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan }) => {
   const [fields, setFields] = useState({
     company: '',
     address1: '',
@@ -20,7 +24,6 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
   const [errors, setErrors] = useState({
     company: false,
     address1: false,
-    address2: false,
     city: false,
     state: false,
     zip: false,
@@ -28,11 +31,23 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
     industry: false,
   });
 
-  const isValid = Object.values(fields).every((v) => v.trim() !== '');
+  const [submitted, setSubmitted] = useState(false);
+
+  const isValid =
+    fields.company.trim() !== '' &&
+    fields.address1.trim() !== '' &&
+    fields.city.trim() !== '' &&
+    fields.state !== '' &&
+    fields.zip.trim() !== '' &&
+    fields.country !== '' &&
+    fields.industry !== '';
 
   useEffect(() => {
     onValidityChange(isValid);
-  }, [isValid, onValidityChange]);
+    if (isValid && onDataChange) {
+      onDataChange({ state: fields.state });
+    }
+  }, [isValid, onValidityChange, onDataChange, fields.state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -41,6 +56,8 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
   };
 
   const validateField = (name: string, value: string) => {
+    if (["industry", "state", "country"].includes(name)) return value === '';
+    if (name === 'address2') return false; // address2 es opcional
     return value.trim() === '';
   };
 
@@ -53,7 +70,6 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
     const newErrors = {
       company: validateField('company', fields.company),
       address1: validateField('address1', fields.address1),
-      address2: validateField('address2', fields.address2),
       city: validateField('city', fields.city),
       state: validateField('state', fields.state),
       zip: validateField('zip', fields.zip),
@@ -61,41 +77,44 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
       industry: validateField('industry', fields.industry),
     };
     setErrors(newErrors);
-
-    if (!isValid) {
-      toast.error('Please fill in all required fields before proceeding to the next step.', {
-        position: "top-center",
-        autoClose: false,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: {
-          backgroundColor: '#fff3cd',
-          color: '#856404',
-          border: '1px solid #ffeeba',
-          width: '400px',
-          fontSize: '14px',
-        },
-      });
-      return false;
-    }
-    return true;
+    const hasErrors = Object.values(newErrors).some(error => error);
+    return !hasErrors;
   };
 
-  // Exponer la función de validación al componente padre
   useEffect(() => {
     const form = document.querySelector('.wizard-form') as HTMLFormElement;
     if (form) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const isValid = validateForm();
-        if (!isValid) {
-          e.stopPropagation();
+      const submitHandler = (e: Event) => {
+        setSubmitted(true);
+        const valid = validateForm();
+        if (!valid) {
+          e.preventDefault();
+          toast.error('Please fill in all required fields before proceeding to the next step.', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            style: {
+              backgroundColor: '#fff3cd',
+              color: '#856404',
+              border: '1px solid #ffeeba',
+              width: '400px',
+              fontSize: '14px',
+            },
+          });
         }
-      });
+      };
+      form.addEventListener('submit', submitHandler);
+      return () => form.removeEventListener('submit', submitHandler);
     }
-  }, []);
+  }, [fields]);
+
+  // Calcular impuestos si hay plan y estado seleccionado
+  const subtotal = selectedPlan?.price || 0;
+  const taxAmount = calculateTax(subtotal, fields.state);
+  const total = subtotal + taxAmount;
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
@@ -110,9 +129,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
               value={fields.company} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.company ? 'error' : ''}
+              className={errors.company && submitted ? 'error' : ''}
             />
-            {errors.company && <span className="error-message">Company name is required</span>}
+            {errors.company && submitted && <span className="error-message">Company name is required</span>}
           </div>
           <div className="wizard-form-group">
             <label>Address</label>
@@ -122,19 +141,17 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
               value={fields.address1} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.address1 ? 'error' : ''}
+              className={errors.address1 && submitted ? 'error' : ''}
               style={{ marginBottom: '0.7rem' }} 
             />
-            {errors.address1 && <span className="error-message">Address is required</span>}
+            {errors.address1 && submitted && <span className="error-message">Address is required</span>}
             <input 
               name="address2" 
               type="text" 
               value={fields.address2} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.address2 ? 'error' : ''}
             />
-            {errors.address2 && <span className="error-message">Address line 2 is required</span>}
           </div>
           <div className="wizard-form-row">
             <div className="wizard-form-group">
@@ -145,9 +162,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
                 value={fields.city} 
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.city ? 'error' : ''}
+                className={errors.city && submitted ? 'error' : ''}
               />
-              {errors.city && <span className="error-message">City is required</span>}
+              {errors.city && submitted && <span className="error-message">City is required</span>}
             </div>
             <div className="wizard-form-group">
               <label>State</label>
@@ -156,7 +173,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
                 value={fields.state} 
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.state ? 'error' : ''}
+                className={errors.state && submitted ? 'error' : ''}
               >
                 <option value="">Select a state</option>
                 <option value="Georgia">Georgia</option>
@@ -164,7 +181,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
                 <option value="Texas">Texas</option>
                 <option value="Florida">Florida</option>
               </select>
-              {errors.state && <span className="error-message">State is required</span>}
+              {errors.state && submitted && <span className="error-message">State is required</span>}
             </div>
           </div>
           <div className="wizard-form-row">
@@ -176,9 +193,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
                 value={fields.zip} 
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.zip ? 'error' : ''}
+                className={errors.zip && submitted ? 'error' : ''}
               />
-              {errors.zip && <span className="error-message">Zip code is required</span>}
+              {errors.zip && submitted && <span className="error-message">Zip code is required</span>}
             </div>
             <div className="wizard-form-group">
               <label>Country</label>
@@ -187,14 +204,14 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
                 value={fields.country} 
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.country ? 'error' : ''}
+                className={errors.country && submitted ? 'error' : ''}
               >
                 <option value="">Select a country</option>
                 <option value="United States">United States</option>
                 <option value="Canada">Canada</option>
                 <option value="Mexico">Mexico</option>
               </select>
-              {errors.country && <span className="error-message">Country is required</span>}
+              {errors.country && submitted && <span className="error-message">Country is required</span>}
             </div>
           </div>
           <div className="wizard-form-group">
@@ -204,7 +221,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
               value={fields.industry} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.industry ? 'error' : ''}
+              className={errors.industry && submitted ? 'error' : ''}
             >
               <option value="">Select an industry</option>
               <option value="Finance">Finance</option>
@@ -212,7 +229,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange }) => {
               <option value="Healthcare">Healthcare</option>
               <option value="Education">Education</option>
             </select>
-            {errors.industry && <span className="error-message">Industry is required</span>}
+            {errors.industry && submitted && <span className="error-message">Industry is required</span>}
           </div>
         </form>
       </div>
