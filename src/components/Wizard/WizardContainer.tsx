@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Elements } from '@stripe/react-stripe-js';
-import { getStripe } from '../../services/stripeService';
 import WizardSidebar from './WizardSidebar';
 import ProfileForm from './ProfileForm';
 import BusinessForm from './BusinessForm';

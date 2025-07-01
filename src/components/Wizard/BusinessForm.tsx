@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { PricingPlan } from '../../services/taxService';
-import { formatCurrency, calculateTax } from '../../services/taxService';
+
 
 interface BusinessFormProps {
   onValidityChange: (isValid: boolean) => void;
@@ -9,7 +9,7 @@ interface BusinessFormProps {
   selectedPlan?: PricingPlan;
 }
 
-const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan }) => {
+const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan: _selectedPlan }) => {
   const [fields, setFields] = useState({
     company: '',
     address1: '',
@@ -117,10 +117,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
     }
   }, [fields]);
 
-  // Calcular impuestos si hay plan y estado seleccionado
-  const subtotal = selectedPlan?.price || 0;
-  const taxAmount = calculateTax(subtotal, fields.state);
-  const total = subtotal + taxAmount;
+
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>

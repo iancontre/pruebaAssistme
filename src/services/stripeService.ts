@@ -106,7 +106,7 @@ export const redirectToCheckout = async (sessionId: string) => {
   }
 };
 
-export const generateInvoice = async (sessionId: string) => {
+export const generateInvoice = async (_sessionId: string) => {
   try {
     // Mock de generación de factura
     const invoiceNumber = `INV-${Date.now()}`;

@@ -23,7 +23,7 @@ interface PaymentFormProps {
 
 const PaymentForm: React.FC<PaymentFormProps> = ({ 
   onValidityChange, 
-  onPaymentSuccess,
+  onPaymentSuccess: _onPaymentSuccess,
   customerData 
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
