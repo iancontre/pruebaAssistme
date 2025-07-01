@@ -49,28 +49,34 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     setErrors({ ...errors, [name]: false });
   };
 
-  const validateField = (name: string, value: string) => {
+  const validateField = (value: string) => {
     return value.trim() === '';
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setErrors({ ...errors, [name]: validateField(name, value) });
+    setErrors({ ...errors, [name]: validateField(value) });
   };
 
   const validateForm = () => {
     const newErrors = {
-      fullName: validateField('fullName', fields.fullName),
-      lastName: validateField('lastName', fields.lastName),
-      companyName: validateField('companyName', fields.companyName),
-      officeNumber: validateField('officeNumber', fields.officeNumber),
-      mobileNumber: validateField('mobileNumber', fields.mobileNumber),
-      email: validateField('email', fields.email),
-      heardAbout: validateField('heardAbout', fields.heardAbout),
+      fullName: validateField(fields.fullName),
+      lastName: validateField(fields.lastName),
+      companyName: validateField(fields.companyName),
+      officeNumber: validateField(fields.officeNumber),
+      mobileNumber: validateField(fields.mobileNumber),
+      email: validateField(fields.email),
+      heardAbout: validateField(fields.heardAbout),
     };
     setErrors(newErrors);
     const hasErrors = Object.values(newErrors).some(error => error);
     return !hasErrors;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Lógica de envío del formulario
+    console.log('Formulario de perfil enviado:', fields);
   };
 
   useEffect(() => {
@@ -107,7 +113,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     <div style={{ position: 'relative', width: '100%' }}>
       <div className="wizard-form-bg" />
       <div className="wizard-form-foreground">
-        <form className="wizard-form" autoComplete="off">
+        <form className="wizard-form" autoComplete="off" onSubmit={handleSubmit}>
           <div className="wizard-form-row">
             <div className="wizard-form-group">
               <label>Full Name</label>
@@ -200,6 +206,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
             </select>
             {errors.heardAbout && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Please select an option</span>}
           </div>
+          <button type="submit">Submit</button>
         </form>
       </div>
     </div>

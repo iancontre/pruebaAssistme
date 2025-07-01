@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import './Nav.css';
-import logoNegro from '../../assets/images/LogoNegro.png';
+import logoNegro from '../../assets/images/LogoNegro.PNG';
 
 const CustomNav = () => {
   useEffect(() => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from '@mui/material';
 import { motion } from 'framer-motion';
 import Nav from '../components/nav/Nav';

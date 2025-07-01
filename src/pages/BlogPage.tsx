@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container } from '@mui/material';
 import { motion } from 'framer-motion';
 import Nav from '../components/nav/Nav';
@@ -30,19 +29,6 @@ const slideInLeft = {
     transition: {
       duration: 1.4,
       ease: [0.4, 0, 0.2, 1],
-    },
-  },
-};
-
-const textReveal = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 1,
-      ease: [0.4, 0, 0.2, 1],
-      staggerChildren: 0.1,
     },
   },
 };

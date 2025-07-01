@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import './Objetives.css';
 import objetivesImage from '../../assets/images/imageObjetives.png'; // Cambia esta ruta por la correcta

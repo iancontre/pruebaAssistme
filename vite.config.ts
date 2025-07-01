@@ -8,4 +8,8 @@ export default defineConfig({
     host: true, // permite que otros dispositivos accedan
     port: 5173, // opcional, pero por claridad
   },
+  build: {
+    // Generar el build directamente en la carpeta del servidor estático
+    outDir: '../staticSever/dist',
+  },
 })

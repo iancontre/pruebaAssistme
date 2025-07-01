@@ -81,6 +81,12 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
     return !hasErrors;
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Lógica de envío del formulario
+    console.log('Formulario de negocio enviado:', fields);
+  };
+
   useEffect(() => {
     const form = document.querySelector('.wizard-form') as HTMLFormElement;
     if (form) {
@@ -120,7 +126,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
     <div style={{ position: 'relative', width: '100%' }}>
       <div className="wizard-form-bg" />
       <div className="wizard-form-foreground">
-        <form className="wizard-form" autoComplete="off">
+        <form className="wizard-form" autoComplete="off" onSubmit={handleSubmit}>
           <div className="wizard-form-group">
             <label>Company</label>
             <input 
@@ -231,6 +237,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
             </select>
             {errors.industry && submitted && <span className="error-message">Industry is required</span>}
           </div>
+          <button type="submit">Submit</button>
         </form>
       </div>
     </div>
