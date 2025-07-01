@@ -4,9 +4,10 @@ import { toast } from 'react-toastify';
 interface ProfileFormProps {
   onValidityChange: (isValid: boolean) => void;
   onDataChange?: (data: { name: string; email: string }) => void;
+  onValid?: () => void;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChange }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChange, onValid }) => {
   const [fields, setFields] = useState({
     fullName: '',
     lastName: '',
@@ -73,10 +74,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     return !hasErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Lógica de envío del formulario
-    console.log('Formulario de perfil enviado:', fields);
+    setSubmitted(true);
+    const valid = validateForm();
+    if (valid && onValid) {
+      onValid();
+    }
   };
 
   useEffect(() => {
@@ -206,7 +210,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
             </select>
             {errors.heardAbout && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Please select an option</span>}
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" style={{display: 'none'}} tabIndex={-1}>Submit</button>
         </form>
       </div>
     </div>

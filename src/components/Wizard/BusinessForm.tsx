@@ -7,9 +7,10 @@ interface BusinessFormProps {
   onValidityChange: (isValid: boolean) => void;
   onDataChange?: (data: { state: string }) => void;
   selectedPlan?: PricingPlan;
+  onValid?: () => void;
 }
 
-const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan: _selectedPlan }) => {
+const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan: _selectedPlan, onValid }) => {
   const [fields, setFields] = useState({
     company: '',
     address1: '',
@@ -81,10 +82,13 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
     return !hasErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Lógica de envío del formulario
-    console.log('Formulario de negocio enviado:', fields);
+    setSubmitted(true);
+    const valid = validateForm();
+    if (valid && onValid) {
+      onValid();
+    }
   };
 
   useEffect(() => {
@@ -234,7 +238,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
             </select>
             {errors.industry && submitted && <span className="error-message">Industry is required</span>}
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" style={{display: 'none'}} tabIndex={-1}>Submit</button>
         </form>
       </div>
     </div>

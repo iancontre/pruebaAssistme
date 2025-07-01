@@ -39,7 +39,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   useEffect(() => {
     console.log('WizardContainer - currentStep changed to:', currentStep);
     if (onStepChange) {
-      onStepChange(currentStep);
+      onStepChange(currentStep); 
     }
   }, [currentStep, onStepChange]);
 
@@ -210,9 +210,9 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   const renderStep = () => {
     switch (currentStep) {
       case 0:   
-        return <ProfileForm onValidityChange={() => {}} onDataChange={handleProfileData} />;
+        return <ProfileForm onValidityChange={() => {}} onDataChange={handleProfileData} onValid={() => setCurrentStep(1)} />;
       case 1:
-        return <BusinessForm onValidityChange={() => {}} onDataChange={handleBusinessData} selectedPlan={selectedPlan} />;
+        return <BusinessForm onValidityChange={() => {}} onDataChange={handleBusinessData} selectedPlan={selectedPlan} onValid={() => setCurrentStep(2)} />;
       case 2:
         return renderSummaryStep();
       case 3:
