@@ -10,6 +10,6 @@ export default defineConfig({
   },
   build: {
     // Generar el build directamente en la carpeta del servidor estático
-    outDir: '../../apis/staticSever/dist',
+    outDir: '../../api/staticSever/dist',
   },
 })
