@@ -17,6 +17,13 @@ interface WizardSidebarProps {
 const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNextStep, onPrevStep }) => {
   const handleNextClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    
+    // Si estamos en el último paso (paso 4), no hacer validación
+    if (currentStep === steps.length - 1) {
+      onNextStep();
+      return;
+    }
+    
     const form = document.querySelector('.wizard-form') as HTMLFormElement;
     if (form) {
       const event = new Event('submit', { cancelable: true, bubbles: true });

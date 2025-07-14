@@ -1,0 +1,199 @@
+.location-example {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.example-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.example-header h2 {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.example-header p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.example-content {
+  display: grid;
+  gap: 2rem;
+}
+
+.selector-section,
+.info-section,
+.features-section,
+.api-info {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.selector-section h3,
+.info-section h3,
+.features-section h3,
+.api-info h3 {
+  color: #1f2937;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.selected-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.info-item {
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.info-item .id {
+  color: #6b7280;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+}
+
+.no-selection {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+  background-color: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.features-list li {
+  padding: 0.5rem 0;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.endpoint-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.endpoint {
+  padding: 0.75rem;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.endpoint code {
+  background-color: #1f2937;
+  color: #f9fafb;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .location-example {
+    padding: 1rem;
+  }
+  
+  .example-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .selector-section,
+  .info-section,
+  .features-section,
+  .api-info {
+    padding: 1rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .location-example {
+    background-color: #111827;
+    color: #f9fafb;
+  }
+  
+  .example-header {
+    border-bottom-color: #374151;
+  }
+  
+  .example-header h2 {
+    color: #f9fafb;
+  }
+  
+  .example-header p {
+    color: #d1d5db;
+  }
+  
+  .selector-section,
+  .info-section,
+  .features-section,
+  .api-info {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+  
+  .selector-section h3,
+  .info-section h3,
+  .features-section h3,
+  .api-info h3 {
+    color: #f9fafb;
+  }
+  
+  .info-item {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+  
+  .no-selection {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #9ca3af;
+  }
+  
+  .features-list li {
+    color: #d1d5db;
+  }
+  
+  .endpoint {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+  
+  .endpoint code {
+    background-color: #111827;
+    color: #f9fafb;
+  }
+} 

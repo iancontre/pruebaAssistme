@@ -11,6 +11,7 @@ import wizzardImageUno from "../../assets/images/wizzardimageuno.png";
 import pasoDos from "../../assets/images/paso dos.png";
 import pasoTres from "../../assets/images/pasotres.png";
 import iconDown from "../../assets/images/icons/iconDown.png";
+import encabezado4 from '../../assets/images/encabezado4.png';
 
 // Definir correctamente el objeto con una firma de índice
 const headersData: Record<string, { title: string; description: string; image: string; showButtons: boolean }> = {
@@ -61,9 +62,9 @@ const wizardHeaders = [
     showButtons: false,
   },
   {
-    title: "Let's get started setting up your account",
+    title: 'Welcome to Assist-me!',
     description: '',
-    image: wizzardImageUno, // Puedes cambiar esta imagen si tienes una específica para el paso 4
+    image: encabezado4,
     showButtons: false,
   },
 ];

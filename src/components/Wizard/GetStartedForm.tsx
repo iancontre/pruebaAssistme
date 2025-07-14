@@ -39,6 +39,9 @@ const GetStartedForm: React.FC<GetStartedFormProps> = ({
       handleSuccessfulPayment();
     } else if (isCanceled) {
       toast.info('Payment was canceled. You can try again.');
+    } else if (isSuccess && !sessionId) {
+      // Caso cuando ya se procesó el pago y se limpiaron los parámetros
+      console.log('Payment already processed, showing success state');
     }
   }, [isSuccess, isCanceled, sessionId]);
 
@@ -60,6 +63,8 @@ const GetStartedForm: React.FC<GetStartedFormProps> = ({
     }
   };
 
+  const isDev = import.meta.env.DEV;
+
   if (isLoading) {
     return (
       <div className="get-started-container">
@@ -74,77 +79,6 @@ const GetStartedForm: React.FC<GetStartedFormProps> = ({
             <h3>Setting up your account...</h3>
             <p>Please wait while we process your payment and create your account.</p>
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isSuccess && invoiceData) {
-    return (
-      <div className="get-started-container">
-        <div className="get-started-bg" />
-        <div className="get-started-foreground">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="success-content"
-          >
-            <div className="success-icon">
-              <i className="bi bi-check-circle-fill"></i>
-            </div>
-            <h3>Welcome to Your New Account!</h3>
-            <p>Your payment has been processed successfully and your account is now active.</p>
-            
-            <div className="account-details">
-              <h4>Account Details</h4>
-              <div className="detail-row">
-                <span>Plan:</span>
-                <span>{paymentData?.plan?.name || 'Selected Plan'}</span>
-              </div>
-              <div className="detail-row">
-                <span>Minutes Included:</span>
-                <span>{paymentData?.plan?.minutes || 0} minutes</span>
-              </div>
-              <div className="detail-row">
-                <span>Amount Paid:</span>
-                <span>{formatCurrency(paymentData?.total || 0)}</span>
-              </div>
-              <div className="detail-row">
-                <span>Invoice Number:</span>
-                <span>{invoiceData?.invoiceNumber || 'N/A'}</span>
-              </div>
-            </div>
-
-            <div className="next-steps">
-              <h4>Next Steps</h4>
-              <ul>
-                <li>Check your email for account setup instructions</li>
-                <li>Download your invoice from the link below</li>
-                <li>Set up your phone system preferences</li>
-                <li>Configure your business hours and routing</li>
-              </ul>
-            </div>
-
-            <div className="action-buttons">
-              <motion.button
-                className="download-invoice-btn"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => window.open(invoiceData?.downloadUrl, '_blank')}
-              >
-                Download Invoice
-              </motion.button>
-              <motion.button
-                className="dashboard-btn"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => window.location.href = '/dashboard'}
-              >
-                Go to Dashboard
-              </motion.button>
-            </div>
-          </motion.div>
         </div>
       </div>
     );
@@ -191,21 +125,42 @@ const GetStartedForm: React.FC<GetStartedFormProps> = ({
     );
   }
 
-  // Estado por defecto
+  // Mostrar siempre el layout custom en el paso 4 (éxito), tanto en dev como después de pago
   return (
-    <div className="get-started-container custom-step4-layout">
-      <div className="get-started-bg" />
-      <div className="get-started-foreground step4-foreground">
-        <div className="step4-content">
-          <div className="step4-left">
-            <h2 className="step4-welcome">Welcome</h2>
-            <p>on behalf of the Assit-Me team, we'd like to welcome you as our newest member! We're looking forward to setting up your account and getting to know you.</p>
-            <h2 className="step4-next">Next Step</h2>
-            <p>We have just a few more questions so we can continue setting up your account. Time needed for this is about 3 - 5 minutes.</p>
-          </div>
-          <div className="step4-right">
-            <div className="step4-thankyou">¡Thank you for<br/>trusting us with your<br/>clients!</div>
-            <img src={wizzar4abajo} alt="Welcome" className="step4-image" />
+    <div className="wizard-form-container">
+      <div className="wizard-form-foreground">
+        <div className="get-started-container custom-step4-layout">
+          <div className="step4-main-layout">
+            {/* Lado izquierdo: texto */}
+            <div className="step4-left">
+              <div className="step4-welcome-block">
+                <h2 className="step4-welcome-title">Welcome</h2>
+                <p className="step4-welcome-text">
+                  on behalf of the Assit-Me team, we’d like to welcome<br />
+                  you as our newest member! We’re looking forward<br />
+                  to setting up your account and getting to know you.
+                </p>
+                <h3 className="step4-nextstep-title">Next Step</h3>
+                <p className="step4-nextstep-text">
+                  We have just a few more questions so we can<br />
+                  continue setting up your account. Time needed for<br />
+                  this is about 3 - 5 minutes.
+                </p>
+              </div>
+            </div>
+            {/* Lado derecho: fondo azul, texto y foto */}
+            <div className="step4-right">
+              <div className="step4-right-bg">
+                <div className="step4-thankyou-text">
+                  <span>¡Thank you for trusting us with your clients!</span>
+                </div>
+                <img
+                  src={wizzar4abajo}
+                  alt="Thank you"
+                  className="step4-image"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

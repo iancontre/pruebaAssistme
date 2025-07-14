@@ -325,94 +325,160 @@
   }
 }
 
+/* Paso 4 - Layout personalizado */
 .custom-step4-layout {
-  min-height: 500px;
+  margin-left: 9rem;
+  width: 100%;
+  min-height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #fff;
 }
 
-.step4-foreground {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-  width: 100%;
-  max-width: 900px;
-  display: flex;
-  align-items: stretch;
-  padding: 0;
-}
-
-.step4-content {
+.step4-main-layout {
   display: flex;
   width: 100%;
   min-height: 500px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
 }
 
 .step4-left {
-  flex: 1;
-  padding: 3rem 2rem 3rem 3rem;
+  flex: 1.2;
+  background: #fff;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  padding: 48px 32px 48px 48px;
 }
 
-.step4-welcome, .step4-next {
-  color: #0F384C;
+.step4-welcome-block {
+  max-width: 340px;
+}
+
+.step4-welcome-title {
+  font-size: 2.1rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  color: #0F384C;
+  margin-bottom: 1.2rem;
 }
 
-.step4-next {
-  margin-top: 2rem;
+.step4-welcome-text {
+  font-size: 0.80rem;
+  color: #222;
+  margin-bottom: 2.2rem;
+  line-height: 1.5;
+}
+
+.step4-nextstep-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0F384C;
+  margin-bottom: 0.7rem;
+}
+
+.step4-nextstep-text {
+  font-size: 0.80rem;
+  color: #222;
+  line-height: 1.5;
 }
 
 .step4-right {
+  flex: 1;
   background: #0F384C;
-  color: #fff;
-  flex: 0 0 340px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-width: 220px;
+}
+
+.step4-right-bg {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  border-top-right-radius: 16px;
-  border-bottom-right-radius: 16px;
-  padding: 2rem 1rem 1rem 1rem;
+  align-items: center;      /* Centra horizontalmente */
+  justify-content: flex-end; /* Pega la imagen abajo */
   position: relative;
 }
 
-.step4-thankyou {
-  font-size: 1.5rem;
+.step4-thankyou-text {
+  position: absolute;
+  top: 48px;
+  right: 32px;
+  color: #fff;
+  font-size: 1.50rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 1.5rem;
-  margin-top: 1rem;
+  line-height: 1.2;
+  z-index: 2;
 }
 
 .step4-image {
-  width: 260px;
-  max-width: 100%;
-  margin-top: 1rem;
-  border-radius: 0 0 16px 16px;
+  width: auto;
+  max-width: 90%;
+  max-height: 350px;
   object-fit: contain;
+  margin-bottom: 0;
+  align-self: center;      /* Centra la imagen horizontalmente */
+}
+
+@media (max-width: 1000px) {
+  .step4-main-layout {
+    width: 98vw;
+    min-width: unset;
+    max-width: 98vw;
+  }
+  .step4-left {
+    padding: 32px 16px 32px 16px;
+  }
+  .step4-right {
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 700px) {
+  .step4-main-layout {
+    flex-direction: column;
+    min-height: unset;
+    width: 100vw;
+    border-radius: 0;
+    max-width: 100vw;
+  }
+  .step4-left, .step4-right {
+    min-width: unset;
+    width: 100vw;
+    border-radius: 0;
+    padding: 24px 8px;
+    justify-content: center;
+    align-items: center;
+  }
+  .step4-right {
+    min-height: 220px;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+  .step4-thankyou-text {
+    position: static;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  .step4-image {
+    position: static;
+    width: 160px;
+    margin: 0 auto 0 0;
+    display: block;
+  }
 }
 
 @media (max-width: 900px) {
-  .step4-content {
-    flex-direction: column;
-    min-height: 0;
-  }
-  .step4-left, .step4-right {
-    flex: unset;
-    width: 100%;
-    border-radius: 0;
-    padding: 2rem 1rem;
-  }
-  .step4-right {
-    border-radius: 0 0 16px 16px;
-    min-height: 200px;
-  }
-  .step4-image {
-    width: 180px;
+  .custom-step4-layout {
+    margin-left: 0;
   }
 } 

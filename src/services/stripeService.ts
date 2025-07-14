@@ -35,49 +35,60 @@ export interface CreateCheckoutSessionRequest {
   cancelUrl: string;
 }
 
-// Mapeo de planes a price IDs reales
+// Mapeo de planes a price IDs reales por nombre
 const PLAN_PRICE_IDS: { [key: string]: string } = {
-  'starter': 'price_1Rdc0LFZLk0rN7lFx7NDndUA', // STARTER
-  'pro': 'price_1Rdc0kFZLk0rN7lFw6b3ULcw', // PRO
-  'business': 'price_1Rdc1AFZLk0rN7lFpvUiN762', // BUSINESS
+  'STARTER': 'price_1Rdc0LFZLk0rN7lFx7NDndUA',
+  'PRO': 'price_1Rdc0kFZLk0rN7lFw6b3ULcw',
+  'BUSINESS': 'price_1Rdc1AFZLk0rN7lFpvUiN762',
 };
 
-// Función para crear checkout session con configuración básica (sin tax automático desde frontend)
+// Debug: Log de los price IDs para verificar
+console.log('Stripe Price IDs by name:', PLAN_PRICE_IDS);
+
+// Función para crear checkout session con configuración básica
 export const createCheckoutSession = async (request: CreateCheckoutSessionRequest): Promise<CheckoutSession> => {
   try {
+    console.log('🚀 Creating checkout session for:', request);
+    
     const stripe = await getStripe();
     if (!stripe) {
       throw new Error('Stripe failed to load');
     }
+    console.log('✅ Stripe loaded successfully');
 
-    const priceId = PLAN_PRICE_IDS[request.planId];
+    // Usar el nombre del plan para encontrar el price ID
+    const priceId = PLAN_PRICE_IDS[request.planName.toUpperCase()];
     if (!priceId) {
-      throw new Error(`Price ID not found for plan: ${request.planId}`);
+      throw new Error(`Price ID not found for plan: ${request.planName} (${request.planId})`);
     }
+    console.log('✅ Price ID found for plan:', request.planName, '->', priceId);
 
-    // Configuración básica para Stripe Checkout
-    const checkoutOptions = {
+    // Crear la sesión de checkout usando el método correcto
+    console.log('🔄 Redirecting to Stripe checkout...');
+    const { error } = await stripe.redirectToCheckout({
       lineItems: [
         {
           price: priceId,
           quantity: 1,
         },
       ],
-      mode: 'subscription' as const,
+      mode: 'subscription',
       successUrl: request.successUrl,
       cancelUrl: request.cancelUrl,
       customerEmail: request.customerEmail,
-    };
-
-    const { error } = await stripe.redirectToCheckout(checkoutOptions);
+      billingAddressCollection: 'required',
+    });
 
     if (error) {
+      console.error('❌ Stripe redirect error:', error);
       throw error;
     }
+    
+    console.log('✅ Stripe redirect successful');
 
     // Retornar un objeto mock ya que redirectToCheckout no retorna session
     return {
-      id: 'mock_session_id',
+      id: 'redirecting_to_stripe',
       url: 'redirecting_to_stripe'
     };
   } catch (error) {

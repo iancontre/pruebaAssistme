@@ -19,7 +19,7 @@
     "@stripe/stripe-js": "^7.4.0",
     "@tanstack/react-table": "^8.21.3",
     "@types/react-router-dom": "^5.3.3",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "bootstrap": "^5.3.6",
     "bootstrap-icons": "^1.13.1",
     "framer-motion": "^12.15.0",
@@ -32,7 +32,8 @@
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.5.3",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "recharts": "^3.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

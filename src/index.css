@@ -28,9 +28,13 @@ html {
   overflow-x: hidden; /* Solo oculta el scroll horizontal */
   height: 100%;
 }
-body{
-  /* overflow: hidden; *//* Removed to allow full width */
-  font-family: 'Open Sans', sans-serif;
+body {
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  background: #e6e8ef;
+  color: #222;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 #root {
   margin: 0;
@@ -66,4 +70,23 @@ button:focus-visible {
 
 html {
   scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  font-weight: 600;
+  margin: 0;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #e6e8ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #cfd2e3;
+  border-radius: 4px;
 }

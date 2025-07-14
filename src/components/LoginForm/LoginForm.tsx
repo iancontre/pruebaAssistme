@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LoginForm.css';
 
 interface Errors {
@@ -12,6 +13,7 @@ const validateEmail = (email: string) => {
 };
 
 const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>({});
@@ -39,6 +41,8 @@ const LoginForm: React.FC = () => {
     if (Object.keys(newErrors).length === 0) {
       // lógica login. 
       alert('Login successful (frontend only)');
+      // Redirigir al dashboard
+      navigate('/dashboard');
     }
   };
 

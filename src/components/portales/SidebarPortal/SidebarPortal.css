@@ -1,0 +1,84 @@
+.sidebar-portal {
+  width: 240px;
+  min-width: 200px;
+  background: linear-gradient(160deg, #3a3b3f 0%, #18181c 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 36px 0 0 0;
+  box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18);
+  border-radius: 18px;
+  height: calc(100vh - 48px);
+  margin: 24px 0 24px 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 0 24px 44px 24px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.sidebar-logo-img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  margin-right: 2px;
+}
+.logo-text {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1.5px;
+}
+
+.sidebar-nav {
+  flex: 1;
+}
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar-nav li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 32px;
+  font-size: 1.08rem;
+  color: #bfc2d1;
+  cursor: pointer;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border-left: 0;
+  transition: background 0.2s, color 0.2s;
+  background: none;
+}
+.sidebar-nav li.active, .sidebar-nav li:hover {
+  background: #3b4a6b;
+  color: #fff;
+}
+.icon-reports::before {
+  content: '\25CF'; /* Cambia por un icono real si tienes SVG */
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 17.93V20a8 8 0 1 1 7.93-7H19a8.001 8.001 0 0 1-7 7.93z"/></svg>') no-repeat center center;
+  background-size: 22px 22px;
+  margin-right: 8px;
+}
+.icon-billing::before {
+  content: '\25CF';
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background: url('data:image/svg+xml;utf8,<svg fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 7H3c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H3V9h18v6zm-2-3c0 .55-.45 1-1 1s-1-.45-1-1 .45-1 1-1 1 .45 1 1z"/></svg>') no-repeat center center;
+  background-size: 22px 22px;
+  margin-right: 8px;
+} 

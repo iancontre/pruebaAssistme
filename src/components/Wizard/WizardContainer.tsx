@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import WizardSidebar from './WizardSidebar';
 import ProfileForm from './ProfileForm';
 import BusinessForm from './BusinessForm';
@@ -6,9 +7,9 @@ import GetStartedForm from './GetStartedForm';
 import prevIcon from '../../assets/images/icons/prevIcon.png';
 import nexicon from '../../assets/images/icons/nexicon.png';
 import { BsCreditCard } from 'react-icons/bs';
-import { PricingPlan } from '../../services/taxService';
+import { PricingPlan, formatCurrency } from '../../services/taxService';
+import { calculateTaxWithAPI } from '../../services/apiService';
 import { createCheckoutSession } from '../../services/stripeService';
-import { calculateTax, formatCurrency } from '../../services/taxService';
 import { toast } from 'react-toastify';
 
 const steps = [
@@ -22,18 +23,23 @@ interface CustomerData {
   name: string;
   email: string;
   state: string;
+  phone_code?: string;
 }
 
 interface WizardContainerProps {
   selectedPlan?: PricingPlan;
   onStepChange?: (step: number) => void;
+  onConfigWizardRequest?: () => void;
 }
 
-const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepChange }) => {
+const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepChange, onConfigWizardRequest }) => {
+  const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState(0);
   const [customerData, setCustomerData] = useState<CustomerData | null>(null);
   const [paymentData, setPaymentData] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [taxCalculation, setTaxCalculation] = useState<any>(null);
+  const [loadingTax, setLoadingTax] = useState(false);
 
   // Notificar cambios de paso al componente padre
   useEffect(() => {
@@ -43,7 +49,57 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     }
   }, [currentStep, onStepChange]);
 
+  // Calcular tax usando el API cuando cambie el estado o el plan
+  useEffect(() => {
+    if (customerData?.state && selectedPlan) {
+      setLoadingTax(true);
+      calculateTaxWithAPI(selectedPlan.price, 'US', customerData.state, '33101')
+        .then((calculation) => {
+          setTaxCalculation(calculation);
+        })
+        .catch((error) => {
+          console.error('Error calculating tax:', error);
+          setTaxCalculation(null);
+        })
+        .finally(() => {
+          setLoadingTax(false);
+        });
+    } else {
+      setTaxCalculation(null);
+    }
+  }, [customerData?.state, selectedPlan]);
+
+  // Detectar pago exitoso y ir al paso 4
+  useEffect(() => {
+    const isSuccess = searchParams.get('success') === 'true';
+    const sessionId = searchParams.get('session_id');
+    
+    if (isSuccess && sessionId) {
+      console.log('🔑 Stripe session_id después del pago:', sessionId); // <-- Mostrar en consola
+      setCurrentStep(3); // Paso 4 (índice 3)
+      
+      // Limpiar los parámetros de URL para evitar que se ejecute múltiples veces
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('success');
+      newUrl.searchParams.delete('session_id');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [searchParams]);
+
   const handleNextStep = async () => {
+    // Si estamos en el último paso (paso 4), activar el wizard de configuración
+    if (currentStep === steps.length - 1) {
+      if (onConfigWizardRequest) {
+        onConfigWizardRequest();
+      }
+      return;
+    }
+    
+    // FORZAR: Si estamos en el paso 3 (Order Summary) y estamos en desarrollo, avanzar directo al paso 4 y salir
+    if (currentStep === 2 && import.meta.env.DEV) {
+      setCurrentStep(3);
+      return;
+    }
     // Si estamos en el paso 2 y vamos al resumen, solo avanza
     if (currentStep === 2) {
       // No hacer nada especial, solo avanzar
@@ -72,11 +128,12 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     }));
   };
 
-  const handleBusinessData = (data: { state: string }) => {
+  const handleBusinessData = (data: { state: string; phone_code?: string }) => {
     setCustomerData(prev => ({ 
       name: prev?.name || '', 
       email: prev?.email || '', 
-      state: data.state 
+      state: data.state,
+      phone_code: data.phone_code || prev?.phone_code
     }));
   };
 
@@ -91,6 +148,14 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
       toast.error('Please complete your profile information first.');
       return;
     }
+    
+    console.log('🚀 Proceeding to payment with plan:', {
+      id: selectedPlan.id,
+      name: selectedPlan.name,
+      price: selectedPlan.price,
+      customerEmail: customerData.email,
+      customerName: customerData.name
+    });
     
     setIsProcessing(true);
     try {
@@ -127,7 +192,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     }
     
     const subtotal = selectedPlan.price;
-    const taxAmount = customerData?.state ? calculateTax(subtotal, customerData.state) : 0;
+    const taxAmount = taxCalculation?.tax_amount || 0;
     const total = subtotal + taxAmount;
     
     return (
@@ -147,7 +212,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
               <span>${selectedPlan.addMinuteRate}/min</span>
             </div>
           </div>
-          {customerData?.state && (
+          {customerData?.state ? (
             <div className="tax-breakdown">
               <div className="breakdown-item">
                 <span>Subtotal</span>
@@ -155,15 +220,34 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
               </div>
               <div className="breakdown-item">
                 <span>Tax ({customerData.state})</span>
-                <span>{formatCurrency(taxAmount)}</span>
+                <span>
+                  {loadingTax ? (
+                    <span style={{ color: '#8DA9C9' }}>Calculating...</span>
+                  ) : (
+                    formatCurrency(taxAmount)
+                  )}
+                </span>
               </div>
               <div className="breakdown-item total">
                 <span>Total</span>
-                <span>{formatCurrency(total)}</span>
+                <span>
+                  {loadingTax ? (
+                    <span style={{ color: '#8DA9C9' }}>Calculating...</span>
+                  ) : (
+                    formatCurrency(total)
+                  )}
+                </span>
               </div>
+              {taxCalculation && (
+                <div className="tax-note">
+                  <p>
+                    💡 <strong>Note:</strong> Tax rate: {(taxCalculation.tax_rate * 100).toFixed(2)}% 
+                    based on your location. Final amount will be confirmed on the payment page.
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-          {!customerData?.state && (
+          ) : (
             <div className="tax-breakdown">
               <div className="breakdown-item">
                 <span>Subtotal</span>
@@ -210,13 +294,25 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   const renderStep = () => {
     switch (currentStep) {
       case 0:   
-        return <ProfileForm onValidityChange={() => {}} onDataChange={handleProfileData} onValid={() => setCurrentStep(1)} />;
+        return <ProfileForm 
+          onValidityChange={() => {}} 
+          onDataChange={handleProfileData} 
+          onValid={() => setCurrentStep(1)}
+        />;
       case 1:
         return <BusinessForm onValidityChange={() => {}} onDataChange={handleBusinessData} selectedPlan={selectedPlan} onValid={() => setCurrentStep(2)} />;
       case 2:
         return renderSummaryStep();
       case 3:
-        return <GetStartedForm onValidityChange={() => {}} paymentData={paymentData} onPaymentSuccess={handlePaymentSuccess} />;
+        return <GetStartedForm 
+          onValidityChange={() => {}} 
+          paymentData={{
+            plan: selectedPlan,
+            taxAmount: taxCalculation?.tax_amount || 0,
+            total: selectedPlan ? selectedPlan.price + (taxCalculation?.tax_amount || 0) : 0
+          }} 
+          onPaymentSuccess={handlePaymentSuccess} 
+        />;
       default:
         return null;
     }
@@ -237,7 +333,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
           </div>
           <div className="wizard-navigation mobile">
             {currentStep > 0 && currentStep < 3 && (
-              <button className="wizard-prev-btn-circular" onClick={handlePrevStep}>
+              <button className="wizard-prev-btn-circular" onClick={handlePrevStep} style={{ display: currentStep === 3 ? 'none' : undefined }}>
                 <img src={prevIcon} alt="Previous" style={{ width: 24, height: 24 }} />
               </button>
             )}

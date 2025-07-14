@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 interface ProfileFormProps {
   onValidityChange: (isValid: boolean) => void;
-  onDataChange?: (data: { name: string; email: string }) => void;
+  onDataChange?: (data: { name: string; email: string; industry: string }) => void;
   onValid?: () => void;
 }
 
@@ -13,8 +13,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     lastName: '',
     companyName: '',
     officeNumber: '',
-    mobileNumber: '',
     email: '',
+    industry: '',
     heardAbout: '',
   });
 
@@ -23,8 +23,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     lastName: false,
     companyName: false,
     officeNumber: false,
-    mobileNumber: false,
     email: false,
+    industry: false,
     heardAbout: false,
   });
 
@@ -39,10 +39,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     if (isValid && onDataChange) {
       onDataChange({
         name: `${fields.fullName} ${fields.lastName}`.trim(),
-        email: fields.email
+        email: fields.email,
+        industry: fields.industry
       });
     }
-  }, [isValid, onValidityChange, onDataChange, fields.fullName, fields.lastName, fields.email]);
+  }, [isValid, onValidityChange, onDataChange, fields.fullName, fields.lastName, fields.email, fields.industry]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -65,8 +66,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
       lastName: validateField(fields.lastName),
       companyName: validateField(fields.companyName),
       officeNumber: validateField(fields.officeNumber),
-      mobileNumber: validateField(fields.mobileNumber),
       email: validateField(fields.email),
+      industry: validateField(fields.industry),
       heardAbout: validateField(fields.heardAbout),
     };
     setErrors(newErrors);
@@ -156,31 +157,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
             />
             {errors.companyName && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Company name is required</span>}
           </div>
-          <div className="wizard-form-row">
-            <div className="wizard-form-group">
-              <label>Office Number</label>
-              <input 
-                name="officeNumber" 
-                type="text" 
-                value={fields.officeNumber} 
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.officeNumber && submitted ? 'error' : ''}
-              />
-              {errors.officeNumber && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Office number is required</span>}
-            </div>
-            <div className="wizard-form-group">
-              <label>Mobile Number</label>
-              <input 
-                name="mobileNumber" 
-                type="text" 
-                value={fields.mobileNumber} 
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={errors.mobileNumber && submitted ? 'error' : ''}
-              />
-              {errors.mobileNumber && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Mobile number is required</span>}
-            </div>
+          <div className="wizard-form-group">
+            <label>Office Number</label>
+            <input 
+              name="officeNumber" 
+              type="text" 
+              value={fields.officeNumber} 
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.officeNumber && submitted ? 'error' : ''}
+            />
+            {errors.officeNumber && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Office number is required</span>}
           </div>
           <div className="wizard-form-group">
             <label>Email</label>
@@ -195,7 +182,29 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
             {errors.email && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Email is required</span>}
           </div>
           <div className="wizard-form-group">
-            <label>Where did you hear about us?</label>
+            <label>Industry</label>
+            <select 
+              name="industry" 
+              value={fields.industry} 
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={errors.industry && submitted ? 'error' : ''}
+            >
+              <option value="">Select an industry</option>
+              <option value="Finance">Finance</option>
+              <option value="Technology">Technology</option>
+              <option value="Healthcare">Healthcare</option>
+              <option value="Education">Education</option>
+              <option value="Manufacturing">Manufacturing</option>
+              <option value="Retail">Retail</option>
+              <option value="Real Estate">Real Estate</option>
+              <option value="Consulting">Consulting</option>
+              <option value="Other">Other</option>
+            </select>
+            {errors.industry && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Industry is required</span>}
+          </div>
+          <div className="wizard-form-group">
+            <label>How did you hear about us?</label>
             <select 
               name="heardAbout" 
               value={fields.heardAbout} 
@@ -204,11 +213,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               className={errors.heardAbout && submitted ? 'error' : ''}
             >
               <option value="">Select an option</option>
-              <option value="Internet">Internet</option>
-              <option value="Friend">Friend</option>
+              <option value="Google">Google</option>
+              <option value="Social Media">Social Media</option>
+              <option value="Referral">Referral</option>
+              <option value="Advertisement">Advertisement</option>
               <option value="Other">Other</option>
             </select>
-            {errors.heardAbout && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Please select an option</span>}
+            {errors.heardAbout && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>This field is required</span>}
           </div>
           <button type="submit" style={{display: 'none'}} tabIndex={-1}>Submit</button>
         </form>

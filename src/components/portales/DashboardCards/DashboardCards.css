@@ -1,0 +1,64 @@
+.dashboard-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.dashboard-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  padding: 24px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  min-height: 280px;
+}
+
+.dashboard-card-title {
+  font-size: 1.18rem;
+  font-weight: 600;
+  color: #23244a;
+  margin-bottom: 12px;
+  text-align: left;
+  width: 100%;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-minutes-summary {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 8px;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.dashboard-minutes-box {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: #f5f7fa;
+  min-width: 90px;
+  box-shadow: 0 1px 4px rgba(30,207,255,0.08);
+}
+.dashboard-minutes-box span {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #888;
+  margin-top: 2px;
+}
+.dashboard-minutes-box.consumed {
+  color: #3b3be3;
+  border: 1.5px solid #3b3be3;
+  background: #f7f8ff;
+}
+.dashboard-minutes-box.available {
+  color: #1ecfff;
+  border: 1.5px solid #1ecfff;
+  background: #f5fcff;
+} 
