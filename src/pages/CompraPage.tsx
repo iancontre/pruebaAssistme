@@ -21,11 +21,13 @@ const CompraPage: React.FC = () => {
   return (
     <>
       <Nav />
-      <Header
-        key={`wizard-step-${currentWizardStep}`}
-        isWizard={true}
-        wizardStep={currentWizardStep}
-      />
+      {!showConfigWizard && (
+        <Header
+          key={`wizard-step-${currentWizardStep}`}
+          isWizard={true}
+          wizardStep={currentWizardStep}
+        />
+      )}
       {!showConfigWizard ? (
         <WizardContainer
           selectedPlan={selectedPlan}

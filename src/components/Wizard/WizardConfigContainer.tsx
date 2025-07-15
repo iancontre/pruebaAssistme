@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import WizardSidebar from './WizardSidebar';
+import Header from '../header/Header';
 import './Wizard.css';
+import finalize1 from '../../assets/images/finalize 1.png';
 
 const configSteps = [
   { label: 'SETUP', description: 'Configure your call handling' },
@@ -39,6 +41,12 @@ const WizardConfigContainer: React.FC = () => {
     reportEmailError: '',
   });
 
+  // Estados para el paso 3
+  const [selectedDay, setSelectedDay] = useState<string>('2025-02-26');
+  const [selectedSlot, setSelectedSlot] = useState('');
+  const [confirmNumber, setConfirmNumber] = useState(true);
+  const [showFinalize, setShowFinalize] = useState(false);
+
   const timezones = [
     'Eastern Time Zone (UTC-05:00)',
     'Central Time Zone (UTC-06:00)',
@@ -51,10 +59,18 @@ const WizardConfigContainer: React.FC = () => {
   };
 
   const handleNextStep = () => {
+    if (currentStep === 2) {
+      setShowFinalize(true);
+      return;
+    }
     setCurrentStep((prev) => (prev < configSteps.length - 1 ? prev + 1 : prev));
   };
 
   const handlePrevStep = () => {
+    if (showFinalize) {
+      setShowFinalize(false);
+      return;
+    }
     setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
@@ -74,6 +90,42 @@ const WizardConfigContainer: React.FC = () => {
   };
 
   const renderStep = () => {
+    if (showFinalize) {
+      return (
+        <>
+          <div className="wizard-form-bg" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
+          <div className="wizard-form-foreground" style={{ position: 'relative', zIndex: 1 }}>
+            <form className="wizard-form" autoComplete="off" style={{ position: 'relative', minHeight: 500 }}>
+              <div style={{ maxWidth: 500, paddingRight: 180 }}>
+                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 18, marginBottom: 24 }}>Welcome</div>
+                <div style={{ color: '#222', fontSize: 16, marginBottom: 32, maxWidth: 420 }}>
+                  We want you to know that we are committed to delivering the very best service to you and to your clients. We understand that every interaction counts and we never give any less than 100% to all of our clients and all of their clients.
+                </div>
+                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 18, marginBottom: 12 }}>Next Step</div>
+                <div style={{ color: '#222', fontSize: 16, marginBottom: 32, maxWidth: 420 }}>
+                  A setup specialist will call you at 678-427-1932 on February 26 at 4:00pm EST to finalize everything and get you live.<br /><br />We look forward to speaking with you.
+                </div>
+                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 32, marginTop: 48, lineHeight: 1.1 }}>
+                  We can't wait to<br />Start Working<br />for you
+                </div>
+              </div>
+              <img 
+                src={finalize1} 
+                alt="Finalize" 
+                style={{ 
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                  height: '380px',
+                  objectFit: 'cover',
+                  objectPosition: 'bottom right'
+                }} 
+              />
+            </form>
+          </div>
+        </>
+      );
+    }
     if (currentStep === 0) {
       return (
         <div style={{ position: 'relative', width: '100%' }}>
@@ -505,38 +557,222 @@ const WizardConfigContainer: React.FC = () => {
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                       <select
                         className="wizard-config-textarea"
-                        style={{ width: 60 }}
-                        value={step2.reportHour}
-                        onChange={e => handleStep2Change('reportHour', e.target.value)}
+                        style={{ width: 60, textAlign: 'center', padding: '0 8px', height: 32, fontSize: 15 }}
+                        value={step2.reportHour && /^[0-9]{2}$/.test(step2.reportHour) ? step2.reportHour : '09'}
+                        onChange={e => handleStep2Change('reportHour', e.target.value.padStart(2, '0'))}
                       >
                         {[...Array(12)].map((_, i) => {
                           const val = (i + 1).toString().padStart(2, '0');
                           return <option key={val} value={val}>{val}</option>;
                         })}
                       </select>
-                      <select className="wizard-config-textarea" style={{ width: 60 }} value={step2.reportMinute} onChange={e => handleStep2Change('reportMinute', String(e.target.value))}>
+                      <select
+                        className="wizard-config-textarea"
+                        style={{ width: 60, textAlign: 'center', padding: '0 8px', height: 32, fontSize: 15 }}
+                        value={step2.reportMinute && /^[0-9]{2}$/.test(step2.reportMinute) ? step2.reportMinute : '00'}
+                        onChange={e => handleStep2Change('reportMinute', e.target.value.padStart(2, '0'))}
+                      >
                         {[...Array(60)].map((_, i) => {
                           const val = i.toString().padStart(2, '0');
                           return <option key={val} value={val}>{val}</option>;
                         })}
                       </select>
-                      <select className="wizard-config-textarea" style={{ width: 60 }} value={step2.reportPeriod} onChange={e => handleStep2Change('reportPeriod', String(e.target.value))}>
+                      <select
+                        className="wizard-config-textarea"
+                        style={{ width: 60, textAlign: 'center', padding: '0 8px', height: 32, fontSize: 15 }}
+                        value={step2.reportPeriod}
+                        onChange={e => handleStep2Change('reportPeriod', e.target.value)}
+                      >
                         <option value="am">am</option>
                         <option value="pm">pm</option>
                       </select>
                     </div>
                   </div>
                 </div>
-                <label className="wizard-config-label">To which email would you like to receive the report?</label>
-                <input
-                  className="wizard-config-textarea"
-                  type="email"
-                  value={step2.reportEmail}
-                  onChange={handleReportEmailChange}
-                  style={{ maxWidth: 400 }}
-                  placeholder="Enter email address"
-                />
-                {step2.reportEmailError && <span style={{ color: '#d32f2f', fontSize: 13 }}>{step2.reportEmailError}</span>}
+                <div className="wizard-form-group" style={{ padding: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div style={{ flex: 1, textAlign: 'left' }}>
+                      <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
+                        To which email would you like to receive the report?
+                      </label>
+                    </div>
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                      <input
+                        className="wizard-config-textarea"
+                        type="email"
+                        value={step2.reportEmail}
+                        onChange={handleReportEmailChange}
+                        style={{ maxWidth: 300, width: '100%' }}
+                        placeholder="Enter email address"
+                      />
+                    </div>
+                  </div>
+                  {step2.reportEmailError && (
+                    <div style={{ color: '#d32f2f', fontSize: 13, marginLeft: '50%', marginTop: 2 }}>
+                      {step2.reportEmailError}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      );
+    }
+    if (currentStep === 2) {
+      // Paso 3: Layout igual a la imagen proporcionada, con el mismo contenedor y botón Next Step funcional
+      const availableDays = [
+        { label: 'Wednesday, February 26 (Today)', value: '2025-02-26' },
+        { label: 'Thursday, February 27', value: '2025-02-27' },
+        { label: 'Friday,February 28', value: '2025-02-28' },
+        { label: 'Monday, March 3', value: '2025-03-03' },
+        { label: 'Tuesday,March 4', value: '2025-03-04' },
+      ];
+      const availableSlots = {
+        '2025-02-26': [
+          { time: '09:30 AM', disabled: true },
+          { time: '12:00 PM', disabled: true },
+          { time: '02:30 PM', disabled: false },
+        ],
+        '2025-02-27': [
+          { time: '10:00 AM', disabled: true },
+          { time: '12:30 AM', disabled: true },
+          { time: '03:00 PM', disabled: false },
+        ],
+        '2025-02-28': [
+          { time: '10:30 AM', disabled: true },
+          { time: '01:00 PM', disabled: true },
+          { time: '03:30 PM', disabled: false },
+        ],
+        '2025-03-03': [
+          { time: '11:00 AM', disabled: true },
+          { time: '01:30 PM', disabled: true },
+          { time: '04:00 PM', disabled: false },
+        ],
+        '2025-03-04': [
+          { time: '11:30 AM', disabled: true },
+          { time: '02:00 PM', disabled: false },
+          { time: '04:30 PM', disabled: false },
+        ],
+      };
+      type DayKey = keyof typeof availableSlots;
+      const phoneNumber = '678-427-1932'; // Mock, puedes traerlo del estado real
+
+      return (
+        <div style={{ position: 'relative', width: '100%' }}>
+          <div className="wizard-form-bg" />
+          <div className="wizard-form-foreground">
+            <form className="wizard-form" autoComplete="off" style={{ minWidth: 700, maxWidth: 850 }} onSubmit={e => e.preventDefault()}>
+              <div style={{ maxWidth: 700, margin: '0 auto', padding: 32 }}>
+                <div style={{ color: '#18344C', fontSize: 18, marginBottom: 16 }}>
+                  Your account is now being processed, however we would like to set up a time for one of our setup specialists to call you to review your instructions and the handling of your calls
+                </div>
+                <div style={{ color: '#18344C', fontSize: 16, marginBottom: 24 }}>
+                  Please choose the time slot that would work best for you
+                </div>
+                <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', marginBottom: 32 }}>
+                  {/* Días */}
+                  <div>
+                    <div style={{ fontWeight: 700, marginBottom: 16, fontSize: 18 }}>Select an available day</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {availableDays.map(day => (
+                        <button
+                          key={day.value}
+                          type="button"
+                          onClick={() => { setSelectedDay(day.value); setSelectedSlot(''); }}
+                          style={{
+                            background: selectedDay === day.value ? '#18344C' : '#fff',
+                            color: selectedDay === day.value ? '#fff' : '#18344C',
+                            border: selectedDay === day.value ? 'none' : '2px solid #18344C',
+                            borderRadius: 10,
+                            fontWeight: 600,
+                            fontSize: 16,
+                            padding: '12px 18px',
+                            cursor: 'pointer',
+                            boxShadow: selectedDay === day.value ? '0 2px 8px rgba(24,52,76,0.08)' : 'none',
+                            outline: 'none',
+                            transition: 'all 0.2s',
+                          }}
+                        >
+                          {day.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Horarios */}
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                      {(availableSlots[selectedDay as keyof typeof availableSlots] as { time: string; disabled: boolean }[]).map((slot) => (
+                        <button
+                          key={slot.time}
+                          type="button"
+                          disabled={slot.disabled}
+                          onClick={() => setSelectedSlot(slot.time)}
+                          style={{
+                            background: selectedSlot === slot.time ? '#18344C' : slot.disabled ? '#E9E9E9' : '#fff',
+                            color: selectedSlot === slot.time ? '#fff' : slot.disabled ? '#A0A0A0' : '#18344C',
+                            border: selectedSlot === slot.time ? 'none' : '2px solid #18344C',
+                            borderRadius: 10,
+                            fontWeight: 700,
+                            fontSize: 16,
+                            padding: '12px 0',
+                            cursor: slot.disabled ? 'not-allowed' : 'pointer',
+                            boxShadow: selectedSlot === slot.time ? '0 2px 8px rgba(24,52,76,0.08)' : 'none',
+                            outline: 'none',
+                            transition: 'all 0.2s',
+                          }}
+                        >
+                          {slot.time}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                {/* Confirmación de número */}
+                <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 24 }}>
+                  <span style={{ color: '#18344C', fontSize: 16 }}>
+                    Is the best number to reach you the number you previously provided, <b>{phoneNumber}</b>
+                  </span>
+                  <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+                    {[{ value: true, label: 'Yes' }, { value: false, label: 'No' }].map(opt => (
+                      <label key={String(opt.value)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8 }}>
+                        <input
+                          type="radio"
+                          checked={confirmNumber === opt.value}
+                          onChange={() => setConfirmNumber(opt.value)}
+                          style={{ display: 'none' }}
+                        />
+                        <span
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: '50%',
+                            background: confirmNumber === opt.value ? '#5DD28E' : '#E9E9E9',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: confirmNumber === opt.value ? '2px solid #5DD28E' : '2px solid #E9E9E9',
+                            boxSizing: 'border-box',
+                            transition: 'background 0.2s, border 0.2s',
+                          }}
+                        >
+                          {confirmNumber === opt.value && (
+                            <span style={{
+                              width: 10,
+                              height: 10,
+                              borderRadius: '50%',
+                              background: '#fff',
+                              display: 'block',
+                            }} />
+                          )}
+                        </span>
+                        <span style={{ color: '#222', fontSize: 16, fontWeight: 400 }}>{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             </form>
           </div>
@@ -548,33 +784,37 @@ const WizardConfigContainer: React.FC = () => {
   };
 
   return (
-    <div className="wizard-main-layout">
-      <WizardSidebar
-        steps={configSteps}
-        currentStep={currentStep}
-        onNextStep={handleNextStep}
-        onPrevStep={handlePrevStep}
-      />
-      <div className="wizard-content">
-        <div className="wizard-form-container">
-          <div className="wizard-form-foreground">
-            {renderStep()}
-          </div>
-          <div className="wizard-navigation mobile">
-            {currentStep > 0 && (
-              <button className="wizard-prev-btn-circular" onClick={handlePrevStep}>
-                Prev
-              </button>
-            )}
-            {currentStep < configSteps.length - 1 && (
-              <button className="wizard-next-btn" onClick={handleNextStep}>
-                Next Step
-              </button>
-            )}
+    <>
+      <Header isConfigWizard={true} wizardStep={showFinalize ? 3 : currentStep} />
+      <div className="wizard-main-layout">
+        <WizardSidebar
+          steps={configSteps}
+          currentStep={currentStep}
+          onNextStep={handleNextStep}
+          onPrevStep={handlePrevStep}
+          forceNoValidation={true}
+        />
+        <div className="wizard-content">
+          <div className="wizard-form-container">
+            <div className="wizard-form-foreground">
+              {renderStep()}
+            </div>
+            <div className="wizard-navigation mobile">
+              {(currentStep > 0 || showFinalize) && (
+                <button className="wizard-prev-btn-circular" onClick={handlePrevStep}>
+                  Prev
+                </button>
+              )}
+              {currentStep < configSteps.length - 1 && !showFinalize && (
+                <button className="wizard-next-btn" onClick={handleNextStep}>
+                  Next Step
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

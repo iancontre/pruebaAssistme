@@ -12,6 +12,10 @@ import pasoDos from "../../assets/images/paso dos.png";
 import pasoTres from "../../assets/images/pasotres.png";
 import iconDown from "../../assets/images/icons/iconDown.png";
 import encabezado4 from '../../assets/images/encabezado4.png';
+import wizarconfig1 from '../../assets/images/Wizarconfig1png.png';
+import encabezadowizzard2 from '../../assets/images/encabezadowizzard2.png';
+import wizzardconfig3 from '../../assets/images/wizzardconfig3.png';
+import wizzardFinalConfig from '../../assets/images/wizzardFinalConfig.png';
 
 // Definir correctamente el objeto con una firma de índice
 const headersData: Record<string, { title: string; description: string; image: string; showButtons: boolean }> = {
@@ -69,6 +73,34 @@ const wizardHeaders = [
   },
 ];
 
+// Datos específicos para el wizard de configuración
+const configWizardHeaders = [
+  {
+    title: "Let's continue with the process",
+    description: '',
+    image: wizarconfig1,
+    showButtons: false,
+  },
+  {
+    title: 'We are almost finished',
+    description: '',
+    image: encabezadowizzard2,
+    showButtons: false,
+  },
+  {
+    title: 'Select what is necessary to be the best',
+    description: '',
+    image: wizzardconfig3,
+    showButtons: false,
+  },
+  {
+    title: 'Thank you for Choosing us',
+    description: '',
+    image: wizzardFinalConfig,
+    showButtons: false,
+  },
+];
+
 interface HeaderProps {
   title?: string;
   description?: string;
@@ -76,6 +108,7 @@ interface HeaderProps {
   showButtons?: boolean;
   isWizard?: boolean;
   wizardStep?: number;
+  isConfigWizard?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = (props) => {
@@ -83,12 +116,21 @@ const Header: React.FC<HeaderProps> = (props) => {
   const headerData = headersData[location.pathname] || headersData["/"];
   
   // Debug: verificar que el wizardStep se está actualizando
-  console.log('Header - wizardStep:', props.wizardStep, 'isWizard:', props.isWizard);
+  console.log('Header - wizardStep:', props.wizardStep, 'isWizard:', props.isWizard, 'isConfigWizard:', props.isConfigWizard);
   
   // Si es wizard, usar los datos del paso específico
   let title, description, image, showButtons;
   
-  if (props.isWizard && props.wizardStep !== undefined) {
+  if (props.isConfigWizard && props.wizardStep !== undefined) {
+    const wizardData = configWizardHeaders[props.wizardStep] || configWizardHeaders[0];
+    title = props.title ?? wizardData.title;
+    description = props.description ?? wizardData.description;
+    image = props.image ?? wizardData.image;
+    showButtons = props.showButtons ?? wizardData.showButtons;
+    
+    // Debug: verificar qué datos se están usando
+    console.log('Header - Using config wizard data for step:', props.wizardStep, wizardData);
+  } else if (props.isWizard && props.wizardStep !== undefined) {
     const wizardData = wizardHeaders[props.wizardStep] || wizardHeaders[0];
     title = props.title ?? wizardData.title;
     description = props.description ?? wizardData.description;
@@ -105,6 +147,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   }
   
   const isWizard = props.isWizard ?? false;
+  const isConfigWizard = props.isConfigWizard ?? false;
 
   // Detectar si estamos en el blog, FAQs o Customer Service
   const isBlog = location.pathname === "/blog";
@@ -147,9 +190,9 @@ const Header: React.FC<HeaderProps> = (props) => {
       <div className="header-content">
         <img src={image} alt="Encabezado" className="header-image" />
         <div className={`header-text ${isBlog ? "center-blog" : ""} ${isFaqs ? "faqs-text" : ""} ${isCustomerService ? "faqs-text" : ""}`}>
-          <h1 className={`tittle-header ${isFaqs ? "faqs-title" : ""} ${isCustomerService ? "faqs-title" : ""} ${isWizard ? "wizard-title" : ""}`}>
+          <h1 className={`tittle-header ${isFaqs ? "faqs-title" : ""} ${isCustomerService ? "faqs-title" : ""} ${isWizard ? "wizard-title" : ""} ${isConfigWizard ? "wizard-title" : ""}`}>
             {title}
-            {isWizard && (
+            {(isWizard || isConfigWizard) && (
               <div className="wizard-icon-container">
                 <img src={iconDown} alt="Down Icon" className="wizard-down-icon" />
               </div>

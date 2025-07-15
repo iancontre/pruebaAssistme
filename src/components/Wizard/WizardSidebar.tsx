@@ -12,12 +12,17 @@ interface WizardSidebarProps {
   currentStep: number;
   onNextStep: () => void;
   onPrevStep: () => void;
+  forceNoValidation?: boolean;
 }
 
-const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNextStep, onPrevStep }) => {
+const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNextStep, onPrevStep, forceNoValidation }) => {
   const handleNextClick = (e: React.MouseEvent) => {
     e.preventDefault();
     
+    if (forceNoValidation) {
+      onNextStep();
+      return;
+    }
     // Si estamos en el último paso (paso 4), no hacer validación
     if (currentStep === steps.length - 1) {
       onNextStep();
