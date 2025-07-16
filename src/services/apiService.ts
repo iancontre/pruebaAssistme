@@ -261,6 +261,18 @@ export interface Plan {
   updated_at?: string;
 }
 
+// --- Servicio de planes con Stripe ---
+export interface PlanWithStripe extends Plan {
+  stripe_price_id?: string;
+  stripe_product_id?: string;
+}
+
+export interface PlansWithStripeResponse {
+  plans: PlanWithStripe[];
+  total: number;
+  message: string;
+}
+
 export interface PlansResponse {
   plans: Plan[];
   total: number;
@@ -378,7 +390,7 @@ const validateCitiesResponse = (data: any): CitiesResponse => {
   
   return {
     cities: validCities,
-    total: validCities.length,
+    total: total,
     message: data.message || 'Cities loaded successfully'
   };
 };
@@ -388,7 +400,7 @@ const validatePlansResponse = (data: any): PlansResponse => {
   if (!data || typeof data !== 'object') {
     throw new Error('Invalid response format');
   }
-  
+
   // Manejar diferentes estructuras posibles
   let plans: Plan[] = [];
   let total: number = 0;
@@ -434,13 +446,79 @@ const validatePlansResponse = (data: any): PlansResponse => {
     logger.warn('No valid plans found in response');
     return { plans: [], total: 0, message: 'No plans available' };
   }
-  
+
   return {
     plans: validPlans,
-    total: validPlans.length,
+    total: total,
     message: data.message || 'Plans loaded successfully'
   };
 };
+
+
+
+// Planes hardcodeados como fallback cuando la API no está disponible
+const FALLBACK_PLANS: Plan[] = [
+  {
+    id: '1',
+    name: 'STARTER',
+    description: 'Perfect for small businesses',
+    price: 99,
+    currency: 'USD',
+    duration: 'monthly',
+    features: [
+      'No Setup Fees',
+      'No Contracts',
+      '100% Bilingual',
+      '24/7/365 Answering',
+      'Basic Features'
+    ],
+    included_minutes: 50,
+    additional_minute_price: 1.89,
+    active: true
+  },
+  {
+    id: '2',
+    name: 'PRO',
+    description: 'Ideal for growing businesses',
+    price: 199,
+    currency: 'USD',
+    duration: 'monthly',
+    features: [
+      'No Setup Fees',
+      'No Contracts',
+      '100% Bilingual',
+      '24/7/365 Answering',
+      'Advanced Features',
+      'Priority Support'
+    ],
+    included_minutes: 100,
+    additional_minute_price: 1.59,
+    active: true
+  },
+  {
+    id: '3',
+    name: 'BUSINESS',
+    description: 'For established businesses',
+    price: 299,
+    currency: 'USD',
+    duration: 'monthly',
+    features: [
+      'No Setup Fees',
+      'No Contracts',
+      '100% Bilingual',
+      '24/7/365 Answering',
+      'Premium Features',
+      'Priority Support',
+      'Custom Solutions'
+    ],
+    included_minutes: 200,
+    additional_minute_price: 1.29,
+    active: true
+  }
+];
+
+// Los planes ahora se obtienen únicamente desde la API
+// No más datos hardcodeados de fallback
 
 export async function fetchCountries(cancelToken?: CancelTokenSource): Promise<Country[]> {
   try {
@@ -704,15 +782,82 @@ export async function fetchAllPlans(
         message: error.message
       });
       
-      // Si es un 404, el endpoint no existe
+      // Si es un 404, el endpoint no existe - usar fallback
       if (status === 404) {
-        logger.warn(`Plans endpoint not found. This endpoint might not be implemented yet.`);
-        return [];
+        logger.warn(`Plans endpoint not found. Using fallback plans.`);
+        return FALLBACK_PLANS;
       }
     }
     
     logger.error(`Error fetching all plans:`, error);
     throw new Error(`Failed to fetch plans: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+export async function fetchAllPlansWithStripe(
+  cancelToken?: CancelTokenSource
+): Promise<PlanWithStripe[]> {
+  try {
+    logger.info('Fetching all plans with Stripe data');
+    
+    const token = await getClientCredentialsToken();
+    if (!token) {
+      throw new Error('No se pudo obtener el token de autenticación');
+    }
+    
+    const url = '/db/plans';
+    logger.info(`Making request to: ${url}`);
+    
+    const response = await retryRequest(() => 
+      api.get<any>(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        cancelToken: cancelToken?.token,
+      })
+    );
+    
+    logger.info('Raw API response:', response.data);
+    
+    // Tu API devuelve { data: [...], total: X, message: "..." }
+    const plansData = response.data.data || response.data.plans || response.data;
+    
+    if (!Array.isArray(plansData)) {
+      throw new Error('Invalid response format: plans data is not an array');
+    }
+    
+    logger.info(`Processing ${plansData.length} plans from API response`);
+    
+    // Convertir los datos al formato esperado
+    const plans: PlanWithStripe[] = plansData.map((plan: any) => ({
+      id: plan.id,
+      name: plan.name,
+      description: plan.description,
+      price: parseFloat(plan.price) || 0,
+      currency: plan.currency?.code || 'USD',
+      duration: 'monthly',
+      features: plan.features || [],
+      included_minutes: plan.included_minutes || 0,
+      additional_minute_price: parseFloat(plan.additional_minute_price) || 0,
+      active: plan.active !== false,
+      stripe_price_id: plan.stripe_price_id,
+      stripe_product_id: plan.stripe_product_id,
+      created_at: plan.createdAt,
+      updated_at: plan.updatedAt
+    }));
+    
+    // Retornar solo los planes activos
+    const activePlans = plans.filter((plan: PlanWithStripe) => plan.active);
+    
+    logger.info(`Successfully processed ${activePlans.length} active plans`);
+    logger.info('Processed plans:', activePlans.map(p => ({ name: p.name, priceId: p.stripe_price_id })));
+    
+    return activePlans;
+  } catch (error) {
+    logger.error(`Error fetching all plans with Stripe:`, error);
+    throw new Error(`Failed to fetch plans with Stripe: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
@@ -732,6 +877,30 @@ export interface TaxCalculation {
   tax_rate: number;
   total_amount: number;
 }
+
+// --- Tipos para planes de precios ---
+export interface PricingPlan {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  duration: string;
+  features: string[];
+  included_minutes: number;
+  additional_minute_price: number;
+  stripe_price_id?: string;
+  // Propiedades adicionales para compatibilidad
+  minutes?: number;
+  addMinuteRate?: number;
+}
+
+// --- Función de formateo de moneda ---
+export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+  }).format(amount);
+};
 
 export async function calculateTaxWithAPI(
   amount: number,

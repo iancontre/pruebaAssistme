@@ -5,7 +5,7 @@ import Header from '../components/header/Header';
 import WizardContainer from '../components/Wizard/WizardContainer';
 import WizardConfigContainer from '../components/Wizard/WizardConfigContainer';
 import '../components/Wizard/Wizard.css';
-import { PricingPlan } from '../services/taxService';
+import { PricingPlan } from '../services/apiService';
 
 
 

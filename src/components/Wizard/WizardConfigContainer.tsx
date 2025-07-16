@@ -227,7 +227,7 @@ const WizardConfigContainer: React.FC = () => {
     { key: 'overflow', label: 'Call Overflow/Busy' },
     { key: 'virtualReceptionist', label: '24/7 Virtual Receptionist' },
     { key: 'other', label: 'Other' },
-  ].map((opt, idx, arr) => (
+  ].map((opt) => (
     <label key={opt.key} style={{
       display: 'flex', flexDirection: 'row', alignItems: 'center', cursor: 'pointer', gap: 10, width: '100%', height: 48, minWidth: 0, justifyContent: 'flex-start',
     }}>
@@ -656,7 +656,6 @@ const WizardConfigContainer: React.FC = () => {
           { time: '04:30 PM', disabled: false },
         ],
       };
-      type DayKey = keyof typeof availableSlots;
       const phoneNumber = '678-427-1932'; // Mock, puedes traerlo del estado real
 
       return (

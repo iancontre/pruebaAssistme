@@ -1,17 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { PricingPlan } from '../../services/taxService';
+import { PricingPlan } from '../../services/apiService';
 import { fetchCountries, fetchAllStates, fetchAllCities, Country, State, City } from '../../services/apiService';
 import { FaFlag } from 'react-icons/fa';
-
-// Función para convertir código ISO a emoji de bandera
-const getCountryFlag = (isoCode: string): string => {
-  const codePoints = isoCode
-    .toUpperCase()
-    .split('')
-    .map(char => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-};
+// import './BusinessForm.css';
 
 interface BusinessFormProps {
   onValidityChange: (isValid: boolean) => void;

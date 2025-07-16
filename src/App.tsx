@@ -1,10 +1,13 @@
 import AppRoutes from './router/Routes';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 function App() {
   return (
-    <div className="App">
-      <AppRoutes />
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <AppRoutes />
+      </div>
+    </ErrorBoundary>
   );
 }
 

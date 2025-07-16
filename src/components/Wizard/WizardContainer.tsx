@@ -7,7 +7,7 @@ import GetStartedForm from './GetStartedForm';
 import prevIcon from '../../assets/images/icons/prevIcon.png';
 import nexicon from '../../assets/images/icons/nexicon.png';
 import { BsCreditCard } from 'react-icons/bs';
-import { PricingPlan, formatCurrency } from '../../services/taxService';
+import { PricingPlan, formatCurrency } from '../../services/apiService';
 import { calculateTaxWithAPI } from '../../services/apiService';
 import { createCheckoutSession } from '../../services/stripeService';
 import { toast } from 'react-toastify';
@@ -36,7 +36,6 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState(0);
   const [customerData, setCustomerData] = useState<CustomerData | null>(null);
-  const [paymentData, setPaymentData] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [taxCalculation, setTaxCalculation] = useState<any>(null);
   const [loadingTax, setLoadingTax] = useState(false);
@@ -138,18 +137,14 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   };
 
   const handleProceedToPayment = async () => {
-    if (!selectedPlan) {
-      toast.error('No plan selected. Please try again.');
+    if (!customerData || !selectedPlan) {
+      toast.error('Please complete all required information.');
       return;
     }
-    
-    // Si no hay customerData, usar datos por defecto o mostrar error
-    if (!customerData?.email || !customerData?.name) {
-      toast.error('Please complete your profile information first.');
-      return;
-    }
-    
-    console.log('🚀 Proceeding to payment with plan:', {
+
+    console.log('Proceeding to payment with:', {
+      plan: selectedPlan.name,
+      customer: customerData,
       id: selectedPlan.id,
       name: selectedPlan.name,
       price: selectedPlan.price,
@@ -171,15 +166,37 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
       });
     } catch (error) {
       console.error('Payment error:', error);
-      toast.error('Failed to proceed to payment. Please try again.');
+      
+      // Mostrar mensajes de error más específicos
+      let errorMessage = 'Failed to proceed to payment. Please try again.';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('unavailable') || error.message.includes('not active')) {
+          errorMessage = 'This plan is currently unavailable. Please contact support or try a different plan.';
+        } else if (error.message.includes('configuration error')) {
+          errorMessage = 'There was an issue with the payment setup. Please contact support.';
+        } else if (error.message.includes('Payment setup failed')) {
+          errorMessage = error.message;
+        } else if (error.message.includes('Card error')) {
+          errorMessage = 'There was an issue with the payment method. Please try again.';
+        } else if (error.message.includes('Invalid request')) {
+          errorMessage = 'Invalid payment request. Please refresh the page and try again.';
+        }
+      }
+      
+      toast.error(errorMessage);
+      
+              // Si es un error de producto no activo, mostrar información adicional
+        if (error instanceof Error && error.message.includes('not active')) {
+          console.warn('Product not active error detected. Please check Stripe dashboard.');
+          // Opcional: mostrar un modal con información adicional
+          setTimeout(() => {
+            toast.info('If this issue persists, please contact our support team.');
+          }, 2000);
+        }
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  const handlePaymentSuccess = (data: any) => {
-    setPaymentData(data);
-    setCurrentStep(3); // Ir al paso final
   };
 
   // Paso 3: Resumen del plan y botón para ir a pagar
@@ -304,15 +321,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
       case 2:
         return renderSummaryStep();
       case 3:
-        return <GetStartedForm 
-          onValidityChange={() => {}} 
-          paymentData={{
-            plan: selectedPlan,
-            taxAmount: taxCalculation?.tax_amount || 0,
-            total: selectedPlan ? selectedPlan.price + (taxCalculation?.tax_amount || 0) : 0
-          }} 
-          onPaymentSuccess={handlePaymentSuccess} 
-        />;
+        return <GetStartedForm />;
       default:
         return null;
     }
