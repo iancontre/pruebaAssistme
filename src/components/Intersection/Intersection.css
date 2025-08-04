@@ -89,10 +89,9 @@
   position: absolute;
   right: 10px;
   bottom: -19px;
-  filter: brightness(0) invert(1); /* Makes the icon white to match button text */
+  filter: brightness(0) invert(1);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .intersection-container {
     padding: 3rem 1.5rem 0 1.5rem;
@@ -108,11 +107,11 @@
 
   .intersection-text-section {
     padding-left: 0;
-    order: 1; /* Texto aparece primero */
+    order: 1;
   }
 
   .intersection-image-section {
-    order: 2; /* Imagen aparece después */
+    order: 2;
     margin-left: 0;
     margin-top: auto;
     display: flex;
@@ -179,4 +178,4 @@
     padding: 1rem;
     font-size: 0.95rem;
   }
-} 
+}

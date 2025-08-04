@@ -42,6 +42,7 @@
   min-width: 80px;
   margin-left: 2.2rem;
 }
+
 .wizard-step-circles::before {
   content: '';
   position: absolute;
@@ -77,9 +78,11 @@
   margin: 0 auto 4.9rem auto;
   background-clip: padding-box;
 }
+
 .wizard-step-circle:last-child {
   margin-bottom: 0;
 }
+
 .wizard-step-circle.active {
   background: #0F384C;
   color: #fff;
@@ -97,16 +100,19 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
 .wizard-step-label {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 0.2rem;
 }
+
 .wizard-step-title {
   font-weight: bold;
   font-size: 1.1rem;
   letter-spacing: 1px;
 }
+
 .wizard-step-desc {
   font-size: 0.95rem;
   color: #cfd8dc;
@@ -124,6 +130,7 @@
   flex-direction: column;
   align-items: center;
 }
+
 .wizard-step-line {
   width: 4px;
   height: 70px;
@@ -163,12 +170,14 @@
   flex: 1;
   margin-bottom: 1.5rem;
 }
+
 .wizard-form-group label {
   font-size: 1rem;
   font-weight: 500;
   color: #0F384C;
   margin-bottom: 0.5rem;
 }
+
 .wizard-form-group input,
 .wizard-form-group select {
   padding: 0.9rem 1.2rem;
@@ -181,6 +190,7 @@
   outline: none;
   transition: border 0.2s;
 }
+
 .wizard-form-group input:focus,
 .wizard-form-group select:focus {
   border: 1.5px solid #0F384C;
@@ -198,10 +208,9 @@
 }
 
 .wizard-navigation.mobile {
-  display: none; /* Oculto en desktop por defecto */
+  display: none;
 }
 
-/* Estilos para los botones en desktop */
 .wizard-next-btn {
   background-color: #0F384C;
   color: white;
@@ -241,7 +250,6 @@
   box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .wizard-form {
     min-width: 500px;
@@ -249,6 +257,7 @@
     margin-left: 0.5rem;
   }
 }
+
 @media (max-width: 900px) {
   .wizard-main-layout {
     flex-direction: column;
@@ -288,6 +297,7 @@
     gap: 0.5rem;
   }
 }
+
 @media (max-width: 768px) {
   .wizard-main-layout {
     flex-direction: column;
@@ -377,12 +387,10 @@
     height: 42px;
   }
 
-  /* Ocultamos los botones de escritorio */
   .wizard-navigation.desktop {
     display: none;
   }
 
-  /* Mostramos los botones de móvil */
   .wizard-navigation.mobile {
     display: flex;
     justify-content: center;
@@ -392,12 +400,12 @@
     gap: 1rem;
   }
 
-  
   .wizard-navigation.mobile .wizard-next-btn {
     width: 50%;
-    justify-content: center; 
+    justify-content: center;
   }
 }
+
 @media (max-width: 480px) {
   .wizard-sidebar {
     padding: 1rem 0.5rem;
@@ -432,6 +440,7 @@
     height: 38px;
   }
 }
+
 @media screen and (max-width: 430px) {
   .wizard-next-btn {
     width: 92%;
@@ -446,6 +455,7 @@
   box-shadow: 0 4px 18px rgba(15,56,76,0.13), 0 1.5px 6px rgba(0,0,0,0.08);
   font-weight: bold;
 }
+
 .wizard-step-info.active .wizard-step-label,
 .wizard-step-info.active .wizard-step-title,
 .wizard-step-info.active .wizard-step-desc {
@@ -483,7 +493,6 @@
   cursor: pointer;
 }
 
-/* Plan Summary Styles */
 .plan-summary {
   margin-bottom: 2rem;
   padding: 1.5rem;
@@ -557,7 +566,6 @@
   margin: 0.25rem 0;
 }
 
-/* Business Form Layout */
 .business-form-layout {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -572,7 +580,6 @@
   width: 100%;
 }
 
-/* Plan Summary Sidebar */
 .plan-summary-sidebar {
   position: sticky;
   top: 2rem;
@@ -672,7 +679,6 @@
   margin-right: 0.5rem;
 }
 
-/* Responsive Design */
 @media (max-width: 1200px) {
   .business-form-layout {
     padding-right: 1rem;
@@ -794,7 +800,7 @@
 .tax-note p {
   margin: 0;
   line-height: 1.4;
-} 
+}
 
 .wizard-config-textarea {
   padding: 0.9rem 1.2rem;
@@ -810,9 +816,10 @@
   min-height: 48px;
   box-sizing: border-box;
 }
+
 .wizard-config-textarea:focus {
   border: 1.5px solid #0F384C;
-} 
+}
 
 .wizard-form .wizard-config-textarea ~ label,
 .wizard-form-group .wizard-config-label,
@@ -820,23 +827,23 @@
   color: #222 !important;
 }
 
-/* Alternativamente, para asegurar que los labels de los grupos de textarea sean negros solo en el wizard de configuración: */
 .wizard-form-group label {
-  /* por defecto azul */
+  color: #0F384C;
 }
+
 .wizard-form-group .wizard-config-textarea ~ label,
 .wizard-form-group label.wizard-config-label {
   color: #222 !important;
 }
 
-/* Más directo: */
 .wizard-form .wizard-config-textarea {
-  /* para los textareas, pero el label está antes, así que mejor: */
+  color: #222;
 }
+
 .wizard-form-group label.wizard-config-label {
   color: #222 !important;
-} 
+}
 
 .wizard-config-label {
   color: #222 !important;
-} 
+}

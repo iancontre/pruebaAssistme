@@ -1,33 +1,42 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+const API_BASE_URL = 'https://myassist-me.com'
+
+const createProxyConfig = (path: string, rewrite?: (path: string) => string) => ({
+  target: API_BASE_URL,
+  changeOrigin: true,
+  secure: false,
+  ...(rewrite && { rewrite })
+})
+
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true, // permite que otros dispositivos accedan
-    port: 5173, // opcional, pero por claridad
+    host: true,
+    port: 5173,
     proxy: {
-      '/api': {
-        target: 'http://myassist-me.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: false, // para evitar problemas de SSL
-      },
-      '/oauth': {
-        target: 'https://myassist-me.com',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/db': {
-        target: 'https://myassist-me.com',
-        changeOrigin: true,
-        secure: false,
-      },
+      '/api': createProxyConfig('/api', (path) => path.replace(/^\/api/, '')),
+      '/oauth': createProxyConfig('/oauth'),
+      '/db': createProxyConfig('/db'),
     }
   },
   build: {
-    // Generar el build directamente en la carpeta del servidor estático
     outDir: '../../apis/staticSever/dist',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 2000,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
   },
+  css: {
+    postcss: './postcss.config.cjs'
+  },
+  esbuild: {
+    drop: ['console', 'debugger']
+  }
 })

@@ -33,14 +33,12 @@
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
-  margin-left: calc((105% - 1200px)/2 + 2rem); /* Ajuste mágico para alineación */
-  width: calc(330px * 2 + 20px); /
-  
- 
+  margin-left: calc((105% - 1200px)/2 + 2rem);
+  width: calc(330px * 2 + 20px);
 }
 .search-container {
   display: flex;
-  align-items: stretch; /* Asegura que todos los elementos tengan la misma altura */
+  align-items: stretch;
   background: #fff;
   border: 2px solid #ccc;
   border-radius: 15px;
@@ -48,9 +46,8 @@
   max-width: 720px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   overflow: hidden;
-  margin-top: 5%; /* Para que el botón no sobresalga del borde redondeado */
+  margin-top: 5%;
 
- 
 }
 
 .search-bar {
@@ -60,27 +57,27 @@
   padding: 0.75rem;
   font-size: 1rem;
   min-width: 0;
-  border-radius: 13px 0 0 13px; 
+  border-radius: 13px 0 0 13px;
 }
 
 .search-icon {
   font-size: 1.2rem;
   color: #666;
   margin: 0 0.5rem;
-  align-self: center; /* Centra verticalmente el icono */
+  align-self: center;
 }
 
 .search-button {
   background-color: #00303f;
   color: white;
   border: none;
-  padding: 0 2rem; /* Más padding horizontal */
+  padding: 0 2rem;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  border-radius:  15px; /* Redondea solo el lado derecho */
-  margin: 0; 
-  
+  border-radius:  15px;
+  margin: 0;
+
 }
 .container-btn{
   justify-content: center;
@@ -99,7 +96,7 @@
   flex-direction: row;
   gap: 20px;
   width: 70%;
-  justify-content: center; 
+  justify-content: center;
 }
 
 .post-card {
@@ -110,7 +107,7 @@
   display: flex;
   flex-direction: column;
   height: auto;
-  width: 330px; /* ancho reducido pero razonable */
+  width: 330px;
   margin: 1rem;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -127,7 +124,7 @@
   object-fit:cover;
   border-radius: 10px;
   margin: 15px auto 0;
-  
+
 }
 
 .post-content {
@@ -220,9 +217,6 @@
   color: #999;
 }
 
-/* ... tus estilos existentes (sin cambios) ... */
-
-/* General responsive: hasta 1200px (laptops más pequeños) */
 @media (max-width: 1200px) {
   .search-container {
     width: 80%;
@@ -234,7 +228,6 @@
   }
 }
 
-/* Tablets y laptops pequeños (≤ 992px) */
 @media (max-width: 992px) {
   .blog-content-layout {
     flex-direction: column;
@@ -288,7 +281,6 @@
   }
 }
 
-/* Móviles (≤ 768px) */
 @media (max-width: 768px) {
   .title {
     font-size: 1.8rem;
@@ -357,7 +349,6 @@
   }
 }
 
-/* Móviles pequeños (≤ 576px) */
 @media (max-width: 576px) {
   .title {
     font-size: 1.6rem;
