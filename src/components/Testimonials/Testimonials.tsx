@@ -137,7 +137,7 @@ const Testimonials: React.FC = () => {
               className="linea-fondo-bg"
             />
           </div>
-          <p className="testimonials-subtitle">Discover why businesses choose Assist-Me for their virtual assistant needs</p>
+          <p className="testimonials-subtitle">testimonial</p>
           <h2 className="testimonials-title">What Our Clients Say</h2>
         </div>
 
