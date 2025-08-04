@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+
 import './FrequentlyAskedQuestions.css';
 
 interface FAQ {
@@ -8,60 +10,51 @@ interface FAQ {
   answer: string;
 }
 
-const faqData: FAQ[] = [
+const getFaqData = (): FAQ[] => [
   {
     id: 1,
     question: "What types of calls can your virtual assistants handle?",
-    answer: `Our virtual assistants are equipped to handle a wide variety of calls, including but not limited to:
-
-• Customer service inquiries
-• Order and appointment scheduling
-• Lead generation and follow-up
-• Technical support and troubleshooting
-• General inquiries and information requests
-• Emergency or after-hours calls
-
-We can adapt to any specific needs or industry requirements, ensuring that every call is handled professionally and efficiently, based on your business goals.`
+    answer: "Our virtual assistants are trained to handle a wide variety of calls, including but not limited to: • Customer service inquiries • Order scheduling and appointments • Lead generation and follow-up • Technical support and troubleshooting • General inquiries and information requests • Emergency or after-hours calls We can adapt to any specific need or industry requirement, ensuring that each call is handled professionally and efficiently, according to your business objectives."
   },
   {
     id: 2,
     question: "Do you offer follow-up service to potential clients?",
-    answer: "Yes, ASSIST-ME provides follow-up services to potential clients. Our virtual assistants can handle tasks such as scheduling follow-up calls, sending reminder emails, and ensuring that no lead is forgotten, all while maintaining a professional and personalized approach."
+    answer: "Yes, ASSIST-ME provides follow-up services to potential clients. Our virtual assistants can handle tasks such as scheduling follow-up calls, sending reminder emails, and ensuring no prospect is forgotten, all with a professional and personalized approach."
   },
   {
     id: 3,
-    question: "Can Assist-Me Customer Service associates respond to emails and messages in addition to calls?",
-    answer: "Absolutely. Our team is trained to handle not only calls but also emails and instant messages. We ensure that all forms of communication are managed efficiently, offering a seamless experience for your clients across multiple channels."
+    question: "Can Assist-Me's customer service team respond to emails and messages in addition to calls?",
+    answer: "Absolutely. Our team is trained to manage not only calls but also emails and instant messages. We ensure all forms of communication are handled efficiently, offering a seamless experience for your clients across multiple channels."
   },
   {
     id: 4,
-    question: "Is the service available 24/7 or only during specific times?",
-    answer: "ASSIST-ME offers 24/7 availability, meaning we are always ready to support your business, whether it's during regular business hours or outside of them. Our service can also be customized to meet your specific scheduling needs, ensuring coverage when it matters most."
+    question: "Is the service available 24/7 or only during specific hours?",
+    answer: "ASSIST-ME offers 24/7 availability, meaning we are always ready to support your business, whether during business hours or after. Our service can also be customized to fit your scheduling needs, ensuring coverage when you need it most."
   },
   {
     id: 5,
-    question: "Do the virtual assistants speak English and Spanish?",
-    answer: "Yes, our virtual assistants are bilingual in both English and Spanish, providing effective and professional communication with a diverse range of clients. We ensure that language is never a barrier to delivering top-quality service."
+    question: "Do virtual assistants speak English and Spanish?",
+    answer: "Yes, our virtual assistants are bilingual in English and Spanish, allowing for effective and professional communication with a wide variety of clients. We ensure that language is never a barrier to providing high-quality service."
   },
   {
     id: 6,
-    question: "How does Assist-Me handle high call volumes for its customers?",
-    answer: "ASSIST-ME utilizes a robust system designed to manage high call volumes without compromising service quality. Our team is equipped to handle an influx of calls, ensuring each one is answered promptly and efficiently. We can scale our resources to match demand, ensuring no call goes unanswered."
+    question: "How does Assist-Me handle a high volume of calls from its clients?",
+    answer: "ASSIST-ME uses a robust system designed to manage high volumes of calls without compromising service quality. Our team is prepared to handle a large flow of calls, ensuring each one is answered quickly and efficiently. We can scale our resources according to demand, ensuring no call goes unanswered."
   },
   {
     id: 7,
-    question: "Do you charge per call or is there a fixed monthly fee?",
-    answer: "At ASSIST-ME, we offer flexible pricing models to suit your needs. You can choose between a fixed monthly fee for comprehensive service or a per-call pricing option, depending on the level of support required. Our goal is to provide cost-effective solutions tailored to your business."
+    question: "Do you charge per call or have a fixed monthly fee?",
+    answer: "At ASSIST-ME, we offer flexible pricing models that adjust to your needs. You can choose between a fixed monthly fee for comprehensive service or a pay-per-call model, depending on the level of support required. Our goal is to provide you with cost-effective solutions tailored to your business."
   },
   {
     id: 8,
-    question: "Can I customize attendee scripts and responses?",
-    answer: "Yes, we allow you to fully customize the scripts and responses our virtual assistants use when handling calls, messages, or emails. This ensures that the communication aligns perfectly with your brand's voice and meets your specific business requirements."
+    question: "Can I customize the scripts and responses of the assistants?",
+    answer: "Yes, we allow you to fully customize the scripts and responses used by our virtual assistants when handling calls, messages, or emails. This ensures that communication is perfectly aligned with your brand's voice and meets your specific requirements."
   },
   {
     id: 9,
-    question: "How can I forward calls to my phone?",
-    answer: "Forwarding calls to your phone is simple with ASSIST-ME. We provide easy-to-follow instructions and support to ensure calls are seamlessly redirected to your phone, allowing you to stay connected with your clients whenever you need, no matter where you are."
+    question: "How can I divert calls to my phone?",
+    answer: "Diverting calls to your phone is simple with ASSIST-ME. We provide clear instructions and support to ensure calls are seamlessly redirected to your phone, allowing you to stay connected with your clients when you need to, wherever you are."
   }
 ];
 
@@ -124,7 +117,7 @@ const FrequentlyAskedQuestions: React.FC = () => {
           </motion.h2>
           
           <div className="faq-list">
-            {faqData.map((faq, index) => (
+            {getFaqData().map((faq, index) => (
               <motion.div 
                 key={faq.id} 
                 className="faq-item"
@@ -177,9 +170,9 @@ const FrequentlyAskedQuestions: React.FC = () => {
                 <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="#0F384C"/>
               </svg>
             </div>
-            <h3>Do you have more questions?</h3>
-            <p>End-to-end payments and financial management in a single solution. Meet the right platform to help realize.</p>
-            <button className="contact-btn" onClick={() => {
+                         <h3>Do you have more questions?</h3>
+             <p>Comprehensive payments and financial management in a single solution. Discover the ideal platform to achieve it.</p>
+             <button className="contact-btn" onClick={() => {
               if (window.location.pathname === '/') {
                 const el = document.getElementById('contact');
                 if (el) {
@@ -189,7 +182,7 @@ const FrequentlyAskedQuestions: React.FC = () => {
                 localStorage.setItem('scrollToSection', 'contact');
                 window.location.href = '/';
               }
-            }}>Contact me</button>
+                         }}>Contact me</button>
           </div>
         </motion.div>
       </div>

@@ -1,10 +1,17 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError, CancelTokenSource } from 'axios';
+import { 
+  setJWTToken, 
+  getJWTToken as getJWTTokenFromCookie, 
+  removeJWTToken, 
+  isAuthenticated as isAuthenticatedCookie,
+  getUserInfoFromToken,
+  setJWTRefreshToken
+} from '../utils/cookieUtils';
 
 // Configuración para desarrollo vs producción
 const isDevelopment = import.meta.env.DEV;
 
-// En desarrollo usamos rutas relativas para que funcione el proxy de Vite
-// En producción usamos la URL completa
+
 const API_BASE_URL = isDevelopment ? '' : 'https://myassist-me.com';
 
 // Configuración de retry
@@ -41,6 +48,22 @@ export interface AuthResponse {
   refresh_token?: string;
   expires_in?: number;
 }
+
+// Función para guardar información del usuario en localStorage (solo para datos no sensibles)
+const setUserInfo = (userInfo: any): void => {
+  try {
+    // Solo guardamos información no sensible
+    const safeUserInfo = {
+      id: userInfo.id,
+      email: userInfo.email,
+      full_name: userInfo.full_name,
+      role: userInfo.role
+    };
+    localStorage.setItem('user_info', JSON.stringify(safeUserInfo));
+  } catch (error) {
+    logger.error('Error saving user info:', error);
+  }
+};
 
 // Función de retry con delay exponencial
 const retryRequest = async <T>(
@@ -95,7 +118,7 @@ export async function getClientCredentialsToken(): Promise<string | null> {
     );
     
     const accessToken = response.data.access_token;
-    const expiresIn = response.data.expires_in || 3600; // segundos
+    const expiresIn = response.data.expires_in || 3600; 
     
     // Validar que el token existe
     if (!accessToken) {
@@ -456,69 +479,9 @@ const validatePlansResponse = (data: any): PlansResponse => {
 
 
 
-// Planes hardcodeados como fallback cuando la API no está disponible
-const FALLBACK_PLANS: Plan[] = [
-  {
-    id: '1',
-    name: 'STARTER',
-    description: 'Perfect for small businesses',
-    price: 99,
-    currency: 'USD',
-    duration: 'monthly',
-    features: [
-      'No Setup Fees',
-      'No Contracts',
-      '100% Bilingual',
-      '24/7/365 Answering',
-      'Basic Features'
-    ],
-    included_minutes: 50,
-    additional_minute_price: 1.89,
-    active: true
-  },
-  {
-    id: '2',
-    name: 'PRO',
-    description: 'Ideal for growing businesses',
-    price: 199,
-    currency: 'USD',
-    duration: 'monthly',
-    features: [
-      'No Setup Fees',
-      'No Contracts',
-      '100% Bilingual',
-      '24/7/365 Answering',
-      'Advanced Features',
-      'Priority Support'
-    ],
-    included_minutes: 100,
-    additional_minute_price: 1.59,
-    active: true
-  },
-  {
-    id: '3',
-    name: 'BUSINESS',
-    description: 'For established businesses',
-    price: 299,
-    currency: 'USD',
-    duration: 'monthly',
-    features: [
-      'No Setup Fees',
-      'No Contracts',
-      '100% Bilingual',
-      '24/7/365 Answering',
-      'Premium Features',
-      'Priority Support',
-      'Custom Solutions'
-    ],
-    included_minutes: 200,
-    additional_minute_price: 1.29,
-    active: true
-  }
-];
 
-// Los planes ahora se obtienen únicamente desde la API
-// No más datos hardcodeados de fallback
+
+
 
 export async function fetchCountries(cancelToken?: CancelTokenSource): Promise<Country[]> {
   try {
@@ -625,6 +588,7 @@ export async function fetchAllStates(
         data,
         message: error.message
       });
+      // prueba
       
       // Si es un 404, el endpoint no existe
       if (status === 404) {
@@ -782,10 +746,10 @@ export async function fetchAllPlans(
         message: error.message
       });
       
-      // Si es un 404, el endpoint no existe - usar fallback
+      // Si es un 404, el endpoint no existe
       if (status === 404) {
-        logger.warn(`Plans endpoint not found. Using fallback plans.`);
-        return FALLBACK_PLANS;
+        logger.warn(`Plans endpoint not found. This endpoint might not be implemented yet.`);
+        throw new Error('Plans endpoint not available');
       }
     }
     
@@ -946,5 +910,383 @@ export async function calculateTaxWithAPI(
     };
   }
 }
+
+// --- Suscripciones Stripe ---
+export interface SubscriptionPayload {
+  session_id: string;
+  [key: string]: any;
+}
+
+export async function createSubscriptionFromSession(data: SubscriptionPayload) {
+  const response = await api.post('/db/stripe/create-subscription-from-session', data);
+  return response.data;
+}
+
+export async function fetchActiveRole() {
+  try {
+    const token = await getValidToken();
+    const response = await api.get('/db/roles/active', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data.role_id;
+  } catch (error) {
+    logger.error('Error fetching active role:', error);
+    throw error;
+  }
+}
+
+// --- JWT Login ---
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success?: boolean;
+  message: string;
+  token?: string;
+  access_token?: string;
+  accessToken?: string;
+  user?: {
+    id: string;
+    email: string;
+    full_name: string;
+    role: string;
+  };
+  error?: string;
+}
+
+export async function loginWithJWT(credentials: LoginCredentials): Promise<LoginResponse> {
+  try {
+    logger.info('Attempting JWT login');
+    
+    const response = await api.post<LoginResponse>('/oauth/auth/user/login', credentials);
+    
+    // Log detallado de la respuesta para debugging
+    logger.info('Backend response:', response.data);
+    
+    // Verificar diferentes estructuras de respuesta posibles
+    const responseData = response.data;
+    
+    // Caso 1: Estructura esperada con success y token
+    if (responseData.success && responseData.token) {
+      setJWTToken(responseData.token);
+      // Solo establecer refresh token si existe
+      if ('refresh_token' in responseData && responseData.refresh_token && typeof responseData.refresh_token === 'string') {
+        setJWTRefreshToken(responseData.refresh_token);
+      }
+      
+      if (responseData.user) {
+        setUserInfo(responseData.user);
+      }
+      
+      logger.info('JWT login successful');
+      return responseData;
+    }
+    
+    // Caso 2: Si el mensaje indica éxito pero no hay success flag
+    if (responseData.message && responseData.message.toLowerCase().includes('successful')) {
+      // Buscar token en diferentes propiedades posibles
+      const token = responseData.token || responseData.access_token || responseData.accessToken;
+      
+      if (token) {
+        setJWTToken(token);
+        // Solo establecer refresh token si existe
+        if ('refresh_token' in responseData && responseData.refresh_token && typeof responseData.refresh_token === 'string') {
+          setJWTRefreshToken(responseData.refresh_token);
+        }
+        
+        if (responseData.user) {
+          setUserInfo(responseData.user);
+        }
+        
+        logger.info('JWT login successful (alternative structure)');
+        return {
+          success: true,
+          message: responseData.message,
+          token: token,
+          user: responseData.user
+        };
+      }
+    }
+    
+    // Caso 3: Si hay token pero no success flag
+    const token = responseData.token || responseData.access_token || responseData.accessToken;
+    if (token) {
+      setJWTToken(token);
+      // Solo establecer refresh token si existe
+      if ('refresh_token' in responseData && responseData.refresh_token && typeof responseData.refresh_token === 'string') {
+        setJWTRefreshToken(responseData.refresh_token);
+      }
+      
+      if (responseData.user) {
+        setUserInfo(responseData.user);
+      }
+      
+      logger.info('JWT login successful (token found)');
+      return {
+        success: true,
+        message: responseData.message || 'Login successful',
+        token: token,
+        user: responseData.user
+      };
+    }
+    
+    // Si no se encontró token, considerar como error
+    logger.error('JWT login failed: No token found in response');
+    return {
+      success: false,
+      message: responseData.message || 'Login failed - no token received',
+      error: 'No token found'
+    };
+    
+  } catch (error) {
+    logger.error('JWT login error:', error);
+    
+    if (axios.isAxiosError(error)) {
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Login failed';
+      return {
+        success: false,
+        message: errorMessage,
+        error: errorMessage
+      };
+    }
+    
+    return {
+      success: false,
+      message: 'Network error occurred',
+      error: 'Network error'
+    };
+  }
+}
+
+// Función para verificar si el usuario está autenticado
+export const isAuthenticated = (): boolean => {
+  return isAuthenticatedCookie();
+};
+
+// Función para obtener el token JWT
+export const getJWTToken = (): string | null => {
+  return getJWTTokenFromCookie();
+};
+
+// Función para cerrar sesión
+export const logout = (): void => {
+  removeJWTToken();
+  // Limpiar información del usuario del localStorage
+  localStorage.removeItem('user_info');
+};
+
+// Función para obtener información del usuario
+export const getUserInfo = () => {
+  // Primero intentar obtener del token JWT
+  const userFromToken = getUserInfoFromToken();
+  if (userFromToken) {
+    return userFromToken;
+  }
+  
+  // Fallback: obtener del localStorage
+  try {
+    const userInfo = localStorage.getItem('user_info');
+    return userInfo ? JSON.parse(userInfo) : null;
+  } catch (error) {
+    logger.error('Error getting user info from localStorage:', error);
+    return null;
+  }
+};
+
+// Interfaces para los datos de llamadas
+export interface CallData {
+  date: string;
+  calls: number;
+  minutes: number;
+  average_duration: number;
+}
+
+export interface CallSummaryResponse {
+  chart_data: CallData[];
+  total_calls?: number;
+  total_minutes?: number;
+  average_duration?: number;
+}
+
+// Función para obtener el resumen de llamadas
+export async function fetchCallSummary(
+  userId: string,
+  startDate: string,
+  endDate: string
+): Promise<CallSummaryResponse> {
+  try {
+    // Usar el token JWT del usuario en lugar del token de client_credentials
+    const jwtToken = getJWTToken();
+    if (!jwtToken) {
+      throw new Error('No JWT token available. Please log in again.');
+    }
+
+    // Verificar si el token JWT es válido
+    if (!isAuthenticated()) {
+      throw new Error('JWT token has expired. Please log in again.');
+    }
+
+    const response = await retryRequest(() =>
+      api.get<CallSummaryResponse>(`/db/call-usage/summary/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`,
+          'Content-Type': 'application/json',
+        },
+        params: {
+          startDate,
+          endDate
+        }
+      })
+    );
+
+    logger.info('Call summary fetched successfully');
+    return response.data;
+  } catch (error) {
+    logger.error('Error fetching call summary:', error);
+    throw error;
+  }
+}
+
+// Interfaces para los datos de llamadas por cliente
+export interface ClientCallData {
+  cliente_numeroid: string;
+  cliente_nombre: string;
+  llamadas_del_dia: number;
+  minutos_totales_dia: number;
+  duracion_promedio_minutos: number;
+  primera_llamada_dia: string;
+  ultima_llamada_dia: string;
+  fecha?: string; // Agregado para compatibilidad con el componente
+}
+
+export interface DailySummary {
+  fecha: string;
+  total_clientes_unicos: number;
+  total_llamadas_dia: number;
+  minutos_totales_dia: number;
+  clientes: ClientCallData[];
+}
+
+export interface ClientCallResponse {
+  periodo: {
+    fecha_inicio: string;
+    fecha_fin: string;
+  };
+  resumen_diario: DailySummary[];
+}
+
+// Función para obtener datos de clientes por día
+export async function fetchClientCallsByDay(
+  userId: string,
+  startDate: string,
+  endDate: string
+): Promise<ClientCallResponse> {
+  try {
+    // Usar el token JWT del usuario
+    const jwtToken = getJWTToken();
+    if (!jwtToken) {
+      throw new Error('No JWT token available. Please log in again.');
+    }
+
+    // Verificar si el token JWT es válido
+    if (!isAuthenticated()) {
+      throw new Error('JWT token has expired. Please log in again.');
+    }
+
+    const response = await retryRequest(() =>
+      api.get<ClientCallResponse>(`/db/call-usage/clients/by-day`, {
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`,
+          'Content-Type': 'application/json',
+        },
+        params: {
+          startDate,
+          endDate,
+          userId
+        }
+      })
+    );
+
+    logger.info('Client calls by day fetched successfully');
+    return response.data;
+  } catch (error) {
+    logger.error('Error fetching client calls by day:', error);
+    throw error;
+  }
+}
+
+// Interfaces para las llamadas
+export interface CallRecord {
+  cliente_nombre: string;
+  duracion_segundos: number;
+  duracion_minutos: number;
+  fecha_llamada: string;
+  tipificacion: string;
+  tipificacion_nivel1: string;
+  tipificacion_nivel2: string;
+  tipificacion_nivel3: string;
+  observaciones: string;
+  prioridad: string;
+  es_transferencia: boolean;
+  agente: string;
+  telefono_cliente: string;
+  email_cliente: string;
+  fecha_actualizacion: string;
+}
+
+export interface CallRecordsResponse {
+  calls: CallRecord[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+// Función para obtener las llamadas con paginación
+export const fetchCallRecords = async (
+  userId: string, 
+  startDate: string, 
+  endDate: string, 
+  page: number = 1, 
+  limit: number = 50
+): Promise<CallRecordsResponse> => {
+  try {
+    console.log('Fetching call records with params:', { userId, startDate, endDate, page, limit });
+    
+    // Usar el token JWT del usuario en lugar del token de client_credentials
+    const jwtToken = getJWTToken();
+    if (!jwtToken) {
+      throw new Error('No JWT token available. Please log in again.');
+    }
+
+    // Verificar si el token JWT es válido
+    if (!isAuthenticated()) {
+      throw new Error('JWT token has expired. Please log in again.');
+    }
+
+    const response = await retryRequest(() =>
+      api.get<CallRecordsResponse>(`/db/call-usage/calls/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`,
+          'Content-Type': 'application/json',
+        },
+        params: {
+          startDate,
+          endDate,
+          page,
+          limit
+        }
+      })
+    );
+
+    console.log('Call records response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching call records:', error);
+    throw error;
+  }
+};
 
 export default api; 

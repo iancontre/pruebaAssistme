@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useFormValidation } from '../../hooks/useFormValidation';
 
 interface ProfileFormProps {
   onValidityChange: (isValid: boolean) => void;
@@ -8,7 +9,39 @@ interface ProfileFormProps {
 }
 
 const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChange, onValid }) => {
-  const [fields, setFields] = useState({
+  const [submitted, setSubmitted] = useState(false);
+
+  // Configuración de validación
+  const fieldTypes = {
+    fullName: 'name',
+    lastName: 'name',
+    companyName: 'company',
+    officeNumber: 'phone',
+    email: 'email',
+    industry: 'select',
+    heardAbout: 'select'
+  };
+
+  const additionalData = {
+    fullName: { fieldName: 'Full name' },
+    lastName: { fieldName: 'Last name' },
+    companyName: { fieldName: 'Company name' },
+    officeNumber: { fieldName: 'Office number' },
+    email: { fieldName: 'Email' },
+    industry: { fieldName: 'Industry' },
+    heardAbout: { fieldName: 'How did you hear about us' }
+  };
+
+  const {
+    fields,
+    errors,
+    isValid,
+    touched,
+    handleChange,
+    handleBlur,
+    validateForm
+  } = useFormValidation({
+    initialFields: {
     fullName: '',
     lastName: '',
     companyName: '',
@@ -16,25 +49,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     email: '',
     industry: '',
     heardAbout: '',
+    },
+    fieldTypes,
+    additionalData,
+    validateOnChange: true,
+    validateOnBlur: true
   });
-
-  const [errors, setErrors] = useState({
-    fullName: false,
-    lastName: false,
-    companyName: false,
-    officeNumber: false,
-    email: false,
-    industry: false,
-    heardAbout: false,
-  });
-
-  const [submitted, setSubmitted] = useState(false);
-
-  const isValid = Object.values(fields).every((v) => v.trim() !== '');
 
   useEffect(() => {
     onValidityChange(isValid);
-    
     // Pasar datos al componente padre cuando el formulario sea válido
     if (isValid && onDataChange) {
       onDataChange({
@@ -45,36 +68,6 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     }
   }, [isValid, onValidityChange, onDataChange, fields.fullName, fields.lastName, fields.email, fields.industry]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFields({ ...fields, [name]: value });
-    setErrors({ ...errors, [name]: false });
-  };
-
-  const validateField = (value: string) => {
-    return value.trim() === '';
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setErrors({ ...errors, [name]: validateField(value) });
-  };
-
-  const validateForm = () => {
-    const newErrors = {
-      fullName: validateField(fields.fullName),
-      lastName: validateField(fields.lastName),
-      companyName: validateField(fields.companyName),
-      officeNumber: validateField(fields.officeNumber),
-      email: validateField(fields.email),
-      industry: validateField(fields.industry),
-      heardAbout: validateField(fields.heardAbout),
-    };
-    setErrors(newErrors);
-    const hasErrors = Object.values(newErrors).some(error => error);
-    return !hasErrors;
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
@@ -82,6 +75,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     if (valid && onValid) {
       onValid();
     }
+    // No bloquees el avance si es válido
+    return valid;
   };
 
   useEffect(() => {
@@ -112,7 +107,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
       form.addEventListener('submit', submitHandler);
       return () => form.removeEventListener('submit', submitHandler);
     }
-  }, [fields]);
+  }, [fields, validateForm]);
+
+  const getFieldClassName = (fieldName: string) => {
+    const hasError = (touched[fieldName] || submitted) && errors[fieldName];
+    const isValid = touched[fieldName] && !errors[fieldName] && fields[fieldName];
+    if (hasError) return 'error';
+    if (isValid) return 'valid';
+    return '';
+  };
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
@@ -128,9 +131,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
                 value={fields.fullName} 
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.fullName && submitted ? 'error' : ''}
+                className={getFieldClassName('fullName')}
+                placeholder="Enter your full name"
               />
-              {errors.fullName && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Full name is required</span>}
+              {(touched.fullName || submitted) && errors.fullName && (
+                <span className="error-message" style={{ color: '#d32f2f' }}>{errors.fullName}</span>
+              )}
             </div>
             <div className="wizard-form-group">
               <label>Last Name</label>
@@ -140,9 +146,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
                 value={fields.lastName} 
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={errors.lastName && submitted ? 'error' : ''}
+                className={getFieldClassName('lastName')}
+                placeholder="Enter your last name"
               />
-              {errors.lastName && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Last name is required</span>}
+              {(touched.lastName || submitted) && errors.lastName && (
+                <span className="error-message" style={{ color: '#d32f2f' }}>{errors.lastName}</span>
+              )}
             </div>
           </div>
           <div className="wizard-form-group">
@@ -153,21 +162,27 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               value={fields.companyName} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.companyName && submitted ? 'error' : ''}
+              className={getFieldClassName('companyName')}
+              placeholder="Enter your company name"
             />
-            {errors.companyName && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Company name is required</span>}
+            {(touched.companyName || submitted) && errors.companyName && (
+              <span className="error-message" style={{ color: '#d32f2f' }}>{errors.companyName}</span>
+            )}
           </div>
           <div className="wizard-form-group">
             <label>Office Number</label>
             <input 
               name="officeNumber" 
-              type="text" 
+              type="tel"
               value={fields.officeNumber} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.officeNumber && submitted ? 'error' : ''}
+              className={getFieldClassName('officeNumber')}
+              placeholder="Enter your office phone number"
             />
-            {errors.officeNumber && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Office number is required</span>}
+            {(touched.officeNumber || submitted) && errors.officeNumber && (
+              <span className="error-message" style={{ color: '#d32f2f' }}>{errors.officeNumber}</span>
+            )}
           </div>
           <div className="wizard-form-group">
             <label>Email</label>
@@ -177,9 +192,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               value={fields.email} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.email && submitted ? 'error' : ''}
+              className={getFieldClassName('email')}
+              placeholder="Enter your email address"
             />
-            {errors.email && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Email is required</span>}
+            {(touched.email || submitted) && errors.email && (
+              <span className="error-message" style={{ color: '#d32f2f' }}>{errors.email}</span>
+            )}
           </div>
           <div className="wizard-form-group">
             <label>Industry</label>
@@ -188,7 +206,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               value={fields.industry} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.industry && submitted ? 'error' : ''}
+              className={getFieldClassName('industry')}
             >
               <option value="">Select an industry</option>
               <option value="Finance">Finance</option>
@@ -201,7 +219,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               <option value="Consulting">Consulting</option>
               <option value="Other">Other</option>
             </select>
-            {errors.industry && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>Industry is required</span>}
+            {(touched.industry || submitted) && errors.industry && (
+              <span className="error-message" style={{ color: '#d32f2f' }}>{errors.industry}</span>
+            )}
           </div>
           <div className="wizard-form-group">
             <label>How did you hear about us?</label>
@@ -210,7 +230,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               value={fields.heardAbout} 
               onChange={handleChange}
               onBlur={handleBlur}
-              className={errors.heardAbout && submitted ? 'error' : ''}
+              className={getFieldClassName('heardAbout')}
             >
               <option value="">Select an option</option>
               <option value="Google">Google</option>
@@ -219,7 +239,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               <option value="Advertisement">Advertisement</option>
               <option value="Other">Other</option>
             </select>
-            {errors.heardAbout && submitted && <span className="error-message" style={{ color: '#d32f2f' }}>This field is required</span>}
+            {(touched.heardAbout || submitted) && errors.heardAbout && (
+              <span className="error-message" style={{ color: '#d32f2f' }}>{errors.heardAbout}</span>
+            )}
           </div>
           <button type="submit" style={{display: 'none'}} tabIndex={-1}>Submit</button>
         </form>

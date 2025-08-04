@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+
 import './Intersection.css';
 import imagenIntersection from "../../assets/images/imageintersection.png";
 import userinterfaceIcon from "../../assets/images/icons/userinterface.png";
@@ -71,8 +72,7 @@ const Intersection: React.FC = () => {
           variants={slideInRight}
         >
           <h2 className="intersection-title">
-            Still Don't Know Our<br />
-            Pricing And Plans?
+            Still Don't Know Our Pricing And Plans?
           </h2>
           
           <motion.button 

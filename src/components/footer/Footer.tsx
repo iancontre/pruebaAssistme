@@ -1,4 +1,5 @@
 import React from 'react';
+
 import './Footer.css';
 import { FaFacebook, FaInstagram, FaLinkedin, FaPhone } from 'react-icons/fa';
 import assistMeLogoBackground from '../../assets/images/logowhite.png'; 

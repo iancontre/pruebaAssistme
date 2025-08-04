@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from 'framer-motion';
+
 import './Choose.css';
 import imageChoose from '../../assets/images/imagechoose.png';
 
@@ -46,14 +47,11 @@ const Choose: React.FC = () => {
           <h1 className='tittle-choose'>Why choose us ?</h1>
           
           <ul>
-          <p>Value Proposition </p>
-            <li>We offer personalized attention to incoming calls through our specialized
-            advisors.</li>
+          <p>Value Proposition</p>
+            <li>We offer personalized attention to incoming calls through our specialized advisors.</li>
             <li>We answer 100% of the calls received by our clients.</li>
-            <li>We deliver excellence in service quality, as well as the tools provided to our clients
-                 (web portal, customized reports, and client satisfaction follow-ups).</li>
-            <li>We collect caller information to build a call history, avoiding the need to request 
-                the same details again—saving time and improving the caller experience on future interactions with Assist-Me.</li>
+            <li>We deliver excellence in service quality, as well as the tools provided to our clients (web portal, customized reports, and client satisfaction follow-ups).</li>
+            <li>We collect caller information to build a call history, avoiding the need to request the same details again—saving time and improving the caller experience on future interactions with Assist-Me.</li>
             <li>A dedicated account manager is assigned to VIP clients who pay an additional fee for this premium service.</li>
           </ul>
         </motion.div>

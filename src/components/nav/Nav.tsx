@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import './Nav.css';
 import logoNegro from '../../assets/images/LogoNegro.PNG';
 
+
 const CustomNav = () => {
+  const [currentLanguage, setCurrentLanguage] = useState('en');
   useEffect(() => {
     // Revisar si hay una sección pendiente de scroll cuando se carga la página
     const sectionToScroll = localStorage.getItem('scrollToSection');
@@ -68,7 +70,7 @@ const CustomNav = () => {
 
             <NavDropdown title="About us" id="about-dropdown" className="menu-item styled-dropdown-item">
               <NavDropdown.Item onClick={() => handleSectionNavigation('about')}>
-                <i className="bi bi-chevron-right"></i> About Us
+                <i className="bi bi-chevron-right"></i> About us
               </NavDropdown.Item>
               <NavDropdown.Item onClick={() => handleSectionNavigation('mission')}>
                 <i className="bi bi-chevron-right"></i> Our Mission
@@ -85,26 +87,26 @@ const CustomNav = () => {
 
             <NavDropdown title="Services" id="services-dropdown" className="menu-item styled-dropdown-item">
               <NavDropdown.Item href="/faqs">
-                <i className="bi bi-chevron-right"></i> FAQ'S and Testimonials
+                <i className="bi bi-chevron-right"></i> FAQs & Testimonials
               </NavDropdown.Item>
               <NavDropdown.Item href="/customerService">
                 <i className="bi bi-chevron-right"></i> Customer Service
               </NavDropdown.Item>
               <NavDropdown.Item onClick={() => handleSectionNavigation('pricing')}>
-                <i className="bi bi-chevron-right"></i> Pricing and Plans
+                <i className="bi bi-chevron-right"></i> Pricing & Plans
               </NavDropdown.Item>
             </NavDropdown>
 
             <Nav.Link href="/#tutorials" className="menu-item">Tutorials</Nav.Link>
 
-            <NavDropdown title={<span>🌐 En</span>} id="lang-dropdown" className="menu-item styled-dropdown-item">
-              <NavDropdown.Item href="#en">
+            <NavDropdown title={<span>🌐 {currentLanguage === 'en' ? 'En' : 'Es'}</span>} id="lang-dropdown" className="menu-item styled-dropdown-item">
+              <NavDropdown.Item onClick={() => setCurrentLanguage('en')}>
                 <i className="bi bi-chevron-right"></i> 
                 <span className="flag-icon flag-us"> </span> English
               </NavDropdown.Item>
-              <NavDropdown.Item href="#es">
+              <NavDropdown.Item onClick={() => setCurrentLanguage('es')}>
                 <i className="bi bi-chevron-right"></i> 
-                <span className="flag-icon flag-co"> </span> Español
+                <span className="flag-icon flag-mx"> </span> Español
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>

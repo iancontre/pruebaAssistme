@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import LocationSelector from './LocationSelector';
 import './LocationExample.css';
 
@@ -58,13 +59,13 @@ const LocationExample: React.FC = () => {
             </div>
           ) : (
             <div className="no-selection">
-              <span>No location selected yet</span>
+              <span>No location selected</span>
             </div>
           )}
         </div>
 
         <div className="features-section">
-          <h3>✨ Features</h3>
+          <h3>Features</h3>
           <ul className="features-list">
             <li>✅ Dynamic loading of states based on country selection</li>
             <li>✅ Automatic token management with OAuth2</li>
@@ -78,7 +79,7 @@ const LocationExample: React.FC = () => {
         </div>
 
         <div className="api-info">
-          <h3>🔗 API Endpoints Used</h3>
+          <h3>API Endpoints</h3>
           <div className="endpoint-list">
             <div className="endpoint">
               <strong>Countries:</strong> <code>/db/countries-intelligent/countries</code>

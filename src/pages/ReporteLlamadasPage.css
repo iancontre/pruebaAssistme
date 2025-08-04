@@ -1,0 +1,104 @@
+/* Importar fuente Michroma */
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+
+/* Estilos específicos para la página de reporte de llamadas */
+html.reporte-llamadas-page {
+  background: #808080 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+body.reporte-llamadas-page {
+  background: #808080 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+/* Forzar el color en el root también */
+body.reporte-llamadas-page #root {
+  background: #808080 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+/* Reglas globales para evitar scroll horizontal */
+html.reporte-llamadas-page * {
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
+body.reporte-llamadas-page * {
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+}
+
+/* Layout principal del reporte */
+.reporte-layout {
+  display: flex;
+  min-height: 100vh;
+  height: 100vh;
+  background: #808080 !important;
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  z-index: 1;
+}
+
+/* Área principal del reporte */
+.reporte-main-area {
+  position: absolute;
+  top: 50px;
+  left: 264px; /* Al lado del sidebar */
+  right: 24px;
+  bottom: 24px;
+  background: transparent;
+  padding: 10px;
+  overflow: auto;
+  max-width: calc(100vw - 288px);
+  box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .reporte-main-area {
+    left: 200px;
+    max-width: calc(100vw - 224px);
+  }
+}
+
+@media (max-width: 768px) {
+  .reporte-main-area {
+    left: 0;
+    right: 0;
+    top: 100px;
+    max-width: 100vw;
+  }
+}
+
+/* Estilos para el buscador */
+.reporte-llamadas-page input::placeholder {
+  color: #fff !important;
+  opacity: 0.8 !important;
+} 

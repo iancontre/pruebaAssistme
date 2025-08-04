@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from 'framer-motion';
+
 import './Service.css';
 import requiesticon from '../../assets/images/icons/requestService.png';
 import callMaleicon from '../../assets/images/icons/callMale.png';
@@ -47,7 +48,7 @@ const Service: React.FC = () => {
 
   return (
     <div className="services-container">
-      <h1 className="service-tittle">Services</h1>
+                <h1 className="service-tittle">Services</h1>
       {/* Sección 01 - Main Services */}
       <section className="main-services-section">
         <div className="section-header">
@@ -62,14 +63,12 @@ const Service: React.FC = () => {
           <div className="title-and-description">
             <div className="text-and-card-container">
               <div className="text-content">
-                <h2 className="section-title">
-                  Main
-                  <br />
-                  Services
-                </h2>
-                <p className="section-description">
-                  At our virtual assistant company, we provide comprehensive and flexible support solutions so you can focus on what matters most: growing your business. Our team of highly trained professionals handles phone answering, call management, administrative tasks, customer service, and more—always with efficiency, care, and a deep understanding of your needs. Whether you require help during business hours or full 24/7 coverage, we're here to optimize your time, improve customer experience, and keep your business running smoothly—wherever you are.
-                </p>
+                                                   <h2 className="section-title">
+                    Main Services
+                  </h2>
+                  <p className="section-description">
+                    In our virtual assistant company, we offer comprehensive and flexible solutions so you can focus on what matters most: growing your business. Our team of highly trained professionals handles phone support, call management, administrative tasks, customer service, and much more, always with efficiency, closeness, and a deep understanding of your needs. Whether you need support during business hours or full 24/7 coverage, we are here to optimize your time, improve the customer experience, and keep your operation running smoothly, wherever you are.
+                  </p>
               </div>
 
               <motion.div 
@@ -80,11 +79,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Personalized Phone Support</h5>
-                <p className="card-description">
-                  We answer every call on behalf of your business, following your preferred tone and protocol. Our goal is to provide a professional and friendly first impression that strengthens 
-                  your brand and builds trust with every customer.
-                </p>
+                                                                   <h5 className="card-title">Personalized Phone Support</h5>
+                  <p className="card-description">
+                    We answer each call on behalf of your company, following the tone and protocol you prefer. Our goal is to provide a professional and friendly first impression that reinforces your brand and builds trust with each customer.
+                  </p>
                 <div className="container-card">
                   <img src={requiesticon} className="icon-requiest" />
                   <img src={callMaleicon} alt="icon-call" />
@@ -99,11 +97,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Personalized Phone Support</h5>
-                <p className="card-description">
-                  We take accurate notes of each call-name, reason, and contact details-and send them to you instantly 
-                  via email or messaging app, so you're always in the loop, even when you're unavailable.
-                </p>
+                                 <h5 className="card-title">Message Taking and Instant Delivery</h5>
+                 <p className="card-description">
+                   We accurately record each call—name, reason, and contact details—and send them to you immediately via email or messaging app, so you're always informed, even if you can't answer.
+                 </p>
                 <div className="container-cardmedial">
                   <img src={openEmailicon} className="icon-email" />
                   <img src={chatBubbleicon} alt="icon-bubble" />
@@ -118,11 +115,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Personalized Phone Support</h5>
-                <p className="card-description">
-                  Our bilingual team offers seamless communication in both English and Spanish, helping you connect effectively with 
-                  a wider audience and ensuring every caller feels understood and supported.
-                </p>
+                                 <h5 className="card-title">Bilingual Support (English and Spanish)</h5>
+                 <p className="card-description">
+                   Our bilingual team facilitates smooth communication in English and Spanish, helping you connect with a broader audience and ensuring each person feels understood and attended to.
+                 </p>
                 <div className="container-ligt">
                   <img src={lenguageicon} className="icon-requies" />
                 </div>
@@ -136,11 +132,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Personalized Phone Support</h5>
-                <p className="card-description">
-                  Need full-time coverage or specific hours of support? We adapt to your business needs with round-the-clock availability 
-                  or tailored scheduling, so you never miss a business opportunity.
-                </p>
+                                 <h5 className="card-title">24/7 Coverage or Custom Hours</h5>
+                 <p className="card-description">
+                   Need full coverage or just during specific hours? We adapt to your business needs, ensuring continuous availability or custom scheduling, so you never miss an opportunity.
+                 </p>
                 <div className="container-ligt">
                   <img src={lastHoursicon} className="icon-requies" />
                 </div>
@@ -162,7 +157,7 @@ const Service: React.FC = () => {
             </div>
           </div>
           <div className="title-and-description">
-            <h2 className="section-title">Unique Features</h2>
+                         <h2 className="section-title">Unique Features</h2>
             <div className="text-and-card-container" style={{flexWrap: "wrap"}}>
               <motion.div 
                 className="service-card"
@@ -173,10 +168,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Plan Details Viewing Platform</h5>
-                <p className="card-description">
-                  Access our online platform at any time to check your plan status, minute usage, call history, reports, and more. All in one place, clear, secure, and easy-to-navigate, so you have complete control of your service in real time.
-                </p>
+                                 <h5 className="card-title">Plan Details Visualization Platform</h5>
+                 <p className="card-description">
+                   Access our online platform anytime to check your plan status, minute usage, call history, reports, and more. Everything in one place, clear, secure, and easy to navigate, so you have total control of your service in real time.
+                 </p>
                 <div className="container-towcard">
                   <img src={callinicon} className="icon-calling" />
                   <img src={popupicon} alt="icon-popupin" />
@@ -192,10 +187,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Personalized Call Support</h5>
-                <p className="card-description">
-                  We provide professional and personalized phone support on behalf of you or your company, adapting to the protocol you prefer. Our team is responsible for receiving and attending calls efficiently, ensuring a warm and effective experience for your customers, regardless of the volume or time.
-                </p>
+                                 <h5 className="card-title">Personalized Phone Support</h5>
+                 <p className="card-description">
+                   We provide professional and personalized phone support on your behalf or your company's behalf, adapting to the protocol you prefer. Our team handles receiving and managing calls efficiently, ensuring a warm and effective experience for your clients, regardless of volume or time.
+                 </p>
                 <div className="container-towcard-c">
                   <img src={videoMeicon} className="icon-videoMe" />
                   <img src={supporticon} alt="icon-support" />
@@ -211,10 +206,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Call Summaries By Email And SMS</h5>
-                <p className="card-description">
-                  Receive a clear and concise summary of each call handled, directly to your email or text message. Includes key data such as the contact's name, the reason for the call, and any actions taken or pending, so you're always informed, even when you can't answer in real time.
-                </p>
+                                 <h5 className="card-title">Call Summaries by Email and SMS</h5>
+                 <p className="card-description">
+                   Receive a clear and concise summary of each call handled, directly to your email or via text message. Includes key data such as contact name, call reason, and actions taken or pending, so you're always informed, even when you can't answer in real time.
+                 </p>
                 <div className="container-towcard-c">
                   <img src={receivedicon} className="icon-received" />
                   <img src={pushNotificaicon} alt="icon-push" />
@@ -230,10 +225,10 @@ const Service: React.FC = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <h5 className="card-title">Call History Reporting</h5>
-                <p className="card-description">
-                  We offer detailed and periodic reports on all calls received, including date, time, duration, and reason. This information allows you to have complete control regarding your communication with your customers, identify patterns, and make strategic decisions based on real data.
-                </p>
+                                 <h5 className="card-title">Call History Reports</h5>
+                 <p className="card-description">
+                   We offer detailed and periodic reports of all calls received, including date, time, duration, and reason. This information allows you to have total control over communication with your clients, identify patterns, and make strategic decisions based on real data.
+                 </p>
                 <div className="container-towcard-c">
                   <img src={checkFileicon} className="icon-requies" />
                   <img src={orderFileicon} alt="icon-orderFile" />

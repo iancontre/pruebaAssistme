@@ -8,34 +8,30 @@ import prevIcon from '../../assets/images/icons/prevIcon.png';
 import nexicon from '../../assets/images/icons/nexicon.png';
 import { BsCreditCard } from 'react-icons/bs';
 import { PricingPlan, formatCurrency } from '../../services/apiService';
+import { fetchActiveRole } from '../../services/apiService';
 import { calculateTaxWithAPI } from '../../services/apiService';
 import { createCheckoutSession } from '../../services/stripeService';
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 const steps = [
-  { label: 'PROFILE', description: 'First tell us a little about yourself' },
-  { label: 'BUSINESS', description: 'That you are requesting services for' },
+  { label: 'PROFILE', description: 'Tell us about yourself' },
+  { label: 'BUSINESS', description: 'Tell us about your business' },
   { label: 'SUMMARY', description: 'Review your plan and details' },
   { label: 'GET STARTED', description: `Let's get started setting up your account` },
 ];
-
-interface CustomerData {
-  name: string;
-  email: string;
-  state: string;
-  phone_code?: string;
-}
 
 interface WizardContainerProps {
   selectedPlan?: PricingPlan;
   onStepChange?: (step: number) => void;
   onConfigWizardRequest?: () => void;
+  onWizardComplete?: (data: any) => void; // NUEVO
 }
 
-const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepChange, onConfigWizardRequest }) => {
+const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepChange, onConfigWizardRequest, onWizardComplete }) => {
   const [searchParams] = useSearchParams();
   const [currentStep, setCurrentStep] = useState(0);
-  const [customerData, setCustomerData] = useState<CustomerData | null>(null);
+  const [customerData, setCustomerData] = useState<any>({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [taxCalculation, setTaxCalculation] = useState<any>(null);
   const [loadingTax, setLoadingTax] = useState(false);
@@ -74,7 +70,6 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     const sessionId = searchParams.get('session_id');
     
     if (isSuccess && sessionId) {
-      console.log('🔑 Stripe session_id después del pago:', sessionId); // <-- Mostrar en consola
       setCurrentStep(3); // Paso 4 (índice 3)
       
       // Limpiar los parámetros de URL para evitar que se ejecute múltiples veces
@@ -82,8 +77,17 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
       newUrl.searchParams.delete('success');
       newUrl.searchParams.delete('session_id');
       window.history.replaceState({}, '', newUrl.toString());
+
+      // NUEVO: Llama al padre con todos los datos
+      if (onWizardComplete && customerData && selectedPlan) {
+        onWizardComplete({
+          customerData,
+          selectedPlan,
+          session_id: sessionId,
+        });
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, customerData, selectedPlan, onWizardComplete]);
 
   const handleNextStep = async () => {
     // Si estamos en el último paso (paso 4), activar el wizard de configuración
@@ -119,50 +123,46 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
-  const handleProfileData = (data: { name: string; email: string }) => {
-    setCustomerData(prev => ({ 
-      name: data.name, 
-      email: data.email, 
-      state: prev?.state || '' 
-    }));
+  // Combina los datos de perfil y negocio en customerData
+  const handleProfileData = (data: any) => {
+    setCustomerData((prev: any) => ({ ...prev, ...data }));
+  };
+  const handleBusinessData = (data: any) => {
+    setCustomerData((prev: any) => ({ ...prev, ...data }));
   };
 
-  const handleBusinessData = (data: { state: string; phone_code?: string }) => {
-    setCustomerData(prev => ({ 
-      name: prev?.name || '', 
-      email: prev?.email || '', 
-      state: data.state,
-      phone_code: data.phone_code || prev?.phone_code
-    }));
-  };
-
+  // Guardar datos en localStorage antes de redirigir a Stripe
   const handleProceedToPayment = async () => {
     if (!customerData || !selectedPlan) {
       toast.error('Please complete all required information.');
       return;
     }
-
-    console.log('Proceeding to payment with:', {
-      plan: selectedPlan.name,
-      customer: customerData,
-      id: selectedPlan.id,
-      name: selectedPlan.name,
-      price: selectedPlan.price,
-      customerEmail: customerData.email,
-      customerName: customerData.name
-    });
-    
     setIsProcessing(true);
     try {
-      // Crear Checkout Session con Stripe Tax automático
+      let role_id = '';
+      try {
+        role_id = await fetchActiveRole();
+      } catch (e) {
+        toast.error('No se pudo obtener el rol activo');
+        setIsProcessing(false);
+        return;
+      }
+
+      // GUARDA el role_id en customerData antes de guardar en localStorage
+      const customerDataWithRole = { ...customerData, role_id };
+
+      localStorage.setItem('wizard_customerData', JSON.stringify(customerDataWithRole));
+      localStorage.setItem('wizard_selectedPlan', JSON.stringify(selectedPlan));
+
       await createCheckoutSession({
         planId: selectedPlan.id,
         planName: selectedPlan.name,
-        amount: selectedPlan.price, // Stripe calculará automáticamente los impuestos
+        amount: selectedPlan.price,
         customerEmail: customerData.email,
-        customerName: customerData.name,
+        customerName: customerData.fullName || customerData.name || '',
         successUrl: `${window.location.origin}/compra?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/compra?canceled=true`,
+        // Puedes pasar role_id aquí si Stripe lo necesita, si no, omítelo
       });
     } catch (error) {
       console.error('Payment error:', error);
@@ -198,6 +198,41 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
       setIsProcessing(false);
     }
   };
+
+  // Recuperar datos de localStorage tras el pago
+  useEffect(() => {
+    const isSuccess = searchParams.get('success') === 'true';
+    const sessionId = searchParams.get('session_id');
+    let customer = customerData;
+    let plan = selectedPlan;
+    if (!customer || Object.keys(customer).length === 0) {
+      const stored = localStorage.getItem('wizard_customerData');
+      if (stored) customer = JSON.parse(stored);
+    }
+    if (!plan) {
+      const stored = localStorage.getItem('wizard_selectedPlan');
+      if (stored) plan = JSON.parse(stored);
+    }
+    if (isSuccess && sessionId) {
+      setCurrentStep(3);
+      if (onWizardComplete && customer && plan) {
+        onWizardComplete({
+          customerData: customer,
+          selectedPlan: plan,
+          session_id: sessionId,
+        });
+        localStorage.removeItem('wizard_customerData');
+        localStorage.removeItem('wizard_selectedPlan');
+      } else {
+        console.warn('No se pudo llamar a onWizardComplete porque falta customerData o selectedPlan');
+      }
+      // Limpiar la URL...
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('success');
+      newUrl.searchParams.delete('session_id');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, [searchParams, customerData, selectedPlan, onWizardComplete]);
 
   // Paso 3: Resumen del plan y botón para ir a pagar
   const renderSummaryStep = () => {
@@ -310,12 +345,8 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   // Renderizar el contenido del paso actual
   const renderStep = () => {
     switch (currentStep) {
-      case 0:   
-        return <ProfileForm 
-          onValidityChange={() => {}} 
-          onDataChange={handleProfileData} 
-          onValid={() => setCurrentStep(1)}
-        />;
+      case 0:
+        return <ProfileForm onValidityChange={() => {}} onDataChange={handleProfileData} onValid={() => setCurrentStep(1)} />;
       case 1:
         return <BusinessForm onValidityChange={() => {}} onDataChange={handleBusinessData} selectedPlan={selectedPlan} onValid={() => setCurrentStep(2)} />;
       case 2:
@@ -355,6 +386,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

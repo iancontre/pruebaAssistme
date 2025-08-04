@@ -3,37 +3,28 @@ import { toast } from 'react-toastify';
 import { PricingPlan } from '../../services/apiService';
 import { fetchCountries, fetchAllStates, fetchAllCities, Country, State, City } from '../../services/apiService';
 import { FaFlag } from 'react-icons/fa';
-// import './BusinessForm.css';
+import { useFormValidation } from '../../hooks/useFormValidation';
 
 interface BusinessFormProps {
   onValidityChange: (isValid: boolean) => void;
-  onDataChange?: (data: { state: string; phone_code?: string; mobileNumber?: string }) => void;
+  onDataChange?: (data: {
+    company?: string;
+    address1?: string;
+    address2?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
+    mobileNumber?: string;
+    officeNumber?: string;
+    phone_code?: string;
+    // ...otros campos relevantes
+  }) => void;
   selectedPlan?: PricingPlan;
   onValid?: () => void;
 }
 
 const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan: _selectedPlan, onValid }) => {
-  const [fields, setFields] = useState({
-    company: '',
-    address1: '',
-    address2: '',
-    city: '',
-    state: '',
-    zip: '',
-    country: '',
-    mobileNumber: '',
-  });
-
-  const [errors, setErrors] = useState({
-    company: false,
-    address1: false,
-    city: false,
-    state: false,
-    zip: false,
-    country: false,
-    mobileNumber: false,
-  });
-
   const [submitted, setSubmitted] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
   const [states, setStates] = useState<State[]>([]);
@@ -41,6 +32,53 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
   const [loadingCountries, setLoadingCountries] = useState(true);
   const [loadingStates, setLoadingStates] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
+
+  // Configuración de validación
+  const fieldTypes = {
+    company: 'company',
+    address1: 'address',
+    address2: 'text', // Cambiado de 'required' a 'text' para que no sea obligatorio
+    city: 'select',
+    state: 'select',
+    zip: 'zipCode',
+    country: 'select',
+    mobileNumber: 'phone'
+  };
+
+  const {
+    fields,
+    errors,
+    isValid,
+    touched,
+    handleChange,
+    handleBlur,
+    setFieldValue,
+    validateForm
+  } = useFormValidation({
+    initialFields: {
+      company: '',
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zip: '',
+      country: '',
+      mobileNumber: '',
+    },
+    fieldTypes,
+    additionalData: {
+      company: { fieldName: 'Company' },
+      address1: { fieldName: 'Address' },
+      address2: { fieldName: 'Address line 2' },
+      city: { fieldName: 'City' },
+      state: { fieldName: 'State' },
+      zip: { fieldName: 'Zip code' },
+      country: { fieldName: 'Country' },
+      mobileNumber: { fieldName: 'Mobile number' }
+    },
+    validateOnChange: true,
+    validateOnBlur: true
+  });
 
   // Cargar países al montar el componente
   useEffect(() => {
@@ -143,10 +181,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
         
         // No agregar el prefijo al estado, solo limpiar si es necesario
         if (currentNumber !== fields.mobileNumber) {
-          setFields(prev => ({
-            ...prev,
-            mobileNumber: currentNumber
-          }));
+          setFieldValue('mobileNumber', currentNumber);
         }
         
         console.log('📞 BusinessForm: Updated phone number with country code:', {
@@ -157,21 +192,10 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
         });
       }
     }
-  }, [fields.country, countries]);
+  }, [fields.country, countries, setFieldValue]);
 
   // El campo state es obligatorio si hay estados disponibles
   const hasStates = states.length > 0;
-  // El campo city es obligatorio si hay ciudades disponibles
-  const hasCities = cities.length > 0;
-  
-  const isValid =
-    fields.company.trim() !== '' &&
-    fields.address1.trim() !== '' &&
-    (hasCities ? fields.city !== '' : true) && // Solo requerir city si hay ciudades disponibles
-    (hasStates ? fields.state !== '' : true) && // Solo requerir state si hay estados disponibles
-    fields.zip.trim() !== '' &&
-    fields.country !== '' &&
-    fields.mobileNumber.trim() !== '';
 
   // Memoizar la función de callback para evitar re-renders innecesarios
   const handleDataChange = useCallback(() => {
@@ -198,7 +222,26 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
     handleDataChange();
   }, [isValid, onValidityChange, handleDataChange]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // Llama a onDataChange cada vez que los campos cambian y el formulario es válido
+  useEffect(() => {
+    if (onDataChange) {
+      onDataChange({
+        company: fields.company,
+        address1: fields.address1,
+        address2: fields.address2,
+        city: fields.city, // <-- Asegura que la ciudad se pase
+        state: fields.state,
+        zip: fields.zip,
+        country: fields.country,
+        mobileNumber: fields.mobileNumber,
+        officeNumber: fields.officeNumber, // si existe
+        // ...otros campos relevantes
+      });
+    }
+  }, [fields, onDataChange]);
+
+  // Manejar cambios personalizados para campos especiales
+  const handleCustomChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
     // Manejo especial para el campo de teléfono móvil
@@ -206,46 +249,10 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
       // Para el teléfono móvil, solo guardar el número sin prefijo
       // El prefijo se muestra visualmente pero no se guarda en el estado
       const numberWithoutPrefix = value.replace(/^\+\d+\s*/, '');
-      setFields({ ...fields, [name]: numberWithoutPrefix });
+      setFieldValue(name, numberWithoutPrefix);
     } else {
-      setFields({ ...fields, [name]: value });
+      handleChange(e);
     }
-    
-    setErrors({ ...errors, [name]: false });
-  };
-
-  const validateField = (name: string, value: string) => {
-    if (name === "country") return value === '';
-    if (name === "state") {
-      // El campo state solo es obligatorio si hay estados disponibles
-      return hasStates ? value === '' : false;
-    }
-    if (name === "city") {
-      // El campo city solo es obligatorio si hay ciudades disponibles
-      return hasCities ? value === '' : false;
-    }
-    if (name === 'address2') return false; // address2 es opcional
-    return value.trim() === '';
-  };
-
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setErrors({ ...errors, [name]: validateField(name, value) });
-  };
-
-  const validateForm = () => {
-    const newErrors = {
-      company: validateField('company', fields.company),
-      address1: validateField('address1', fields.address1),
-      city: validateField('city', fields.city),
-      state: validateField('state', fields.state),
-      zip: validateField('zip', fields.zip),
-      country: validateField('country', fields.country),
-      mobileNumber: validateField('mobileNumber', fields.mobileNumber),
-    };
-    setErrors(newErrors);
-    const hasErrors = Object.values(newErrors).some(error => error);
-    return !hasErrors;
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -285,7 +292,17 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
       form.addEventListener('submit', submitHandler);
       return () => form.removeEventListener('submit', submitHandler);
     }
-  }, [fields]);
+  }, [fields, validateForm]);
+
+  // Función para obtener la clase CSS del campo
+  const getFieldClassName = (fieldName: string) => {
+    const hasError = (touched[fieldName] || submitted) && errors[fieldName];
+    const isValid = touched[fieldName] && !errors[fieldName] && fields[fieldName];
+    
+    if (hasError) return 'error';
+    if (isValid) return 'valid';
+    return '';
+  };
 
   return (
     <div style={{ position: 'relative', width: '100%' }}>
@@ -298,11 +315,14 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               name="company" 
               type="text" 
               value={fields.company} 
-              onChange={handleChange}
+              onChange={handleCustomChange}
               onBlur={handleBlur}
-              className={errors.company && submitted ? 'error' : ''}
+              className={getFieldClassName('company')}
+              placeholder="Enter your company name"
             />
-            {errors.company && submitted && <span className="error-message">Company name is required</span>}
+            {(touched.company || submitted) && errors.company && (
+              <span className="error-message">{errors.company}</span>
+            )}
           </div>
           <div className="wizard-form-group">
             <label>Address</label>
@@ -310,18 +330,22 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               name="address1" 
               type="text" 
               value={fields.address1} 
-              onChange={handleChange}
+              onChange={handleCustomChange}
               onBlur={handleBlur}
-              className={errors.address1 && submitted ? 'error' : ''}
+              className={getFieldClassName('address1')}
+              placeholder="Enter your address"
               style={{ marginBottom: '0.7rem' }} 
             />
-            {errors.address1 && submitted && <span className="error-message">Address is required</span>}
+            {(touched.address1 || submitted) && errors.address1 && (
+              <span className="error-message">{errors.address1}</span>
+            )}
             <input 
               name="address2" 
               type="text" 
               value={fields.address2} 
-              onChange={handleChange}
+              onChange={handleCustomChange}
               onBlur={handleBlur}
+              placeholder="Address line 2 (optional)"
             />
           </div>
           <div className="wizard-form-group">
@@ -329,9 +353,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
             <select 
               name="country" 
               value={fields.country} 
-              onChange={handleChange}
+              onChange={handleCustomChange}
               onBlur={handleBlur}
-              className={errors.country && submitted ? 'error' : ''}
+              className={getFieldClassName('country')}
               disabled={loadingCountries}
             >
               <option value="">
@@ -343,7 +367,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                 </option>
               ))}
             </select>
-            {errors.country && submitted && <span className="error-message">Country is required</span>}
+            {(touched.country || submitted) && errors.country && (
+              <span className="error-message">{errors.country}</span>
+            )}
           </div>
           <div className="wizard-form-row">
             <div className="wizard-form-group">
@@ -351,9 +377,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               <select 
                 name="state" 
                 value={fields.state} 
-                onChange={handleChange}
+                onChange={handleCustomChange}
                 onBlur={handleBlur}
-                className={errors.state && submitted ? 'error' : ''}
+                className={getFieldClassName('state')}
                 disabled={loadingStates}
               >
                 <option value="">
@@ -370,16 +396,18 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                   </option>
                 ))}
               </select>
-              {errors.state && submitted && hasStates && <span className="error-message">State is required</span>}
+              {(touched.state || submitted) && errors.state && hasStates && (
+                <span className="error-message">{errors.state}</span>
+              )}
             </div>
             <div className="wizard-form-group">
               <label>City {!cities.length && !loadingCities && <span style={{fontSize: '12px', color: '#666', fontWeight: 'normal'}}>(Optional)</span>}</label>
               <select 
                 name="city" 
                 value={fields.city} 
-                onChange={handleChange}
+                onChange={handleCustomChange}
                 onBlur={handleBlur}
-                className={errors.city && submitted ? 'error' : ''}
+                className={getFieldClassName('city')}
                 disabled={loadingCities}
               >
                 <option value="">
@@ -396,7 +424,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                   </option>
                 ))}
               </select>
-              {errors.city && submitted && cities.length > 0 && <span className="error-message">City is required</span>}
+              {(touched.city || submitted) && errors.city && cities.length > 0 && (
+                <span className="error-message">{errors.city}</span>
+              )}
             </div>
           </div>
           <div className="wizard-form-row">
@@ -440,9 +470,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                           const numberWithoutPrefix = fields.mobileNumber.replace(/^\+\d+\s*/, '');
                           return numberWithoutPrefix || '';
                         })()} 
-                        onChange={handleChange}
+                        onChange={handleCustomChange}
                         onBlur={handleBlur}
-                        className={errors.mobileNumber && submitted ? 'error' : ''}
+                        className={getFieldClassName('mobileNumber')}
                         placeholder={phoneCode ? `Enter your mobile number` : "Select a country first"}
                         style={phoneCode ? { paddingLeft: '80px' } : {}}
                       />
@@ -450,7 +480,9 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                   );
                 })()}
               </div>
-              {errors.mobileNumber && submitted && <span className="error-message">Mobile number is required</span>}
+              {(touched.mobileNumber || submitted) && errors.mobileNumber && (
+                <span className="error-message">{errors.mobileNumber}</span>
+              )}
             </div>
             <div className="wizard-form-group">
               <label>Zip Code</label>
@@ -458,11 +490,14 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                 name="zip" 
                 type="text" 
                 value={fields.zip} 
-                onChange={handleChange}
+                onChange={handleCustomChange}
                 onBlur={handleBlur}
-                className={errors.zip && submitted ? 'error' : ''}
+                className={getFieldClassName('zip')}
+                placeholder="Enter zip code"
               />
-              {errors.zip && submitted && <span className="error-message">Zip code is required</span>}
+              {(touched.zip || submitted) && errors.zip && (
+                <span className="error-message">{errors.zip}</span>
+              )}
             </div>
           </div>
           <button type="submit" style={{display: 'none'}} tabIndex={-1}>Submit</button>

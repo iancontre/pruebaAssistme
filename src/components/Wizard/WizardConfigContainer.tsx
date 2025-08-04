@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WizardSidebar from './WizardSidebar';
 import Header from '../header/Header';
 import './Wizard.css';
 import finalize1 from '../../assets/images/finalize 1.png';
+import { useFormValidation } from '../../hooks/useFormValidation';
 
 const configSteps = [
   { label: 'SETUP', description: 'Configure your call handling' },
@@ -10,9 +11,55 @@ const configSteps = [
   { label: 'CONFIRM', description: 'Review and confirm your setup' },
 ];
 
-const WizardConfigContainer: React.FC = () => {
+interface WizardConfigContainerProps {
+  onConfigComplete?: (data: any) => void;
+  isSubmitting?: boolean;
+}
+
+const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigComplete, isSubmitting }) => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [form, setForm] = useState({
+  
+  // Validación para el paso 1 (Setup)
+  const setupValidation = useFormValidation({
+    initialFields: {
+      announcement: '',
+      greeting: '',
+      goodbye: '',
+      observations: '',
+    },
+    fieldTypes: {
+      announcement: 'required',
+      greeting: 'required',
+      goodbye: 'required',
+      observations: 'text', // Cambiado de 'required' a 'text' para que no sea obligatorio
+    }
+  });
+
+  // Validación para el paso 2 (Options)
+  const optionsValidation = useFormValidation({
+    initialFields: {
+      timezone: '',
+      reportEmail: '',
+    },
+    fieldTypes: {
+      timezone: 'select',
+      reportEmail: 'email',
+    }
+  });
+
+  // Validación para el paso 3 (Confirm)
+  const confirmValidation = useFormValidation({
+    initialFields: {
+      selectedDay: '',
+      selectedSlot: '',
+    },
+    fieldTypes: {
+      selectedDay: 'select',
+      selectedSlot: 'select',
+    }
+  });
+
+  const [form] = useState({
     announcement: '',
     greeting: '',
     goodbye: '',
@@ -54,8 +101,23 @@ const WizardConfigContainer: React.FC = () => {
     'Pacific Time Zone (UTC-08:00)',
   ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // Función para verificar si al menos una opción de usage está seleccionada
+  const isUsageValid = () => {
+    return Object.values(step2.usage).some(value => value === true);
+  };
+
+  // Función para verificar si el paso actual es válido
+  const isCurrentStepValid = () => {
+    switch (currentStep) {
+      case 0:
+        return setupValidation.isValid;
+      case 1:
+        return optionsValidation.isValid && isUsageValid();
+      case 2:
+        return confirmValidation.isValid;
+      default:
+        return false;
+    }
   };
 
   const handleNextStep = () => {
@@ -63,7 +125,11 @@ const WizardConfigContainer: React.FC = () => {
       setShowFinalize(true);
       return;
     }
-    setCurrentStep((prev) => (prev < configSteps.length - 1 ? prev + 1 : prev));
+    
+    // Validar el paso actual antes de continuar
+    if (isCurrentStepValid()) {
+      setCurrentStep((prev) => (prev < configSteps.length - 1 ? prev + 1 : prev));
+    }
   };
 
   const handlePrevStep = () => {
@@ -76,17 +142,65 @@ const WizardConfigContainer: React.FC = () => {
 
   const handleStep2Change = (field: string, value: any) => {
     setStep2(prev => ({ ...prev, [field]: value }));
+    if (field === 'timezone') {
+      optionsValidation.setFieldValue('timezone', value);
+    }
   };
+
+  // Sincronizar datos del estado local con la validación
+  useEffect(() => {
+    setupValidation.setFieldValue('announcement', form.announcement);
+    setupValidation.setFieldValue('greeting', form.greeting);
+    setupValidation.setFieldValue('goodbye', form.goodbye);
+    setupValidation.setFieldValue('observations', form.observations);
+  }, [form]);
+
+  useEffect(() => {
+    optionsValidation.setFieldValue('timezone', step2.timezone);
+    optionsValidation.setFieldValue('reportEmail', step2.reportEmail);
+  }, [step2.timezone, step2.reportEmail]);
+
+  useEffect(() => {
+    confirmValidation.setFieldValue('selectedDay', selectedDay);
+    confirmValidation.setFieldValue('selectedSlot', selectedSlot);
+  }, [selectedDay, selectedSlot]);
+
   const handleUsageChange = (key: keyof typeof step2.usage) => {
     setStep2(prev => ({ ...prev, usage: { ...prev.usage, [key]: !prev.usage[key] } }));
   };
-  const handleReportEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    let error = '';
-    if (value && !/^\S+@\S+\.\S+$/.test(value)) {
-      error = 'Invalid email format';
+
+  const handleDaySelection = (day: string) => {
+    setSelectedDay(day);
+    setSelectedSlot('');
+    confirmValidation.setFieldValue('selectedDay', day);
+  };
+
+  const handleSlotSelection = (slot: string) => {
+    setSelectedSlot(slot);
+    confirmValidation.setFieldValue('selectedSlot', slot);
+  };
+
+  // Al finalizar el wizard de configuración:
+  const handleFinishConfig = () => {
+    if (onConfigComplete) {
+      onConfigComplete({
+        form: {
+          announcement: setupValidation.fields.announcement,
+          greeting: setupValidation.fields.greeting,
+          goodbye: setupValidation.fields.goodbye,
+          observations: setupValidation.fields.observations,
+        },
+        step2: {
+          ...step2,
+          timezone: optionsValidation.fields.timezone,
+          reportEmail: optionsValidation.fields.reportEmail,
+        },
+        selectedDay: confirmValidation.fields.selectedDay,
+        selectedSlot: confirmValidation.fields.selectedSlot,
+        confirmNumber,
+        // Agrega aquí cualquier otro estado relevante de configuración
+      });
     }
-    setStep2(prev => ({ ...prev, reportEmail: value, reportEmailError: error }));
   };
 
   const renderStep = () => {
@@ -108,6 +222,15 @@ const WizardConfigContainer: React.FC = () => {
                 <div style={{ fontWeight: 700, color: '#18344C', fontSize: 32, marginTop: 48, lineHeight: 1.1 }}>
                   We can't wait to<br />Start Working<br />for you
                 </div>
+                <button
+                  type="button"
+                  className="wizard-next-btn"
+                  style={{ marginTop: 32, fontSize: 18, padding: '12px 32px' }}
+                  onClick={handleFinishConfig}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Enviando...' : 'Finalizar y Enviar'}
+                </button>
               </div>
               <img 
                 src={finalize1} 
@@ -138,45 +261,61 @@ const WizardConfigContainer: React.FC = () => {
                 </label>
                 <textarea
                   name="announcement"
-                  value={form.announcement}
-                  onChange={handleChange}
+                  value={setupValidation.fields.announcement}
+                  onChange={setupValidation.handleChange}
+                  onBlur={setupValidation.handleBlur}
                   rows={3}
                   style={{ width: '100%' }}
-                  className="wizard-config-textarea"
+                  className={`wizard-config-textarea ${setupValidation.touched.announcement && !setupValidation.isFieldValid('announcement') ? 'error' : ''} ${setupValidation.touched.announcement && setupValidation.isFieldValid('announcement') ? 'valid' : ''}`}
                 />
+                {setupValidation.touched.announcement && setupValidation.getFieldError('announcement') && (
+                  <div className="error-message">{setupValidation.getFieldError('announcement')}</div>
+                )}
               </div>
               <div className="wizard-form-group">
                 <label className="wizard-config-label">When a live agent answer, how would you like them to greet your caller?</label>
                 <textarea
                   name="greeting"
-                  value={form.greeting}
-                  onChange={handleChange}
+                  value={setupValidation.fields.greeting}
+                  onChange={setupValidation.handleChange}
+                  onBlur={setupValidation.handleBlur}
                   rows={3}
                   style={{ width: '100%' }}
-                  className="wizard-config-textarea"
+                  className={`wizard-config-textarea ${setupValidation.touched.greeting && !setupValidation.isFieldValid('greeting') ? 'error' : ''} ${setupValidation.touched.greeting && setupValidation.isFieldValid('greeting') ? 'valid' : ''}`}
                 />
+                {setupValidation.touched.greeting && setupValidation.getFieldError('greeting') && (
+                  <div className="error-message">{setupValidation.getFieldError('greeting')}</div>
+                )}
               </div>
               <div className="wizard-form-group">
                 <label className="wizard-config-label">When a live agent disconnects, how would you like the caller to say goodbye?</label>
                 <textarea
                   name="goodbye"
-                  value={form.goodbye}
-                  onChange={handleChange}
+                  value={setupValidation.fields.goodbye}
+                  onChange={setupValidation.handleChange}
+                  onBlur={setupValidation.handleBlur}
                   rows={3}
                   style={{ width: '100%' }}
-                  className="wizard-config-textarea"
+                  className={`wizard-config-textarea ${setupValidation.touched.goodbye && !setupValidation.isFieldValid('goodbye') ? 'error' : ''} ${setupValidation.touched.goodbye && setupValidation.isFieldValid('goodbye') ? 'valid' : ''}`}
                 />
+                {setupValidation.touched.goodbye && setupValidation.getFieldError('goodbye') && (
+                  <div className="error-message">{setupValidation.getFieldError('goodbye')}</div>
+                )}
               </div>
               <div className="wizard-form-group">
                 <label className="wizard-config-label">Additional observations?</label>
                 <textarea
                   name="observations"
-                  value={form.observations}
-                  onChange={handleChange}
+                  value={setupValidation.fields.observations}
+                  onChange={setupValidation.handleChange}
+                  onBlur={setupValidation.handleBlur}
                   rows={2}
                   style={{ width: '100%' }}
-                  className="wizard-config-textarea"
+                  className={`wizard-config-textarea ${setupValidation.touched.observations && !setupValidation.isFieldValid('observations') ? 'error' : ''} ${setupValidation.touched.observations && setupValidation.isFieldValid('observations') ? 'valid' : ''}`}
                 />
+                {setupValidation.touched.observations && setupValidation.getFieldError('observations') && (
+                  <div className="error-message">{setupValidation.getFieldError('observations')}</div>
+                )}
               </div>
             </form>
           </div>
@@ -198,14 +337,19 @@ const WizardConfigContainer: React.FC = () => {
                   </div>
                   <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                     <select
-                      className="wizard-config-textarea"
-                      value={step2.timezone}
-                      onChange={e => handleStep2Change('timezone', e.target.value)}
+                      name="timezone"
+                      className={`wizard-config-textarea ${optionsValidation.touched.timezone && !optionsValidation.isFieldValid('timezone') ? 'error' : ''} ${optionsValidation.touched.timezone && optionsValidation.isFieldValid('timezone') ? 'valid' : ''}`}
+                      value={optionsValidation.fields.timezone}
+                      onChange={optionsValidation.handleChange}
+                      onBlur={optionsValidation.handleBlur}
                       style={{ maxWidth: 350, minWidth: 250 }}
                     >
                       <option value="">Select Time Zone</option>
                       {timezones.map(tz => <option key={tz} value={tz}>{tz}</option>)}
                     </select>
+                    {optionsValidation.touched.timezone && optionsValidation.getFieldError('timezone') && (
+                      <div className="error-message">{optionsValidation.getFieldError('timezone')}</div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -598,19 +742,19 @@ const WizardConfigContainer: React.FC = () => {
                     </div>
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                       <input
-                        className="wizard-config-textarea"
+                        name="reportEmail"
+                        className={`wizard-config-textarea ${optionsValidation.touched.reportEmail && !optionsValidation.isFieldValid('reportEmail') ? 'error' : ''} ${optionsValidation.touched.reportEmail && optionsValidation.isFieldValid('reportEmail') ? 'valid' : ''}`}
                         type="email"
-                        value={step2.reportEmail}
-                        onChange={handleReportEmailChange}
+                        value={optionsValidation.fields.reportEmail}
+                        onChange={optionsValidation.handleChange}
+                        onBlur={optionsValidation.handleBlur}
                         style={{ maxWidth: 300, width: '100%' }}
                         placeholder="Enter email address"
                       />
                     </div>
                   </div>
-                  {step2.reportEmailError && (
-                    <div style={{ color: '#d32f2f', fontSize: 13, marginLeft: '50%', marginTop: 2 }}>
-                      {step2.reportEmailError}
-                    </div>
+                  {optionsValidation.touched.reportEmail && optionsValidation.getFieldError('reportEmail') && (
+                    <div className="error-message">{optionsValidation.getFieldError('reportEmail')}</div>
                   )}
                 </div>
               </div>
@@ -679,7 +823,7 @@ const WizardConfigContainer: React.FC = () => {
                         <button
                           key={day.value}
                           type="button"
-                          onClick={() => { setSelectedDay(day.value); setSelectedSlot(''); }}
+                          onClick={() => handleDaySelection(day.value)}
                           style={{
                             background: selectedDay === day.value ? '#18344C' : '#fff',
                             color: selectedDay === day.value ? '#fff' : '#18344C',
@@ -707,7 +851,7 @@ const WizardConfigContainer: React.FC = () => {
                           key={slot.time}
                           type="button"
                           disabled={slot.disabled}
-                          onClick={() => setSelectedSlot(slot.time)}
+                          onClick={() => handleSlotSelection(slot.time)}
                           style={{
                             background: selectedSlot === slot.time ? '#18344C' : slot.disabled ? '#E9E9E9' : '#fff',
                             color: selectedSlot === slot.time ? '#fff' : slot.disabled ? '#A0A0A0' : '#18344C',
@@ -805,7 +949,11 @@ const WizardConfigContainer: React.FC = () => {
                 </button>
               )}
               {currentStep < configSteps.length - 1 && !showFinalize && (
-                <button className="wizard-next-btn" onClick={handleNextStep}>
+                <button 
+                  className={`wizard-next-btn ${!isCurrentStepValid() ? 'disabled' : ''}`}
+                  onClick={handleNextStep}
+                  disabled={!isCurrentStepValid()}
+                >
                   Next Step
                 </button>
               )}

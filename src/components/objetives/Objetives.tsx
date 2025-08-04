@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+
 import './Objetives.css';
 import objetivesImage from '../../assets/images/imageObjetives.png'; // Cambia esta ruta por la correcta
 
@@ -54,7 +55,7 @@ const ObjetivosEspecificos = () => {
         <div className="objetivos-contenedor">
           <div className="contenedor-principal">
 
-            <h1>Specific Objectives</h1>
+                         <h1>Specific Objectives</h1>
             <motion.img 
               src={objetivesImage} 
               alt="Objetivos estratégicos" 
@@ -75,8 +76,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <p>Improve lead conversion through 24/7 call center support, ensuring a rapid response to interested parties,
-                     proactive follow-up, and filtering qualified prospects to increase sales opportunities.</p>
+                                 <p>Optimize customer service by implementing a virtual assistant service that answers calls in real time.</p>
                      <div className='figure'></div>
               </motion.div>
               
@@ -89,7 +89,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <p>Optimize customer service by implementing a virtual assistant service that answers calls in real time.</p>
+                                 <p>Increase the operational efficiency of companies by reducing their administrative workload by 30%, allowing them to focus on negotiating and closing sales.</p>
                 <div className='figure'></div>
               </motion.div>
               
@@ -102,8 +102,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <p>Increase the operational efficiency
-                of companies by reducing their administrative workload by 30%, allowing them to focus on negotiating and closing sales.</p>
+                                 <p>Improve lead conversion through 24/7 call center support, ensuring a rapid response to interested parties, proactive follow-up, and filtering qualified prospects to increase sales opportunities.</p>
                 <div className='figure'></div>
               </motion.div>
               
@@ -116,8 +115,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <p>understanding and anticipating customer needs, 
-                    tailoring our services to exceed their expectations and foster lasting relationships.</p>
+                                 <p>Understanding and anticipating customer needs, tailoring our services to exceed their expectations and foster lasting relationships.</p>
                     <div className='figure'></div>
               </motion.div>
               
@@ -130,8 +128,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                <p>Promote responsible business practices that benefit both our customers and the environment, 
-                    contributing to ethical and sustainable development in the sector.</p>
+                                 <p>Promote responsible business practices that benefit both our customers and the environment, contributing to ethical and sustainable development in the sector.</p>
                     <div className='figure'></div>
               </motion.div>
             </div>

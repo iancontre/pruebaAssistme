@@ -328,4 +328,11 @@
   background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiB2aWV3Qm94PSIwIDAgMTAwIDYwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjRkZERTAwIi8+CjxyZWN0IHk9IjMwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjMDAzOEE4Ii8+CjxyZWN0IHk9IjQ1IiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjQ0UxMTI2Ii8+Cjwvc3ZnPgo=');
 }
 
+.flag-mx {
+  background: linear-gradient(to right, 
+    #006847 0%, #006847 33.33%,
+    white 33.33%, white 66.66%,
+    #CE1126 66.66%, #CE1126 100%);
+}
+
 /* style navbar */

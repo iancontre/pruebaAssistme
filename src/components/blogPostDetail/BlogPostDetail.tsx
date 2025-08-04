@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+
 import "./BlogPostDetail.css";
 
 interface BlogPostDetailProps {
@@ -253,12 +254,12 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
       </div>
       
       <div className="post-share">
-        <p>Comparte este artículo:</p>
+                    <p>Comparte este artículo:</p>
         <div className="share-buttons">
           <button 
             className={`share-btn facebook ${isSharing === 'facebook' ? 'sharing' : ''}`} 
             onClick={shareOnFacebook} 
-            title="Compartir en Facebook"
+                          title="Compartir en Facebook"
             disabled={isSharing === 'facebook'}
           >
             {isSharing === 'facebook' ? (
@@ -272,7 +273,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           <button 
             className={`share-btn x ${isSharing === 'twitter' ? 'sharing' : ''}`} 
             onClick={shareOnTwitter} 
-            title="Compartir en X (Twitter)"
+                          title="Compartir en X (Twitter)"
             disabled={isSharing === 'twitter'}
           >
             {isSharing === 'twitter' ? (
@@ -286,7 +287,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           <button 
             className={`share-btn linkedin ${isSharing === 'linkedin' ? 'sharing' : ''}`} 
             onClick={shareOnLinkedIn} 
-            title="Compartir en LinkedIn"
+                          title="Compartir en LinkedIn"
             disabled={isSharing === 'linkedin'}
           >
             {isSharing === 'linkedin' ? (
@@ -305,7 +306,7 @@ const BlogPostDetail: React.FC<BlogPostDetailProps> = ({
           <svg className="back-arrow-icon" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
           </svg>
-          Volver al Blog
+                      Volver al Blog
         </button>
       </div>
     </motion.div>

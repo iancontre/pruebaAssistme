@@ -1,5 +1,6 @@
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { fetchAllPlansWithStripe, PlanWithStripe } from './apiService';
+import { supportsScrollTimeline } from 'framer-motion';
 
 // Clave pública de Stripe desde variables de entorno
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -19,10 +20,10 @@ export const getStripe = async (): Promise<Stripe | null> => {
       throw new Error('Stripe publishable key is not configured');
     }
     
-    if (!stripePromise) {
+  if (!stripePromise) {
       console.log(' Creating new Stripe promise...');
-      stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
-    }
+    stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+  }
     
     const stripe = await stripePromise;
     if (!stripe) {
@@ -137,7 +138,7 @@ export const createCheckoutSession = async (request: CreateCheckoutSessionReques
       }
     }
     
-    console.log(' Stripe redirect successful');
+    console.log(' Stripe redirect successful', supportsScrollTimeline);
 
     // Retornar un objeto mock ya que redirectToCheckout no retorna session
     return {

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
+
 import "./Header.css";
 
 // Importar imágenes directamente
@@ -113,7 +114,9 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = (props) => {
   const location = useLocation();
-  const headerData = headersData[location.pathname] || headersData["/"];
+  
+  // Obtener los datos del header según la ruta actual
+  const currentPathData = headersData[location.pathname as keyof typeof headersData] || headersData["/"];
   
   // Debug: verificar que el wizardStep se está actualizando
   console.log('Header - wizardStep:', props.wizardStep, 'isWizard:', props.isWizard, 'isConfigWizard:', props.isConfigWizard);
@@ -140,10 +143,10 @@ const Header: React.FC<HeaderProps> = (props) => {
     // Debug: verificar qué datos se están usando
     console.log('Header - Using wizard data for step:', props.wizardStep, wizardData);
   } else {
-    title = props.title ?? headerData.title;
-    description = props.description ?? headerData.description;
-    image = props.image ?? headerData.image;
-    showButtons = props.showButtons ?? headerData.showButtons;
+    title = props.title ?? currentPathData.title;
+    description = props.description ?? currentPathData.description;
+    image = props.image ?? currentPathData.image;
+    showButtons = props.showButtons ?? currentPathData.showButtons;
   }
   
   const isWizard = props.isWizard ?? false;
@@ -201,15 +204,15 @@ const Header: React.FC<HeaderProps> = (props) => {
           <p className={isFaqs || isCustomerService ? "faqs-description" : ""}>{description}</p>
           {showButtons && (
             <div className="header-buttons">
-              <button
-                className={`btn ${isCustomerService ? "customer-service" : "primary"}`}
-                onClick={() => handleSectionNavigation('contact')}
-              >
-                Contact us
-              </button>
-              <Link to="/compra" className={`btn ${isCustomerService ? "customer-service-blue" : "secondary"}`}>
-                Pricing and Plans
-              </Link>
+                        <button
+            className={`btn ${isCustomerService ? "customer-service" : "primary"}`}
+            onClick={() => handleSectionNavigation('contact')}
+          >
+            Contact us
+          </button>
+          <Link to="/compra" className={`btn ${isCustomerService ? "customer-service-blue" : "secondary"}`}>
+            Pricing and Plans
+          </Link>
             </div>
           )}
         </div>

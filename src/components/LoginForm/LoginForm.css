@@ -243,3 +243,44 @@
     font-size: 0.95rem;
   }
 } 
+
+/* Estilos para el estado de loading */
+.login-btn.loading {
+  background: #ccc !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
+}
+
+.login-btn.loading:hover {
+  background: #ccc !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Estilos para campos deshabilitados */
+.login-form input:disabled {
+  background-color: #f5f5f5 !important;
+  color: #999 !important;
+  cursor: not-allowed !important;
+}
+
+.login-form input:disabled::placeholder {
+  color: #ccc !important;
+}
+
+/* Animación de loading para el botón */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.login-btn.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+} 

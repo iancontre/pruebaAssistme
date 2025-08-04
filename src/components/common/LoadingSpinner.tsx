@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { LoadingProps } from '../../types';
 import './LoadingSpinner.css';
 
@@ -11,16 +12,18 @@ interface SpinnerProps {
 export const LoadingSpinner: React.FC<SpinnerProps> = ({ 
   size = 'md', 
   color = 'primary',
-  text = 'Cargando...'
+  text
 }) => {
+  const defaultText = 'Loading...';
+  const displayText = text || defaultText;
   return (
     <div 
       className={`loading-spinner loading-spinner--${size} loading-spinner--${color}`}
       role="status"
-      aria-label={text}
+      aria-label={displayText}
     >
       <div className="spinner" aria-hidden="true"></div>
-      {text && <span className="loading-text">{text}</span>}
+      {displayText && <span className="loading-text">{displayText}</span>}
     </div>
   );
 };
@@ -35,7 +38,7 @@ export const LoadingWrapper: React.FC<LoadingProps> = ({
   if (isLoading) {
     return (
       <div className={`loading-wrapper ${className}`} data-testid={testId}>
-        {fallback || <LoadingSpinner text="Cargando..." />}
+        {fallback || <LoadingSpinner text="Loading..." />}
       </div>
     );
   }

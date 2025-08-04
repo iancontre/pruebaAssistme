@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+
 import './Testimonials.css';
 import quote from '../../assets/images/icons/comillas.png';
 import lineaFondo from '../../assets/images/LineasFondo.svg';
@@ -136,8 +137,8 @@ const Testimonials: React.FC = () => {
               className="linea-fondo-bg"
             />
           </div>
-          <p className="testimonials-subtitle">TESTIMONIAL</p>
-          <h2 className="testimonials-title">What Our Users Says</h2>
+          <p className="testimonials-subtitle">Discover why businesses choose Assist-Me for their virtual assistant needs</p>
+          <h2 className="testimonials-title">What Our Clients Say</h2>
         </div>
 
         {/* Testimonials Carousel */}

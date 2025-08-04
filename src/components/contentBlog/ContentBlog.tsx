@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+
 import "./ContentBlog.css";
 import { BsSearch } from "react-icons/bs";
 import imageblogone from '../../assets/images/blog 1.png';
