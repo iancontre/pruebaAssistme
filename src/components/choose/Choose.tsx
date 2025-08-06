@@ -1,10 +1,13 @@
 import React from "react";
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 import './Choose.css';
 import imageChoose from '../../assets/images/imagechoose.png';
 
 const Choose: React.FC = () => {
+  const { t } = useTranslation();
+  
   const containerVariants = {
     visible: { 
       transition: { 
@@ -44,15 +47,15 @@ const Choose: React.FC = () => {
           className="choose-text"
           variants={itemVariants}
         >
-          <h1 className='tittle-choose'>Why choose us ?</h1>
+          <h1 className='tittle-choose'>{t('choose.title')}</h1>
           
           <ul>
-          <p>Value Proposition</p>
-            <li>We offer personalized attention to incoming calls through our specialized advisors.</li>
-            <li>We answer 100% of the calls received by our clients.</li>
-            <li>We deliver excellence in service quality, as well as the tools provided to our clients (web portal, customized reports, and client satisfaction follow-ups).</li>
-            <li>We collect caller information to build a call history, avoiding the need to request the same details again—saving time and improving the caller experience on future interactions with Assist-Me.</li>
-            <li>A dedicated account manager is assigned to VIP clients who pay an additional fee for this premium service.</li>
+          <p>{t('choose.valueProposition')}</p>
+            <li>{t('choose.point1')}</li>
+            <li>{t('choose.point2')}</li>
+            <li>{t('choose.point3')}</li>
+            <li>{t('choose.point4')}</li>
+            <li>{t('choose.point5')}</li>
           </ul>
         </motion.div>
       </div>

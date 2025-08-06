@@ -1,16 +1,19 @@
 import React from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
 
 import './Contact.css';
 
 const Contact: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="contact-container">
-      <h1 className="contact-title">Contact</h1>
-      <p className="contact-subtitle">Any Question Or Remarks? Just Write Us A Message!</p>
+      <h1 className="contact-title">{t('contact.title')}</h1>
+      <p className="contact-subtitle">{t('contact.subtitle')}</p>
       <div className="contact-content">
         <div className="contact-info">
-          <h2>Contact Information</h2>
-          <p className="contact-info-desc">Say something to start a live chat!</p>
+          <h2>{t('contact.info.title')}</h2>
+          <p className="contact-info-desc">{t('contact.info.description')}</p>
           <ul className="contact-info-list">
             <li>
               <span className="contact-icon phone"></span>
@@ -40,31 +43,31 @@ const Contact: React.FC = () => {
         <form className="contact-form">
           <div className="form-row">
             <div className="form-group">
-              <label>First Name</label>
-              <input type="text" placeholder="Julie" />
+              <label>{t('contact.form.firstName')}</label>
+              <input type="text" placeholder={t('contact.form.firstNamePlaceholder')} />
             </div>
             <div className="form-group">
-              <label>Last Name</label>
-              <input type="text" placeholder="Doe" />
+              <label>{t('contact.form.lastName')}</label>
+              <input type="text" placeholder={t('contact.form.lastNamePlaceholder')} />
             </div>
           </div>
           <div className="form-row">
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" placeholder="julie@assistme.com" />
+              <label>{t('contact.form.email')}</label>
+              <input type="email" placeholder={t('contact.form.emailPlaceholder')} />
             </div>
             <div className="form-group">
-              <label>Phone Number</label>
-              <input type="text" placeholder="+1 012 3456 789" />
+              <label>{t('contact.form.phoneNumber')}</label>
+              <input type="text" placeholder={t('contact.form.phoneNumberPlaceholder')} />
             </div>
           </div>
           <div className="form-row">
             <div className="form-group full-width">
-              <label>Message</label>
-              <textarea placeholder="Write your message.."></textarea>
+              <label>{t('contact.form.message')}</label>
+              <textarea placeholder={t('contact.form.messagePlaceholder')}></textarea>
             </div>
           </div>
-          <button type="submit" className="send-btn">Send Message</button>
+          <button type="submit" className="send-btn">{t('contact.form.sendMessage')}</button>
         </form>
       </div>
     </div>

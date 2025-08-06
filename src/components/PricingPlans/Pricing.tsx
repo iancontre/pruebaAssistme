@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Pricing.css';
@@ -10,6 +11,7 @@ import { toast } from 'react-toastify';
 
 const Plans = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loadingPlans, setLoadingPlans] = useState(true);
@@ -133,32 +135,22 @@ const Plans = () => {
               <h2 className={`plan-price ${isFeatured ? 'fw-bold' : ''}`}>
                 ${plan.price ? Math.floor(plan.price) : 'N/A'}
               </h2>
-              <p className={`plan-sub ${isFeatured ? 'fw-bold' : ''}`}>
-                {plan.duration || 'Per Month'}
-              </p>
-            </div>
-            <p className="plan-minutes">{plan.included_minutes || 50} MINUTES</p>
-            <p className="plan-rate fw-bold">${plan.additional_minute_price || 1.89} per minute additional</p>
+                          <p className={`plan-sub ${isFeatured ? 'fw-bold' : ''}`}>
+              {plan.duration || t('pricing.perMonth')}
+            </p>
+          </div>
+          <p className="plan-minutes">{plan.included_minutes || 50} {t('pricing.minutes')}</p>
+          <p className="plan-rate fw-bold">${plan.additional_minute_price || 1.89} {t('pricing.perMinuteAdditional')}</p>
             <ul className="list-unstyled text-start mt-4">
-              {plan.features && plan.features.length > 0 ? (
-                plan.features.map((feature, idx) => (
-                  <li key={idx}>
-                    <i className="bi bi-check2-circle me-2"></i>{feature}
-                  </li>
-                ))
-              ) : (
-                // Features por defecto si no vienen del API
-                <>
-                  <li><i className="bi bi-check2-circle me-2"></i>No Setup Fees</li>
-                  <li><i className="bi bi-check2-circle me-2"></i>No Contracts</li>
-                  <li><i className="bi bi-check2-circle me-2"></i>100% Bilingual</li>
-                  <li><i className="bi bi-check2-circle me-2"></i>24/7/365 Answering</li>
-                  <li><i className="bi bi-check2-circle me-2"></i>Advanced Features</li>
-                </>
-              )}
+              {/* Siempre usar las traducciones para las características */}
+              <li><i className="bi bi-check2-circle me-2"></i>{t('pricing.features.noSetupFees')}</li>
+              <li><i className="bi bi-check2-circle me-2"></i>{t('pricing.features.noContracts')}</li>
+              <li><i className="bi bi-check2-circle me-2"></i>{t('pricing.features.bilingual')}</li>
+              <li><i className="bi bi-check2-circle me-2"></i>{t('pricing.features.answering')}</li>
+              <li><i className="bi bi-check2-circle me-2"></i>{t('pricing.features.advancedFeatures')}</li>
             </ul>
                             <PlanButton 
-                  text="Sign Up" 
+                  text={t('pricing.signUp')} 
                   variant={isFeatured ? "warning" : "dark"} 
                   onClick={() => goToWizard(plan)} 
                 />
@@ -173,12 +165,12 @@ const Plans = () => {
       <div className="row justify-content-center g-5">
         {loadingPlans ? (
           // Mostrar loading mientras cargan los planes
-          <div className="col-12 text-center">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
+                      <div className="col-12 text-center">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">{t('pricing.loading')}</span>
+              </div>
+              <p className="mt-3">{t('pricing.loading')}</p>
             </div>
-            <p className="mt-3">Loading...</p>
-          </div>
         ) : plans.length > 0 ? (
           // Ordenar planes: STARTER, PRO, BUSINESS
           (() => {
@@ -198,7 +190,7 @@ const Plans = () => {
         ) : (
           // Mostrar mensaje si no hay planes disponibles
           <div className="col-12 text-center">
-            <p>No plans available at the moment. Please try again later.</p>
+            <p>{t('pricing.noPlansAvailable')}</p>
           </div>
         )}
       </div>

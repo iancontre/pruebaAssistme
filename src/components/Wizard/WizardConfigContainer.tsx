@@ -3,13 +3,10 @@ import WizardSidebar from './WizardSidebar';
 import Header from '../header/Header';
 import './Wizard.css';
 import finalize1 from '../../assets/images/finalize 1.png';
+import prevIcon from '../../assets/images/icons/prevIcon.png';
+import nexicon from '../../assets/images/icons/nexicon.png';
 import { useFormValidation } from '../../hooks/useFormValidation';
-
-const configSteps = [
-  { label: 'SETUP', description: 'Configure your call handling' },
-  { label: 'OPTIONS', description: 'Choose your preferences' },
-  { label: 'CONFIRM', description: 'Review and confirm your setup' },
-];
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface WizardConfigContainerProps {
   onConfigComplete?: (data: any) => void;
@@ -17,7 +14,14 @@ interface WizardConfigContainerProps {
 }
 
 const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigComplete, isSubmitting }) => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
+  
+  const configSteps = [
+    { label: t('wizardConfig.steps.setup.label'), description: t('wizardConfig.steps.setup.description') },
+    { label: t('wizardConfig.steps.options.label'), description: t('wizardConfig.steps.options.description') },
+    { label: t('wizardConfig.steps.confirm.label'), description: t('wizardConfig.steps.confirm.description') },
+  ];
   
   // Validación para el paso 1 (Setup)
   const setupValidation = useFormValidation({
@@ -80,6 +84,27 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
     openSaturday: true, // <-- para el checkbox de Saturday
     openSunday: true,   // <-- para el checkbox de Sunday
     weekendOpen: true,
+    // Horarios de lunes a viernes
+    weekdaysOpenHour: '09',
+    weekdaysOpenMinute: '00',
+    weekdaysOpenPeriod: 'am',
+    weekdaysCloseHour: '06',
+    weekdaysCloseMinute: '00',
+    weekdaysClosePeriod: 'pm',
+    // Horarios de sábado
+    saturdayOpenHour: '09',
+    saturdayOpenMinute: '00',
+    saturdayOpenPeriod: 'am',
+    saturdayCloseHour: '05',
+    saturdayCloseMinute: '00',
+    saturdayClosePeriod: 'pm',
+    // Horarios de domingo
+    sundayOpenHour: '09',
+    sundayOpenMinute: '00',
+    sundayOpenPeriod: 'am',
+    sundayCloseHour: '05',
+    sundayCloseMinute: '00',
+    sundayClosePeriod: 'pm',
     reportFrequency: 'daily',
     reportHour: '09',
     reportMinute: '00',
@@ -101,6 +126,233 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
     'Pacific Time Zone (UTC-08:00)',
   ];
 
+  // Función helper para generar opciones de horas (1-12)
+  const generateHourOptions = () => {
+    return [...Array(12)].map((_, i) => {
+      const val = (i + 1).toString().padStart(2, '0');
+      return <option key={val} value={val}>{val}</option>;
+    });
+  };
+
+  // Función helper para generar opciones de minutos (00-59)
+  const generateMinuteOptions = () => {
+    return [...Array(60)].map((_, i) => {
+      const val = i.toString().padStart(2, '0');
+      return <option key={val} value={val}>{val}</option>;
+    });
+  };
+
+  // Función helper para generar opciones de período (am/pm)
+  const generatePeriodOptions = () => {
+    return [
+      <option key="am" value="am">{t('wizardConfig.timeSelectors.am')}</option>,
+      <option key="pm" value="pm">{t('wizardConfig.timeSelectors.pm')}</option>
+    ];
+  };
+
+  // Función para generar días disponibles traducidos
+  const generateAvailableDays = () => {
+    const days = [
+      { 
+        day: 'Wednesday', 
+        date: 'February 26', 
+        isToday: true, 
+        value: '2025-02-26' 
+      },
+      { 
+        day: 'Thursday', 
+        date: 'February 27', 
+        isToday: false, 
+        value: '2025-02-27' 
+      },
+      { 
+        day: 'Friday', 
+        date: 'February 28', 
+        isToday: false, 
+        value: '2025-02-28' 
+      },
+      { 
+        day: 'Monday', 
+        date: 'March 3', 
+        isToday: false, 
+        value: '2025-03-03' 
+      },
+      { 
+        day: 'Tuesday', 
+        date: 'March 4', 
+        isToday: false, 
+        value: '2025-03-04' 
+      }
+    ];
+
+    return days.map(({ day, date, isToday, value }) => {
+      const translatedDay = t(`wizardConfig.days.${day.toLowerCase()}`);
+      const translatedDate = t(`wizardConfig.months.${date.split(' ')[0].toLowerCase()}`) + ' ' + date.split(' ')[1];
+      const todayText = isToday ? ` (${t('wizardConfig.today')})` : '';
+      
+      return {
+        label: `${translatedDay}, ${translatedDate}${todayText}`,
+        value: value
+      };
+    });
+  };
+
+  // Estilos comunes para los selectores de tiempo
+  const timeSelectorStyle = {
+    width: 45,
+    textAlign: 'center' as const,
+    padding: '2px 4px',
+    height: 24,
+    fontSize: 11,
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+    backgroundColor: '#fff',
+    outline: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    // Estilo para cambiar el color de la flecha del selector
+    appearance: 'none' as const,
+    backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 4px center',
+    backgroundSize: '12px',
+    paddingRight: '20px'
+  };
+
+  const periodSelectorStyle = {
+    width: 40,
+    textAlign: 'center' as const,
+    padding: '2px 4px',
+    height: 24,
+    fontSize: 11,
+    border: '1px solid #ccc',
+    borderRadius: '3px',
+    backgroundColor: '#fff',
+    outline: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    // Estilo para cambiar el color de la flecha del selector
+    appearance: 'none' as const,
+    backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 4px center',
+    backgroundSize: '12px',
+    paddingRight: '20px'
+  };
+
+  // Función helper para renderizar selectores de tiempo
+  const renderTimeSelectors = (prefix: string) => {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+        <select
+          className="wizard-config-textarea"
+          style={timeSelectorStyle}
+          value={step2[`${prefix}OpenHour` as keyof typeof step2] as string}
+          onChange={e => handleStep2Change(`${prefix}OpenHour`, e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#4a90e2';
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(74, 144, 226, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#ccc';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          {generateHourOptions()}
+        </select>
+        <span style={{ margin: '0 1px', fontSize: 11, color: '#18344C', fontWeight: 'bold' }}>:</span>
+        <select
+          className="wizard-config-textarea"
+          style={timeSelectorStyle}
+          value={step2[`${prefix}OpenMinute` as keyof typeof step2] as string}
+          onChange={e => handleStep2Change(`${prefix}OpenMinute`, e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#4a90e2';
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(74, 144, 226, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#ccc';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          {generateMinuteOptions()}
+        </select>
+        <select
+          className="wizard-config-textarea"
+          style={periodSelectorStyle}
+          value={step2[`${prefix}OpenPeriod` as keyof typeof step2] as string}
+          onChange={e => handleStep2Change(`${prefix}OpenPeriod`, e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#4a90e2';
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(74, 144, 226, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#ccc';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          {generatePeriodOptions()}
+        </select>
+      </div>
+    );
+  };
+
+  const renderCloseTimeSelectors = (prefix: string) => {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+        <select
+          className="wizard-config-textarea"
+          style={timeSelectorStyle}
+          value={step2[`${prefix}CloseHour` as keyof typeof step2] as string}
+          onChange={e => handleStep2Change(`${prefix}CloseHour`, e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#4a90e2';
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(74, 144, 226, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#ccc';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          {generateHourOptions()}
+        </select>
+        <span style={{ margin: '0 1px', fontSize: 11, color: '#18344C', fontWeight: 'bold' }}>:</span>
+        <select
+          className="wizard-config-textarea"
+          style={timeSelectorStyle}
+          value={step2[`${prefix}CloseMinute` as keyof typeof step2] as string}
+          onChange={e => handleStep2Change(`${prefix}CloseMinute`, e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#4a90e2';
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(74, 144, 226, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#ccc';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          {generateMinuteOptions()}
+        </select>
+        <select
+          className="wizard-config-textarea"
+          style={periodSelectorStyle}
+          value={step2[`${prefix}ClosePeriod` as keyof typeof step2] as string}
+          onChange={e => handleStep2Change(`${prefix}ClosePeriod`, e.target.value)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = '#4a90e2';
+            e.currentTarget.style.boxShadow = '0 0 0 1px rgba(74, 144, 226, 0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = '#ccc';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          {generatePeriodOptions()}
+        </select>
+      </div>
+    );
+  };
+
   // Función para verificar si al menos una opción de usage está seleccionada
   const isUsageValid = () => {
     return Object.values(step2.usage).some(value => value === true);
@@ -112,7 +364,8 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
       case 0:
         return setupValidation.isValid;
       case 1:
-        return optionsValidation.isValid && isUsageValid();
+        // Para el paso 2, solo requerimos que al menos un checkbox de uso esté seleccionado
+        return isUsageValid();
       case 2:
         return confirmValidation.isValid;
       default:
@@ -209,19 +462,40 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
         <>
           <div className="wizard-form-bg" style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
           <div className="wizard-form-foreground" style={{ position: 'relative', zIndex: 1 }}>
+            {/* Título y subtítulo centrados al nivel del formulario */}
+            <div className="wizard-title-container">
+              <h2 style={{ 
+                fontSize: '28px', 
+                fontWeight: 700, 
+                color: '#18344C', 
+                margin: '0 0 8px 0',
+                lineHeight: '1.2',
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.finalize.mainTitle')}
+              </h2>
+            </div>
+            
             <form className="wizard-form" autoComplete="off" style={{ position: 'relative', minHeight: 500 }}>
               <div style={{ maxWidth: 500, paddingRight: 180 }}>
-                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 18, marginBottom: 24 }}>Welcome</div>
+                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 18, marginBottom: 24 }}>{t('wizardConfig.finalize.welcome')}</div>
                 <div style={{ color: '#222', fontSize: 16, marginBottom: 32, maxWidth: 420 }}>
-                  We want you to know that we are committed to delivering the very best service to you and to your clients. We understand that every interaction counts and we never give any less than 100% to all of our clients and all of their clients.
+                  {t('wizardConfig.finalize.welcomeText')}
                 </div>
-                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 18, marginBottom: 12 }}>Next Step</div>
-                <div style={{ color: '#222', fontSize: 16, marginBottom: 32, maxWidth: 420 }}>
-                  A setup specialist will call you at 678-427-1932 on February 26 at 4:00pm EST to finalize everything and get you live.<br /><br />We look forward to speaking with you.
-                </div>
-                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 32, marginTop: 48, lineHeight: 1.1 }}>
-                  We can't wait to<br />Start Working<br />for you
-                </div>
+                <div style={{ fontWeight: 700, color: '#18344C', fontSize: 18, marginBottom: 12 }}>{t('wizardConfig.finalize.nextStep')}</div>
+                <div 
+                  style={{ color: '#222', fontSize: 16, marginBottom: 32, maxWidth: 420 }}
+                  dangerouslySetInnerHTML={{ 
+                    __html: t('wizardConfig.finalize.nextStepText')
+                      .replace('{phoneNumber}', '678-427-1932')
+                      .replace('{date}', 'February 26')
+                      .replace('{time}', '4:00pm')
+                  }}
+                />
+                <div 
+                  style={{ fontWeight: 700, color: '#18344C', fontSize: 32, marginTop: 48, lineHeight: 1.1 }}
+                  dangerouslySetInnerHTML={{ __html: t('wizardConfig.finalize.title') }}
+                />
                 <button
                   type="button"
                   className="wizard-next-btn"
@@ -229,7 +503,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                   onClick={handleFinishConfig}
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Enviando...' : 'Finalizar y Enviar'}
+                  {isSubmitting ? t('wizardConfig.finalize.sending') : t('wizardConfig.finalize.button')}
                 </button>
               </div>
               <img 
@@ -254,10 +528,33 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
         <div style={{ position: 'relative', width: '100%' }}>
           <div className="wizard-form-bg" />
           <div className="wizard-form-foreground">
+            {/* Título y subtítulo centrados al nivel del formulario */}
+            <div className="wizard-title-container">
+              <h2 style={{ 
+                fontSize: '28px', 
+                fontWeight: 700, 
+                color: '#18344C', 
+                margin: '0 0 8px 0',
+                lineHeight: '1.2',
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.title')}
+              </h2>
+              <p style={{ 
+                fontSize: '16px', 
+                color: '#666', 
+                margin: 0,
+                fontWeight: 400,
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.subtitle')}
+              </p>
+            </div>
+            
             <form className="wizard-form" autoComplete="off">
               <div className="wizard-form-group">
                 <label className="wizard-config-label">
-                  Many of our customers opt to have a prerecorded announcement followed by hold music before a live agent answer (this service is free). If you would like to use this service, what would you like it to say?
+                  {t('wizardConfig.setup.announcement.label')}
                 </label>
                 <textarea
                   name="announcement"
@@ -266,6 +563,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                   onBlur={setupValidation.handleBlur}
                   rows={3}
                   style={{ width: '100%' }}
+                  placeholder={t('wizardConfig.setup.announcement.placeholder')}
                   className={`wizard-config-textarea ${setupValidation.touched.announcement && !setupValidation.isFieldValid('announcement') ? 'error' : ''} ${setupValidation.touched.announcement && setupValidation.isFieldValid('announcement') ? 'valid' : ''}`}
                 />
                 {setupValidation.touched.announcement && setupValidation.getFieldError('announcement') && (
@@ -273,7 +571,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 )}
               </div>
               <div className="wizard-form-group">
-                <label className="wizard-config-label">When a live agent answer, how would you like them to greet your caller?</label>
+                <label className="wizard-config-label">{t('wizardConfig.setup.greeting.label')}</label>
                 <textarea
                   name="greeting"
                   value={setupValidation.fields.greeting}
@@ -281,6 +579,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                   onBlur={setupValidation.handleBlur}
                   rows={3}
                   style={{ width: '100%' }}
+                  placeholder={t('wizardConfig.setup.greeting.placeholder')}
                   className={`wizard-config-textarea ${setupValidation.touched.greeting && !setupValidation.isFieldValid('greeting') ? 'error' : ''} ${setupValidation.touched.greeting && setupValidation.isFieldValid('greeting') ? 'valid' : ''}`}
                 />
                 {setupValidation.touched.greeting && setupValidation.getFieldError('greeting') && (
@@ -288,7 +587,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 )}
               </div>
               <div className="wizard-form-group">
-                <label className="wizard-config-label">When a live agent disconnects, how would you like the caller to say goodbye?</label>
+                <label className="wizard-config-label">{t('wizardConfig.setup.goodbye.label')}</label>
                 <textarea
                   name="goodbye"
                   value={setupValidation.fields.goodbye}
@@ -296,6 +595,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                   onBlur={setupValidation.handleBlur}
                   rows={3}
                   style={{ width: '100%' }}
+                  placeholder={t('wizardConfig.setup.goodbye.placeholder')}
                   className={`wizard-config-textarea ${setupValidation.touched.goodbye && !setupValidation.isFieldValid('goodbye') ? 'error' : ''} ${setupValidation.touched.goodbye && setupValidation.isFieldValid('goodbye') ? 'valid' : ''}`}
                 />
                 {setupValidation.touched.goodbye && setupValidation.getFieldError('goodbye') && (
@@ -303,7 +603,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 )}
               </div>
               <div className="wizard-form-group">
-                <label className="wizard-config-label">Additional observations?</label>
+                <label className="wizard-config-label">{t('wizardConfig.setup.observations.label')}</label>
                 <textarea
                   name="observations"
                   value={setupValidation.fields.observations}
@@ -311,6 +611,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                   onBlur={setupValidation.handleBlur}
                   rows={2}
                   style={{ width: '100%' }}
+                  placeholder={t('wizardConfig.setup.observations.placeholder')}
                   className={`wizard-config-textarea ${setupValidation.touched.observations && !setupValidation.isFieldValid('observations') ? 'error' : ''} ${setupValidation.touched.observations && setupValidation.isFieldValid('observations') ? 'valid' : ''}`}
                 />
                 {setupValidation.touched.observations && setupValidation.getFieldError('observations') && (
@@ -327,12 +628,35 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
         <div style={{ position: 'relative', width: '100%' }}>
           <div className="wizard-form-bg" />
           <div className="wizard-form-foreground">
-            <form className="wizard-form" autoComplete="off" onSubmit={e => e.preventDefault()} style={{ minWidth: 700, maxWidth: 850 }}>
+            {/* Título y subtítulo centrados al nivel del formulario */}
+            <div className="wizard-title-container">
+              <h2 style={{ 
+                fontSize: '28px', 
+                fontWeight: 700, 
+                color: '#18344C', 
+                margin: '0 0 8px 0',
+                lineHeight: '1.2',
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.step2.title')}
+              </h2>
+              <p style={{ 
+                fontSize: '16px', 
+                color: '#666', 
+                margin: 0,
+                fontWeight: 400,
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.step2.subtitle')}
+              </p>
+            </div>
+            
+            <form className="wizard-form wizard-config-step2" autoComplete="off" onSubmit={e => e.preventDefault()}>
               <div className="wizard-form-group" style={{ padding: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <div style={{ flex: 1, textAlign: 'left' }}>
                     <label className="wizard-config-label" style={{ marginBottom: 0 }}>
-                      What time zone is your business located in?
+                      {t('wizardConfig.options.timezone.label')}
                     </label>
                   </div>
                   <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
@@ -342,9 +666,8 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                       value={optionsValidation.fields.timezone}
                       onChange={optionsValidation.handleChange}
                       onBlur={optionsValidation.handleBlur}
-                      style={{ maxWidth: 350, minWidth: 250 }}
                     >
-                      <option value="">Select Time Zone</option>
+                      <option value="">{t('wizardConfig.options.timezone.placeholder')}</option>
                       {timezones.map(tz => <option key={tz} value={tz}>{tz}</option>)}
                     </select>
                     {optionsValidation.touched.timezone && optionsValidation.getFieldError('timezone') && (
@@ -354,7 +677,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 </div>
               </div>
               <div className="wizard-form-group">
-                <label className="wizard-config-label">How do you plan on using our service?</label>
+                <label className="wizard-config-label">{t('wizardConfig.options.usage.label')}</label>
                 <div style={{
   display: 'grid',
   gridTemplateColumns: 'repeat(3, 1fr)',
@@ -366,11 +689,11 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
   width: '100%'
 }}>
   {[
-    { key: 'lunch', label: 'Lunch' },
-    { key: 'afterHours', label: 'After Hours' },
-    { key: 'overflow', label: 'Call Overflow/Busy' },
-    { key: 'virtualReceptionist', label: '24/7 Virtual Receptionist' },
-    { key: 'other', label: 'Other' },
+    { key: 'lunch', label: t('wizardConfig.options.usage.options.lunch') },
+    { key: 'afterHours', label: t('wizardConfig.options.usage.options.afterHours') },
+    { key: 'overflow', label: t('wizardConfig.options.usage.options.overflow') },
+    { key: 'virtualReceptionist', label: t('wizardConfig.options.usage.options.virtualReceptionist') },
+    { key: 'other', label: t('wizardConfig.options.usage.options.other') },
   ].map((opt) => (
     <label key={opt.key} style={{
       display: 'flex', flexDirection: 'row', alignItems: 'center', cursor: 'pointer', gap: 10, width: '100%', height: 48, minWidth: 0, justifyContent: 'flex-start',
@@ -411,12 +734,14 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
               <div className="wizard-form-group" style={{ padding: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <div style={{ flex: 1, textAlign: 'left' }}>
-                    <label className="wizard-config-label" style={{ marginBottom: 0 }}>
-                      Are your business hours the same<br />Monday - Friday?
-                    </label>
+                    <label 
+                      className="wizard-config-label" 
+                      style={{ marginBottom: 0 }}
+                      dangerouslySetInnerHTML={{ __html: t('wizardConfig.options.businessHours.label') }}
+                    />
                   </div>
                   <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: 32 }}>
-                    {[{ value: true, label: 'Yes' }, { value: false, label: 'No' }].map(opt => (
+                    {[{ value: true, label: t('wizardConfig.options.businessHours.yes') }, { value: false, label: t('wizardConfig.options.businessHours.no') }].map(opt => (
                       <label key={String(opt.value)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 10 }}>
                         <input
                           type="radio"
@@ -459,10 +784,10 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 <table style={{ width: '100%', borderCollapse: 'collapse', background: '#18344C', color: '#fff', borderRadius: 12, overflow: 'hidden' }}>
                   <thead>
                     <tr>
-                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>Open</th>
-                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>Day</th>
-                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8 }}>Hours</th>
-                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8 }}>Lunch</th>
+                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>{t('wizardConfig.table.open')}</th>
+                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>{t('wizardConfig.table.day')}</th>
+                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8, textAlign: 'center' }}>{t('wizardConfig.table.hours')}</th>
+                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8 }}>{t('wizardConfig.table.lunch')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -497,11 +822,15 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                           </span>
                         </label>
                       </td>
-                      <td>Monday-friday</td>
-                      <td>9:00 am</td>
-                      <td>6:00 pm</td>
-                      <td>none</td>
-                      <td>none</td>
+                      <td>{t('wizardConfig.table.mondayFriday')}</td>
+                      <td style={{ textAlign: 'center', padding: '6px 4px', verticalAlign: 'middle' }}>
+                        {renderTimeSelectors('weekdays')}
+                      </td>
+                      <td style={{ textAlign: 'center', padding: '6px 4px', verticalAlign: 'middle' }}>
+                        {renderCloseTimeSelectors('weekdays')}
+                      </td>
+                      <td>{t('wizardConfig.table.none')}</td>
+                      <td>{t('wizardConfig.table.none')}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -510,11 +839,11 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                   <div style={{ flex: 1, textAlign: 'left' }}>
                     <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
-                      Are you open during the weekend?
+                      {t('wizardConfig.options.weekend.label')}
                     </label>
                   </div>
                   <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: 20 }}>
-                    {[{ value: true, label: 'Yes' }, { value: false, label: 'No' }].map(opt => (
+                    {[{ value: true, label: t('wizardConfig.options.weekend.yes') }, { value: false, label: t('wizardConfig.options.weekend.no') }].map(opt => (
                       <label key={String(opt.value)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8 }}>
                         <input
                           type="radio"
@@ -557,10 +886,10 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 <table style={{ width: '100%', borderCollapse: 'collapse', background: '#18344C', color: '#fff', borderRadius: 12, overflow: 'hidden' }}>
                   <thead>
                     <tr>
-                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>Open</th>
-                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>Day</th>
-                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8 }}>Hours</th>
-                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8 }}>Lunch</th>
+                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>{t('wizardConfig.table.open')}</th>
+                      <th style={{ background: '#18344C', color: '#fff', padding: 8 }}>{t('wizardConfig.table.day')}</th>
+                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8, textAlign: 'center' }}>{t('wizardConfig.table.hours')}</th>
+                      <th colSpan={2} style={{ background: '#18344C', color: '#fff', padding: 8 }}>{t('wizardConfig.table.lunch')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -595,11 +924,15 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                           </span>
                         </label>
                       </td>
-                      <td>Saturday</td>
-                      <td>9:00 am</td>
-                      <td>5:00 pm</td>
-                      <td>none</td>
-                      <td>none</td>
+                      <td>{t('wizardConfig.table.saturday')}</td>
+                      <td style={{ textAlign: 'center', padding: '6px 4px', verticalAlign: 'middle' }}>
+                        {renderTimeSelectors('saturday')}
+                      </td>
+                      <td style={{ textAlign: 'center', padding: '6px 4px', verticalAlign: 'middle' }}>
+                        {renderCloseTimeSelectors('saturday')}
+                      </td>
+                      <td>{t('wizardConfig.table.none')}</td>
+                      <td>{t('wizardConfig.table.none')}</td>
                     </tr>
                     <tr style={{ background: '#e9eef2', color: '#18344C' }}>
                       <td style={{ textAlign: 'center', verticalAlign: 'middle', padding: 0 }}>
@@ -632,28 +965,32 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                           </span>
                         </label>
                       </td>
-                      <td>Sunday</td>
-                      <td>9:00 am</td>
-                      <td>5:00 pm</td>
-                      <td>none</td>
-                      <td>none</td>
+                      <td>{t('wizardConfig.table.sunday')}</td>
+                      <td style={{ textAlign: 'center', padding: '6px 4px', verticalAlign: 'middle' }}>
+                        {renderTimeSelectors('sunday')}
+                      </td>
+                      <td style={{ textAlign: 'center', padding: '6px 4px', verticalAlign: 'middle' }}>
+                        {renderCloseTimeSelectors('sunday')}
+                      </td>
+                      <td>{t('wizardConfig.table.none')}</td>
+                      <td>{t('wizardConfig.table.none')}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
               <div className="wizard-form-group">
                 <p style={{ color: '#18344C', fontWeight: 500, marginBottom: 8 }}>
-                  We provide a Summary Report, free of charge, for the previous 24 hours of messages.
+                  {t('wizardConfig.options.report.description')}
                 </p>
                 <div className="wizard-form-group" style={{ padding: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <div style={{ flex: 1, textAlign: 'left' }}>
                       <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
-                        How often would you like to receive this report?
+                        {t('wizardConfig.options.report.frequency.label')}
                       </label>
                     </div>
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: 20 }}>
-                      {[{ value: 'daily', label: 'Daily' }, { value: 'm-f', label: 'Monday - Friday' }].map(opt => (
+                      {[{ value: 'daily', label: t('wizardConfig.options.report.frequency.daily') }, { value: 'm-f', label: t('wizardConfig.options.report.frequency.mondayFriday') }].map(opt => (
                         <label key={opt.value} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8 }}>
                           <input
                             type="radio"
@@ -693,11 +1030,11 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 </div>
                 <div className="wizard-form-group" style={{ padding: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
-                        At what time would you like to receive the Summary Report?
-                      </label>
-                    </div>
+                                      <div style={{ flex: 1, textAlign: 'left' }}>
+                    <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
+                      {t('wizardConfig.options.report.time.label')}
+                    </label>
+                  </div>
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
                       <select
                         className="wizard-config-textarea"
@@ -727,30 +1064,30 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                         value={step2.reportPeriod}
                         onChange={e => handleStep2Change('reportPeriod', e.target.value)}
                       >
-                        <option value="am">am</option>
-                        <option value="pm">pm</option>
+                        <option value="am">{t('wizardConfig.timeSelectors.am')}</option>
+                        <option value="pm">{t('wizardConfig.timeSelectors.pm')}</option>
                       </select>
                     </div>
                   </div>
                 </div>
                 <div className="wizard-form-group" style={{ padding: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
-                        To which email would you like to receive the report?
-                      </label>
-                    </div>
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
-                      <input
-                        name="reportEmail"
-                        className={`wizard-config-textarea ${optionsValidation.touched.reportEmail && !optionsValidation.isFieldValid('reportEmail') ? 'error' : ''} ${optionsValidation.touched.reportEmail && optionsValidation.isFieldValid('reportEmail') ? 'valid' : ''}`}
-                        type="email"
-                        value={optionsValidation.fields.reportEmail}
-                        onChange={optionsValidation.handleChange}
-                        onBlur={optionsValidation.handleBlur}
-                        style={{ maxWidth: 300, width: '100%' }}
-                        placeholder="Enter email address"
-                      />
+                                      <div style={{ flex: 1, textAlign: 'left' }}>
+                    <label className="wizard-config-label" style={{ marginBottom: 0, fontSize: 16 }}>
+                      {t('wizardConfig.options.report.email.label')}
+                    </label>
+                  </div>
+                  <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                    <input
+                      name="reportEmail"
+                      className={`wizard-config-textarea ${optionsValidation.touched.reportEmail && !optionsValidation.isFieldValid('reportEmail') ? 'error' : ''} ${optionsValidation.touched.reportEmail && optionsValidation.isFieldValid('reportEmail') ? 'valid' : ''}`}
+                      type="email"
+                      value={optionsValidation.fields.reportEmail}
+                      onChange={optionsValidation.handleChange}
+                      onBlur={optionsValidation.handleBlur}
+                      style={{ maxWidth: 300, width: '100%' }}
+                      placeholder={t('wizardConfig.options.report.email.placeholder')}
+                    />
                     </div>
                   </div>
                   {optionsValidation.touched.reportEmail && optionsValidation.getFieldError('reportEmail') && (
@@ -766,13 +1103,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
     }
     if (currentStep === 2) {
       // Paso 3: Layout igual a la imagen proporcionada, con el mismo contenedor y botón Next Step funcional
-      const availableDays = [
-        { label: 'Wednesday, February 26 (Today)', value: '2025-02-26' },
-        { label: 'Thursday, February 27', value: '2025-02-27' },
-        { label: 'Friday,February 28', value: '2025-02-28' },
-        { label: 'Monday, March 3', value: '2025-03-03' },
-        { label: 'Tuesday,March 4', value: '2025-03-04' },
-      ];
+      const availableDays = generateAvailableDays();
       const availableSlots = {
         '2025-02-26': [
           { time: '09:30 AM', disabled: true },
@@ -806,18 +1137,41 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
         <div style={{ position: 'relative', width: '100%' }}>
           <div className="wizard-form-bg" />
           <div className="wizard-form-foreground">
-            <form className="wizard-form" autoComplete="off" style={{ minWidth: 700, maxWidth: 850 }} onSubmit={e => e.preventDefault()}>
+            {/* Título y subtítulo centrados al nivel del formulario */}
+            <div className="wizard-title-container">
+              <h2 style={{ 
+                fontSize: '28px', 
+                fontWeight: 700, 
+                color: '#18344C', 
+                margin: '0 0 8px 0',
+                lineHeight: '1.2',
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.step3.title')}
+              </h2>
+              <p style={{ 
+                fontSize: '16px', 
+                color: '#666', 
+                margin: 0,
+                fontWeight: 400,
+                textAlign: 'center'
+              }}>
+                {t('wizardConfig.step3.subtitle')}
+              </p>
+            </div>
+            
+            <form className="wizard-form wizard-config-step3" autoComplete="off" style={{ minWidth: 700, maxWidth: 850 }} onSubmit={e => e.preventDefault()}>
               <div style={{ maxWidth: 700, margin: '0 auto', padding: 32 }}>
                 <div style={{ color: '#18344C', fontSize: 18, marginBottom: 16 }}>
-                  Your account is now being processed, however we would like to set up a time for one of our setup specialists to call you to review your instructions and the handling of your calls
+                  {t('wizardConfig.confirm.title')}
                 </div>
                 <div style={{ color: '#18344C', fontSize: 16, marginBottom: 24 }}>
-                  Please choose the time slot that would work best for you
+                  {t('wizardConfig.confirm.subtitle')}
                 </div>
                 <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', marginBottom: 32 }}>
                   {/* Días */}
                   <div>
-                    <div style={{ fontWeight: 700, marginBottom: 16, fontSize: 18 }}>Select an available day</div>
+                    <div style={{ fontWeight: 700, marginBottom: 16, fontSize: 18 }}>{t('wizardConfig.confirm.daySelection.label')}</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {availableDays.map(day => (
                         <button
@@ -875,10 +1229,10 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
                 {/* Confirmación de número */}
                 <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 24 }}>
                   <span style={{ color: '#18344C', fontSize: 16 }}>
-                    Is the best number to reach you the number you previously provided, <b>{phoneNumber}</b>
+                    {t('wizardConfig.confirm.phoneConfirmation.label').replace('{phoneNumber}', phoneNumber)}
                   </span>
                   <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
-                    {[{ value: true, label: 'Yes' }, { value: false, label: 'No' }].map(opt => (
+                    {[{ value: true, label: t('wizardConfig.confirm.phoneConfirmation.yes') }, { value: false, label: t('wizardConfig.confirm.phoneConfirmation.no') }].map(opt => (
                       <label key={String(opt.value)} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: 8 }}>
                         <input
                           type="radio"
@@ -936,6 +1290,7 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
           onNextStep={handleNextStep}
           onPrevStep={handlePrevStep}
           forceNoValidation={true}
+          showFinalize={showFinalize}
         />
         <div className="wizard-content">
           <div className="wizard-form-container">
@@ -945,16 +1300,16 @@ const WizardConfigContainer: React.FC<WizardConfigContainerProps> = ({ onConfigC
             <div className="wizard-navigation mobile">
               {(currentStep > 0 || showFinalize) && (
                 <button className="wizard-prev-btn-circular" onClick={handlePrevStep}>
-                  Prev
+                  <img src={prevIcon} alt="Previous" style={{ width: 24, height: 24 }} />
                 </button>
               )}
-              {currentStep < configSteps.length - 1 && !showFinalize && (
+              {(currentStep < configSteps.length - 1 || currentStep === 2) && !showFinalize && (
                 <button 
                   className={`wizard-next-btn ${!isCurrentStepValid() ? 'disabled' : ''}`}
                   onClick={handleNextStep}
                   disabled={!isCurrentStepValid()}
                 >
-                  Next Step
+                  {t('wizardConfig.navigation.nextStep')} <img src={nexicon} alt="Next" style={{ width: 24, height: 24 }} />
                 </button>
               )}
             </div>

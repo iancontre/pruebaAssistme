@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 import './Intersection.css';
 import imagenIntersection from "../../assets/images/imageintersection.png";
@@ -44,6 +45,8 @@ const slideInRight = {
 };
 
 const Intersection: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <motion.section 
       className="intersection-container"
@@ -72,7 +75,7 @@ const Intersection: React.FC = () => {
           variants={slideInRight}
         >
           <h2 className="intersection-title">
-            Still Don't Know Our Pricing And Plans?
+            {t('intersection.title')}
           </h2>
           
           <motion.button 
@@ -94,7 +97,7 @@ const Intersection: React.FC = () => {
               }
             }}
           >
-            Pricing And Plans
+            {t('intersection.button')}
             <img 
               src={userinterfaceIcon} 
               alt="User Interface" 

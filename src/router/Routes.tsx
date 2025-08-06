@@ -9,6 +9,7 @@ import CustomerService from '../pages/CustomerService';
 import DashboardPage from '../pages/DashboardPage';
 import ReporteLlamadasPage from '../pages/ReporteLlamadasPage';
 
+
 const AppRoutes = () => {
   return (
     <BrowserRouter>
@@ -22,6 +23,7 @@ const AppRoutes = () => {
         <Route path="/reporte-llamadas" element={<ReporteLlamadasPage />} />
         <Route path="/compra" element={<CompraPage />} />
         <Route path="/customerService" element={<CustomerService />} />
+
         {/* Aquí puedes agregar más rutas según necesites */}
       </Routes>
     </BrowserRouter>

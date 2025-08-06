@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import './Nav.css';
 import logoNegro from '../../assets/images/LogoNegro.PNG';
+import { useLanguage } from '../../context/LanguageContext';
+import { useTranslation } from '../../hooks/useTranslation';
 
 
 const CustomNav = () => {
-  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const { currentLanguage, changeLanguage } = useLanguage();
+  const { t } = useTranslation();
   useEffect(() => {
     // Revisar si hay una sección pendiente de scroll cuando se carga la página
     const sectionToScroll = localStorage.getItem('scrollToSection');
@@ -68,43 +71,43 @@ const CustomNav = () => {
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="navbar-menu ms-auto">
 
-            <NavDropdown title="About us" id="about-dropdown" className="menu-item styled-dropdown-item">
+            <NavDropdown title={t('nav.aboutUs')} id="about-dropdown" className="menu-item styled-dropdown-item">
               <NavDropdown.Item onClick={() => handleSectionNavigation('about')}>
-                <i className="bi bi-chevron-right"></i> About us
+                <i className="bi bi-chevron-right"></i> {t('nav.aboutUs')}
               </NavDropdown.Item>
               <NavDropdown.Item onClick={() => handleSectionNavigation('mission')}>
-                <i className="bi bi-chevron-right"></i> Our Mission
+                <i className="bi bi-chevron-right"></i> {t('nav.ourMission')}
               </NavDropdown.Item>
               <NavDropdown.Item onClick={() => handleSectionNavigation('vision')}>
-                <i className="bi bi-chevron-right"></i> Our Vision
+                <i className="bi bi-chevron-right"></i> {t('nav.ourVision')}
               </NavDropdown.Item>
               <NavDropdown.Item href="/blog">
-                <i className="bi bi-chevron-right"></i> Our Blog
+                <i className="bi bi-chevron-right"></i> {t('nav.ourBlog')}
               </NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link onClick={() => handleSectionNavigation('choose')} className="menu-item" style={{ cursor: 'pointer' }}>Why Choose Us</Nav.Link>
+            <Nav.Link onClick={() => handleSectionNavigation('choose')} className="menu-item" style={{ cursor: 'pointer' }}>{t('nav.whyChooseUs')}</Nav.Link>
 
-            <NavDropdown title="Services" id="services-dropdown" className="menu-item styled-dropdown-item">
+            <NavDropdown title={t('nav.services')} id="services-dropdown" className="menu-item styled-dropdown-item">
               <NavDropdown.Item href="/faqs">
-                <i className="bi bi-chevron-right"></i> FAQs & Testimonials
+                <i className="bi bi-chevron-right"></i> {t('nav.faqsTestimonials')}
               </NavDropdown.Item>
               <NavDropdown.Item href="/customerService">
-                <i className="bi bi-chevron-right"></i> Customer Service
+                <i className="bi bi-chevron-right"></i> {t('nav.customerService')}
               </NavDropdown.Item>
               <NavDropdown.Item onClick={() => handleSectionNavigation('pricing')}>
-                <i className="bi bi-chevron-right"></i> Pricing & Plans
+                <i className="bi bi-chevron-right"></i> {t('nav.pricingPlans')}
               </NavDropdown.Item>
             </NavDropdown>
 
-            <Nav.Link href="/#tutorials" className="menu-item">Tutorials</Nav.Link>
+            <Nav.Link href="/#tutorials" className="menu-item">{t('nav.tutorials')}</Nav.Link>
 
             <NavDropdown title={<span>🌐 {currentLanguage === 'en' ? 'En' : 'Es'}</span>} id="lang-dropdown" className="menu-item styled-dropdown-item">
-              <NavDropdown.Item onClick={() => setCurrentLanguage('en')}>
+              <NavDropdown.Item onClick={() => changeLanguage('en')}>
                 <i className="bi bi-chevron-right"></i> 
                 <span className="flag-icon flag-us"> </span> English
               </NavDropdown.Item>
-              <NavDropdown.Item onClick={() => setCurrentLanguage('es')}>
+              <NavDropdown.Item onClick={() => changeLanguage('es')}>
                 <i className="bi bi-chevron-right"></i> 
                 <span className="flag-icon flag-mx"> </span> Español
               </NavDropdown.Item>
@@ -112,7 +115,7 @@ const CustomNav = () => {
           </Nav>
 
           <div className="navbar-login">
-            <button className="login-button" onClick={() => window.location.href = '/login'}>Log In</button>
+            <button className="login-button" onClick={() => window.location.href = '/login'}>{t('nav.logIn')}</button>
           </div>
         </Navbar.Collapse>
       </Container>

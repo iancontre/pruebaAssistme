@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   plugins: [
     {
       postcssPlugin: 'internal:charset-removal',

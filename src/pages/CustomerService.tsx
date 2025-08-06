@@ -51,7 +51,7 @@ const CustomerService: React.FC = () => {
         </motion.div>
 
         <div className="customer-service-content">
-          {/* Add your customer service page content here */}
+        
         </div>
       </Container>
 

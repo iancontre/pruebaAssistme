@@ -1,6 +1,7 @@
 import React from 'react';
 import prevIcon from '../../assets/images/icons/prevIcon.png';
 import nexicon from '../../assets/images/icons/nexicon.png';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface Step {
   label: string;
@@ -13,9 +14,11 @@ interface WizardSidebarProps {
   onNextStep: () => void;
   onPrevStep: () => void;
   forceNoValidation?: boolean;
+  showFinalize?: boolean;
 }
 
-const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNextStep, onPrevStep, forceNoValidation }) => {
+const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNextStep, onPrevStep, forceNoValidation, showFinalize }) => {
+  const { t } = useTranslation();
   const handleNextClick = (e: React.MouseEvent) => {
     e.preventDefault();
     
@@ -46,9 +49,11 @@ const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNex
           <img src={prevIcon} alt="Previous" style={{ width: 24, height: 24 }} />
         </button>
       )}
-      <button className="wizard-next-btn" onClick={handleNextClick}>
-        Next Step <img src={nexicon} alt="Next" style={{ width: 24, height: 24 }} />
-      </button>
+      {!showFinalize && (
+        <button className="wizard-next-btn" onClick={handleNextClick}>
+          {t('wizard.sidebar.nextStep')} <img src={nexicon} alt="Next" style={{ width: 24, height: 24 }} />
+        </button>
+      )}
     </>
   );
 
@@ -58,7 +63,7 @@ const WizardSidebar: React.FC<WizardSidebarProps> = ({ steps, currentStep, onNex
         <div className="wizard-steps-info">
           {steps.map((step, idx) => (
             <div className={`wizard-step-info${idx === currentStep ? ' active' : ''}`} key={idx}>
-              <div className="wizard-step-label">Step</div>
+              <div className="wizard-step-label">{t('wizard.sidebar.step')}</div>
               <div className="wizard-step-title">{step.label}</div>
               <div className="wizard-step-desc">{step.description}</div>
             </div>

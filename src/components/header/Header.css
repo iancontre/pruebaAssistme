@@ -573,6 +573,21 @@
     margin-bottom: 1.5rem !important;
     text-align: center;
   }
+
+  /* Responsive para títulos de wizard en el header */
+  @media (max-width: 768px) {
+    .wizard-title {
+      font-size: 2.5rem !important;
+      margin-bottom: 1rem !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .wizard-title {
+      font-size: 2rem !important;
+      margin-bottom: 0.8rem !important;
+    }
+  }
   
   .btn-effect {
     transition: transform 0.3s ease, box-shadow 0.3s ease;

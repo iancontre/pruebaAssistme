@@ -98,11 +98,13 @@
   border: 1px solid #0f384c;
   border-radius: 12px;
   padding: 1.5rem;
+  padding-bottom: 80px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-top: 7%; 
   height: 300px;
   width: 600px;
+  position: relative;
 }
 
 .service-card:hover,
@@ -119,12 +121,14 @@
   border: 1px solid #0f384c;
   border-radius: 12px;
   padding: 1.5rem;
+  padding-bottom: 80px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-top: 7%; 
   height: 302px;
   text-justify: inter-word;
   hyphens: auto;
+  position: relative;
 }
 
 .card-title {
@@ -149,12 +153,11 @@
 .container-card{
   background-color: #8DA9C9;
   margin-bottom: 4px;
-  position: relative;
+  position: absolute;
   width: 300px;
   height: 60px;
-  top:1px ;
-  left: 42.6%;
-  margin-top: 14.9%;
+  bottom: -6px;
+  right: -1px;
   z-index: 2;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 5px;
@@ -166,12 +169,11 @@
 .container-cardmedial{
   background-color: #8DA9C9;
   margin-bottom: 4px;
-  position: relative;
+  position: absolute;
   width: 300px;
   height: 60px;
-  top:1px ;
-  left: 26.2%;
-  margin-top: 20.8%;
+  bottom: -6px;
+  right: -1px;
   z-index: 2;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 5px;
@@ -183,12 +185,11 @@
 .container-ligt{
   background-color: #8DA9C9;
   margin-bottom: 4px;
-  position: relative;
+  position: absolute;
   width: 100px;
   height: 60px;
-  top:1px ;
-  left: 65.5%;
-  margin-top: 3%;
+  bottom: -6px;
+  right: -1px;
   z-index: 2;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 5px;
@@ -200,12 +201,11 @@
 .container-towcard {
   background-color: #8DA9C9;
   margin-bottom: 4px;
-  position: relative;
+  position: absolute;
   width: 300px;
   height: 60px;
-  top:1px ;
-  left: 37.9%;
-  margin-top: 16.3%;
+  bottom: -6px;
+  right: -1px;
   z-index: 2;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 5px;
@@ -217,12 +217,11 @@
 .container-towcard-c{
   background-color: #8DA9C9;
   margin-bottom: 4px;
-  position: relative;
+  position: absolute;
   width: 300px;
   height: 60px;
-  top:1px ;
-  left: 38.2%;
-  margin-top: 10.9%;
+  bottom: -6px;
+  right: -1px;
   z-index: 2;
   border-top-left-radius: 50px;
   border-bottom-right-radius: 5px;
@@ -396,42 +395,47 @@
 
   .container-card{
     width: 65%;           
-    margin-top: 10rem;   
+    margin-top: 0;   
     margin-right: 0;       
     float: none;          
-    position: relative;   
-    left: 40.5%;
+    position: absolute;   
+    bottom: -6px;
+    right: -1px;
   }
   .container-cardmedial{
     width: 65%;           
-    margin-top: 11.5rem;   
+    margin-top: 0;   
     margin-right: 0;      
     float: none;           
-    position: relative;  
-    left: 41%;
+    position: absolute;  
+    bottom: -6px;
+    right: -1px;
   }
   .container-ligt{         
-    margin-top: 4.2rem;    
+    margin-top: 0;    
     margin-right: 0;       
     float: none;          
-    position: relative;    
-    left: 75%;
+    position: absolute;    
+    bottom: -6px;
+    right: -1px;
   }
   .container-towcard{
     width: 65%;           
-    margin-top: 10rem;   
+    margin-top: 0;   
     margin-right: 0;      
     float: none;           
-    position: relative;  
-    left: 40.5%;
+    position: absolute;  
+    bottom: -6px;
+    right: -1px;
   }
   .container-towcard-c{
     width: 65%;           
-    margin-top: 8.5rem;   
+    margin-top: 0;   
     margin-right: 0;      
     float: none;           
-    position: relative;  
-    left: 41%;
+    position: absolute;  
+    bottom: -6px;
+    right: -1px;
   }
  
   .service-card,

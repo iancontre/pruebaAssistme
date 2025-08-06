@@ -1,7 +1,7 @@
 # 🚀 Proyecto Frontend - MyAssist.me
 
 ## 📋 Descripción
-Este es un proyecto frontend desarrollado con React y TypeScript, utilizando Vite como herramienta de construcción. El proyecto incluye integración con Zendesk para el soporte al cliente, Stripe para procesamiento de pagos, un dashboard completo con gráficas interactivas, y utiliza varias bibliotecas modernas para la interfaz de usuario.
+Este es un proyecto frontend desarrollado con React y TypeScript, utilizando Vite como herramienta de construcción. El proyecto incluye integración con Zendesk para el soporte al cliente, Stripe para procesamiento de pagos, un dashboard completo con gráficas interactivas, **sistema completo de internacionalización (i18n)**, y utiliza varias bibliotecas modernas para la interfaz de usuario.
 
 ## 🛠️ Tecnologías Principales
 - ⚛️ React 19
@@ -49,6 +49,70 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
 - 👀 `npm run preview` - Previsualiza la versión de producción localmente
 
 ## ✨ Características Principales
+
+### 🌍 Sistema de Internacionalización (i18n)
+El proyecto incluye un sistema completo de internacionalización que permite cambiar entre idiomas dinámicamente:
+
+#### 🔧 Implementación
+- **Hook personalizado**: `useTranslation` para manejo de traducciones
+- **Context Provider**: `LanguageContext` para gestión del estado del idioma
+- **Archivos de traducción**: `src/locales/en.json` y `src/locales/es.json`
+- **Cambio dinámico**: Selector de idioma en la navegación
+
+#### 📝 Componentes Traducidos
+- ✅ **Navegación**: Menú principal y dropdowns
+- ✅ **Header**: Títulos y botones de acción
+- ✅ **Footer**: Enlaces y información de contacto
+- ✅ **Componentes de contenido**:
+  - `ContentBlog`: Artículos del blog y funcionalidad de búsqueda
+  - `TeamsCustomer`: Información del equipo
+  - `BenefitCustomer`: Beneficios del servicio
+  - `AdvantagesCustomer`: Ventajas competitivas
+  - `Contact`: Formulario de contacto
+  - `FrequentlyAskedQuestions`: Preguntas frecuentes
+  - `Intersection`: Sección de llamada a la acción
+  - `Testimonials`: Testimonios de clientes
+- ✅ **Wizards completos**:
+  - **Wizard de Pago**: Todos los formularios y pasos
+  - **Wizard de Configuración**: Todos los formularios y pasos
+- ✅ **Blog**: Contenido completo de artículos
+- ✅ **Páginas**: HomePage, FAQs, CustomerService
+
+#### 🎯 Funcionalidades del Sistema i18n
+- **Cambio en tiempo real**: Sin recargar la página
+- **Persistencia**: El idioma seleccionado se mantiene en localStorage
+- **Fallback**: Si falta una traducción, muestra la clave
+- **HTML seguro**: Soporte para `dangerouslySetInnerHTML` en traducciones
+- **Interpolación**: Reemplazo dinámico de variables en traducciones
+
+#### 📁 Estructura de Traducciones
+```json
+{
+  "nav": {
+    "aboutUs": "Sobre Nosotros",
+    "services": "Servicios",
+    "pricingPlans": "Precios y Planes"
+  },
+  "header": {
+    "homepage": {
+      "title": "Título principal",
+      "description": "Descripción",
+      "contactUs": "Contáctanos",
+      "pricingPlans": "Precios y Planes"
+    }
+  },
+  "wizard": {
+    "profile": {
+      "title": "Registrarse es Fácil",
+      "subtitle": "Primero cuéntanos un poco sobre ti"
+    },
+    "business": {
+      "title": "Cuéntanos Sobre Tu Negocio",
+      "subtitle": "Primero cuéntanos un poco sobre ti"
+    }
+  }
+}
+```
 
 ### 📊 Dashboard Completo con Gráficas Interactivas
 El proyecto incluye un dashboard empresarial completo con múltiples visualizaciones de datos:
@@ -182,37 +246,153 @@ El proyecto incluye una integración completa con Stripe para el procesamiento d
 - 📱 Implementa Bootstrap para el diseño responsivo
 - 🎯 Incluye iconos de Bootstrap y React Icons
 
+### 📱 Diseño Responsivo Avanzado
+El proyecto incluye un sistema de diseño responsivo completo, especialmente optimizado para los wizards:
+
+#### 🧙‍♂️ Wizards Responsivos
+- **Wizard de Pago**: Completamente adaptativo para móviles, tablets y desktop
+- **Wizard de Configuración**: Optimizado para todos los tamaños de pantalla
+- **Navegación móvil**: Botones de anterior/siguiente adaptativos
+- **Formularios**: Campos y validaciones responsivas
+
+#### 📐 Breakpoints Implementados
+- **≤ 900px**: Tablets grandes y pantallas medianas
+- **≤ 768px**: Tablets y pantallas pequeñas
+- **≤ 480px**: Móviles y pantallas muy pequeñas
+- **≤ 400px**: Móviles pequeños (ajustes específicos)
+
+#### 🎯 Características Responsivas
+- **Títulos y subtítulos**: Tamaños de fuente adaptativos
+- **Formularios**: Layouts que cambian de horizontal a vertical
+- **Tablas**: Scroll horizontal en móviles
+- **Botones**: Tamaños y espaciado adaptativos
+- **Imágenes**: Ocultación inteligente en pantallas pequeñas
+- **Navegación**: Botones de navegación siempre visibles
+
 ### 📊 Manejo de Datos
 - 📋 Implementa tablas de datos con @mui/x-data-grid y react-data-table-component
 - 🌐 Utiliza Axios para las llamadas HTTP
 - 🔔 Incluye notificaciones con react-toastify
 
+### 🧭 Sistema de Navegación Inteligente
+El proyecto implementa un sistema de navegación híbrido que combina rutas tradicionales con scroll interno:
+
+#### 🎯 Navegación por Secciones
+- **Scroll interno**: Para secciones dentro de la página principal (About, Mission, Vision, Pricing, etc.)
+- **Rutas tradicionales**: Para páginas completas (Blog, FAQs, CustomerService, Login, etc.)
+- **Persistencia**: Si navegas desde otra página, te lleva a la home y luego hace scroll a la sección
+
+#### 🔧 Implementación
+```typescript
+const handleSectionNavigation = (sectionId: string) => {
+  if (window.location.pathname === '/') {
+    // Scroll interno si estamos en la home
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  } else {
+    // Navegar a home y guardar sección para scroll posterior
+    localStorage.setItem('scrollToSection', sectionId);
+    window.location.href = '/';
+  }
+};
+```
+
+#### 📍 Secciones Disponibles
+- `about`: Sección Sobre Nosotros
+- `mission`: Sección Nuestra Misión
+- `vision`: Sección Nuestra Visión
+- `choose`: Sección Por Qué Elegirnos
+- `pricing`: Sección de Precios y Planes
+- `contact`: Sección de Contacto
+
 ## 📁 Estructura del Proyecto
 ```
 src/
   ├── components/     # Componentes reutilizables
-  │   └── portales/   # Componentes específicos del portal
-  │       ├── CallSummaryChart/     # 📈 Gráfica de resumen de llamadas
-  │       ├── ClientCallsChart/     # 📊 Gráfica de llamadas por cliente
-  │       ├── DateFilter/           # 📅 Filtro de fechas
-  │       ├── HeaderPortal/         # 🎯 Header del portal
-  │       ├── NotificationsPanel/   # 🔔 Panel de notificaciones
-  │       └── SidebarPortal/        # 🧭 Sidebar de navegación
+  │   ├── portales/   # Componentes específicos del portal
+  │   │   ├── CallSummaryChart/     # 📈 Gráfica de resumen de llamadas
+  │   │   ├── ClientCallsChart/     # 📊 Gráfica de llamadas por cliente
+  │   │   ├── DateFilter/           # 📅 Filtro de fechas
+  │   │   ├── HeaderPortal/         # 🎯 Header del portal
+  │   │   ├── NotificationsPanel/   # 🔔 Panel de notificaciones
+  │   │   └── SidebarPortal/        # 🧭 Sidebar de navegación
+  │   ├── Wizard/     # 🧙‍♂️ Componentes de wizards
+  │   │   ├── WizardContainer.tsx   # 💳 Wizard de pago
+  │   │   ├── WizardConfigContainer.tsx # ⚙️ Wizard de configuración
+  │   │   ├── ProfileForm.tsx       # 👤 Formulario de perfil
+  │   │   ├── BusinessForm.tsx      # 🏢 Formulario de negocio
+  │   │   ├── GetStartedForm.tsx    # 🚀 Formulario de inicio
+  │   │   └── WizardSidebar.tsx     # 🧭 Sidebar de wizard
+  │   ├── nav/        # 🧭 Navegación
+  │   ├── header/     # 🎯 Headers
+  │   ├── footer/     # 📄 Footer
+  │   └── ...         # 📦 Otros componentes
   ├── pages/         # Páginas de la aplicación
   │   ├── DashboardPage.tsx         # 🏠 Dashboard principal
   │   ├── ReporteLlamadasPage.tsx   # 📋 Reporte detallado de llamadas
   │   ├── CompraPage.tsx            # 💳 Página de compra con Stripe
   │   ├── LoginPage.tsx             # 🔐 Página de login
+  │   ├── HomePage.tsx              # 🏠 Página principal
+  │   ├── BlogPage.tsx              # 📝 Página del blog
+  │   ├── FaqsPage.tsx              # ❓ Página de FAQs
+  │   ├── CustomerService.tsx       # 🎧 Página de servicio al cliente
   │   └── ...                       # 📄 Otras páginas
   ├── services/      # Servicios y llamadas API
   │   ├── apiService.ts    # 🌐 Servicios principales de API
   │   └── stripeService.ts # 💳 Servicios de Stripe
-  ├── types/         # Definiciones de tipos TypeScript
-  ├── utils/         # Utilidades y funciones auxiliares
-  ├── hooks/         # Custom hooks
-  ├── config/        # Configuraciones
-  ├── router/        # Configuración de rutas
-  └── styles/        # Estilos globales
+  ├── locales/       # 🌍 Archivos de traducción
+  │   ├── en.json    # 🇺🇸 Traducciones en inglés
+  │   └── es.json    # 🇪🇸 Traducciones en español
+  ├── context/       # 🔄 Context providers
+  │   └── LanguageContext.tsx # 🌍 Contexto de idioma
+  ├── hooks/         # 🎣 Custom hooks
+  │   ├── useTranslation.ts # 🌍 Hook de traducción
+  │   ├── useAuth.ts        # 🔐 Hook de autenticación
+  │   ├── useFormValidation.ts # ✅ Hook de validación
+  │   └── ...               # 🎣 Otros hooks
+  ├── types/         # 📝 Definiciones de tipos TypeScript
+  ├── utils/         # 🛠️ Utilidades y funciones auxiliares
+  ├── config/        # ⚙️ Configuraciones
+  ├── router/        # 🛣️ Configuración de rutas
+  └── styles/        # 🎨 Estilos globales
+```
+
+### ✅ Sistema de Validación de Formularios
+El proyecto incluye un sistema robusto de validación de formularios implementado con un hook personalizado:
+
+#### 🎣 Hook useFormValidation
+- **Validación en tiempo real**: Los campos se validan mientras el usuario escribe
+- **Múltiples tipos de validación**: Required, email, phone, select, text
+- **Manejo de errores**: Mensajes de error personalizados y traducidos
+- **Estados visuales**: Campos válidos/inválidos con estilos diferenciados
+- **Persistencia**: Los datos se mantienen al navegar entre pasos del wizard
+
+#### 🔧 Tipos de Validación Soportados
+```typescript
+type FieldType = 'required' | 'email' | 'phone' | 'select' | 'text';
+
+interface ValidationConfig {
+  initialFields: Record<string, string>;
+  fieldTypes: Record<string, FieldType>;
+}
+```
+
+#### 📝 Uso en Componentes
+```typescript
+const validation = useFormValidation({
+  initialFields: {
+    name: '',
+    email: '',
+    phone: ''
+  },
+  fieldTypes: {
+    name: 'required',
+    email: 'email',
+    phone: 'phone'
+  }
+});
 ```
 
 ## 🔌 Consumo de Endpoints

@@ -1,14 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface ProfileFormProps {
   onValidityChange: (isValid: boolean) => void;
-  onDataChange?: (data: { name: string; email: string; industry: string }) => void;
+  onDataChange?: (data: { 
+    fullName: string; 
+    lastName: string; 
+    companyName: string; 
+    officeNumber: string; 
+    email: string; 
+    industry: string; 
+    heardAbout: string; 
+  }) => void;
   onValid?: () => void;
+  initialData?: {
+    fullName?: string;
+    lastName?: string;
+    companyName?: string;
+    officeNumber?: string;
+    email?: string;
+    industry?: string;
+    heardAbout?: string;
+  };
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChange, onValid }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChange, onValid, initialData }) => {
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
 
   // Configuración de validación
@@ -23,13 +42,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
   };
 
   const additionalData = {
-    fullName: { fieldName: 'Full name' },
-    lastName: { fieldName: 'Last name' },
-    companyName: { fieldName: 'Company name' },
-    officeNumber: { fieldName: 'Office number' },
-    email: { fieldName: 'Email' },
-    industry: { fieldName: 'Industry' },
-    heardAbout: { fieldName: 'How did you hear about us' }
+    fullName: { fieldName: t('wizard.profile.fields.fullName') },
+    lastName: { fieldName: t('wizard.profile.fields.lastName') },
+    companyName: { fieldName: t('wizard.profile.fields.companyName') },
+    officeNumber: { fieldName: t('wizard.profile.fields.officeNumber') },
+    email: { fieldName: t('wizard.profile.fields.email') },
+    industry: { fieldName: t('wizard.profile.fields.industry') },
+    heardAbout: { fieldName: t('wizard.profile.fields.heardAbout') }
   };
 
   const {
@@ -39,16 +58,17 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     touched,
     handleChange,
     handleBlur,
-    validateForm
+    validateForm,
+    setFieldValue
   } = useFormValidation({
     initialFields: {
-    fullName: '',
-    lastName: '',
-    companyName: '',
-    officeNumber: '',
-    email: '',
-    industry: '',
-    heardAbout: '',
+    fullName: initialData?.fullName || '',
+    lastName: initialData?.lastName || '',
+    companyName: initialData?.companyName || '',
+    officeNumber: initialData?.officeNumber || '',
+    email: initialData?.email || '',
+    industry: initialData?.industry || '',
+    heardAbout: initialData?.heardAbout || '',
     },
     fieldTypes,
     additionalData,
@@ -61,12 +81,16 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     // Pasar datos al componente padre cuando el formulario sea válido
     if (isValid && onDataChange) {
       onDataChange({
-        name: `${fields.fullName} ${fields.lastName}`.trim(),
+        fullName: fields.fullName,
+        lastName: fields.lastName,
+        companyName: fields.companyName,
+        officeNumber: fields.officeNumber,
         email: fields.email,
-        industry: fields.industry
+        industry: fields.industry,
+        heardAbout: fields.heardAbout
       });
     }
-  }, [isValid, onValidityChange, onDataChange, fields.fullName, fields.lastName, fields.email, fields.industry]);
+  }, [isValid, onValidityChange, onDataChange, fields.fullName, fields.lastName, fields.companyName, fields.officeNumber, fields.email, fields.industry, fields.heardAbout]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,7 +111,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
         const valid = validateForm();
         if (!valid) {
           e.preventDefault();
-          toast.error('Please fill in all required fields before proceeding to the next step.', {
+          toast.error(t('wizard.profile.errors.fillRequiredFields'), {
             position: "top-center",
             autoClose: 3000,
             hideProgressBar: false,
@@ -121,10 +145,33 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
     <div style={{ position: 'relative', width: '100%' }}>
       <div className="wizard-form-bg" />
       <div className="wizard-form-foreground">
+        {/* Título y subtítulo centrados al nivel del formulario */}
+                        <div className="wizard-title-container">
+          <h2 style={{ 
+            fontSize: '28px', 
+            fontWeight: 700, 
+            color: '#18344C', 
+            margin: '0 0 8px 0',
+            lineHeight: '1.2',
+            textAlign: 'center'
+          }}>
+            {t('profile.title')}
+          </h2>
+          <p style={{ 
+            fontSize: '16px', 
+            color: '#666', 
+            margin: 0,
+            fontWeight: 400,
+            textAlign: 'center'
+          }}>
+            {t('profile.subtitle')}
+          </p>
+        </div>
+        
         <form className="wizard-form" autoComplete="off" onSubmit={handleSubmit}>
           <div className="wizard-form-row">
             <div className="wizard-form-group">
-              <label>Full Name</label>
+              <label>{t('wizard.profile.fields.fullName')}</label>
               <input 
                 name="fullName" 
                 type="text" 
@@ -132,14 +179,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={getFieldClassName('fullName')}
-                placeholder="Enter your full name"
+                placeholder={t('wizard.profile.placeholders.fullName')}
               />
               {(touched.fullName || submitted) && errors.fullName && (
                 <span className="error-message" style={{ color: '#d32f2f' }}>{errors.fullName}</span>
               )}
             </div>
             <div className="wizard-form-group">
-              <label>Last Name</label>
+              <label>{t('wizard.profile.fields.lastName')}</label>
               <input 
                 name="lastName" 
                 type="text" 
@@ -147,7 +194,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={getFieldClassName('lastName')}
-                placeholder="Enter your last name"
+                placeholder={t('wizard.profile.placeholders.lastName')}
               />
               {(touched.lastName || submitted) && errors.lastName && (
                 <span className="error-message" style={{ color: '#d32f2f' }}>{errors.lastName}</span>
@@ -155,7 +202,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
             </div>
           </div>
           <div className="wizard-form-group">
-            <label>Company Name</label>
+            <label>{t('wizard.profile.fields.companyName')}</label>
             <input 
               name="companyName" 
               type="text" 
@@ -163,14 +210,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               onChange={handleChange}
               onBlur={handleBlur}
               className={getFieldClassName('companyName')}
-              placeholder="Enter your company name"
+              placeholder={t('wizard.profile.placeholders.companyName')}
             />
             {(touched.companyName || submitted) && errors.companyName && (
               <span className="error-message" style={{ color: '#d32f2f' }}>{errors.companyName}</span>
             )}
           </div>
           <div className="wizard-form-group">
-            <label>Office Number</label>
+            <label>{t('wizard.profile.fields.officeNumber')}</label>
             <input 
               name="officeNumber" 
               type="tel"
@@ -178,14 +225,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               onChange={handleChange}
               onBlur={handleBlur}
               className={getFieldClassName('officeNumber')}
-              placeholder="Enter your office phone number"
+              placeholder={t('wizard.profile.placeholders.officeNumber')}
             />
             {(touched.officeNumber || submitted) && errors.officeNumber && (
               <span className="error-message" style={{ color: '#d32f2f' }}>{errors.officeNumber}</span>
             )}
           </div>
           <div className="wizard-form-group">
-            <label>Email</label>
+            <label>{t('wizard.profile.fields.email')}</label>
             <input 
               name="email" 
               type="email" 
@@ -193,14 +240,14 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               onChange={handleChange}
               onBlur={handleBlur}
               className={getFieldClassName('email')}
-              placeholder="Enter your email address"
+              placeholder={t('wizard.profile.placeholders.email')}
             />
             {(touched.email || submitted) && errors.email && (
               <span className="error-message" style={{ color: '#d32f2f' }}>{errors.email}</span>
             )}
           </div>
           <div className="wizard-form-group">
-            <label>Industry</label>
+            <label>{t('wizard.profile.fields.industry')}</label>
             <select 
               name="industry" 
               value={fields.industry} 
@@ -208,23 +255,23 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               onBlur={handleBlur}
               className={getFieldClassName('industry')}
             >
-              <option value="">Select an industry</option>
-              <option value="Finance">Finance</option>
-              <option value="Technology">Technology</option>
-              <option value="Healthcare">Healthcare</option>
-              <option value="Education">Education</option>
-              <option value="Manufacturing">Manufacturing</option>
-              <option value="Retail">Retail</option>
-              <option value="Real Estate">Real Estate</option>
-              <option value="Consulting">Consulting</option>
-              <option value="Other">Other</option>
+              <option value="">{t('wizard.profile.options.selectIndustry')}</option>
+              <option value="Finance">{t('wizard.profile.options.industries.finance')}</option>
+              <option value="Technology">{t('wizard.profile.options.industries.technology')}</option>
+              <option value="Healthcare">{t('wizard.profile.options.industries.healthcare')}</option>
+              <option value="Education">{t('wizard.profile.options.industries.education')}</option>
+              <option value="Manufacturing">{t('wizard.profile.options.industries.manufacturing')}</option>
+              <option value="Retail">{t('wizard.profile.options.industries.retail')}</option>
+              <option value="Real Estate">{t('wizard.profile.options.industries.realEstate')}</option>
+              <option value="Consulting">{t('wizard.profile.options.industries.consulting')}</option>
+              <option value="Other">{t('wizard.profile.options.industries.other')}</option>
             </select>
             {(touched.industry || submitted) && errors.industry && (
               <span className="error-message" style={{ color: '#d32f2f' }}>{errors.industry}</span>
             )}
           </div>
           <div className="wizard-form-group">
-            <label>How did you hear about us?</label>
+            <label>{t('wizard.profile.fields.heardAbout')}</label>
             <select 
               name="heardAbout" 
               value={fields.heardAbout} 
@@ -232,12 +279,12 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ onValidityChange, onDataChang
               onBlur={handleBlur}
               className={getFieldClassName('heardAbout')}
             >
-              <option value="">Select an option</option>
-              <option value="Google">Google</option>
-              <option value="Social Media">Social Media</option>
-              <option value="Referral">Referral</option>
-              <option value="Advertisement">Advertisement</option>
-              <option value="Other">Other</option>
+              <option value="">{t('wizard.profile.options.selectOption')}</option>
+              <option value="Google">{t('wizard.profile.options.sources.google')}</option>
+              <option value="Social Media">{t('wizard.profile.options.sources.socialMedia')}</option>
+              <option value="Referral">{t('wizard.profile.options.sources.referral')}</option>
+              <option value="Advertisement">{t('wizard.profile.options.sources.advertisement')}</option>
+              <option value="Other">{t('wizard.profile.options.sources.other')}</option>
             </select>
             {(touched.heardAbout || submitted) && errors.heardAbout && (
               <span className="error-message" style={{ color: '#d32f2f' }}>{errors.heardAbout}</span>

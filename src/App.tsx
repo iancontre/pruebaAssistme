@@ -1,12 +1,15 @@
 import AppRoutes from './router/Routes';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import { LanguageProvider } from './context/LanguageContext';
 
 function App() {
   return (
     <ErrorBoundary>
-    <div className="App">
-      <AppRoutes />
-    </div>
+      <LanguageProvider>
+        <div className="App">
+          <AppRoutes />
+        </div>
+      </LanguageProvider>
     </ErrorBoundary>
   );
 }

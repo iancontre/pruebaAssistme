@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 import './Testimonials.css';
 import quote from '../../assets/images/icons/comillas.png';
@@ -14,75 +15,60 @@ interface Testimonial {
   rating: number;
 }
 
-const testimonialsData: Testimonial[] = [
-  {
-    id: 1,
-    name: "Carlos L.",
-    position: "Real Estate Agent, XYZ Real Estate Group",
-    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
-    text: "As a real estate agent, responding quickly to client inquiries is key to my success. Thanks to ASSIST-ME, I can rest easy knowing that every call, whether from a potential client or an urgent buyer, is answered professionally. Their 24/7 personalized service has allowed me to offer better service and close more deals without worrying about missed calls.",
-    rating: 5
-  },
-  {
-    id: 2,
-    name: "Ana G.",
-    position: "Senior Banker, ABC Bank",
-    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
-    text: "In the banking world, every call counts. With ASSIST-ME, I can ensure that all my clients' inquiries are answered quickly and efficiently. Whether it's resolving questions about financial products or scheduling meetings, ASSIST-ME's call answering service has greatly improved our response time. It has definitely helped me provide a smoother, more professional experience for our clients!",
-    rating: 5
-  },
-  {
-    id: 3,
-    name: "Luis R.",
-    position: "Certified Public Accountant, DEF Accounting Firm",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-    text: "As an accountant, time is precious and my schedule is always full. ASSIST-ME has become an extension of my office, handling client calls and messages flawlessly. This allows me to focus on the work that truly matters while knowing my clients are being taken care of professionally and efficiently. Their customer service is indispensable to my practice.",
-    rating: 5
-  },
-  {
-    id: 4,
-    name: "Maria P.",
-    position: "Real Estate Agent, GHI Real Estate",
-    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face",
-    text: "The flexibility offered by ASSIST-ME is unmatched. As a real estate agent, I often receive calls outside of business hours, and thanks to their 24/7 service, I never miss a business opportunity. The quality of service is excellent, and the detailed call reports help me follow up effectively with my clients.",
-    rating: 5
-  },
-  {
-    id: 5,
-    name: "Roberto M.",
-    position: "Branch Manager, XYZ Bank",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-    text: "Banking is an industry where customer service must be impeccable and constant. With ASSIST-ME, we not only offer real-time support, but they also manage our appointments and urgent inquiries. Their ability to handle high call volumes during busy days has been critical in maintaining high-quality service at all times.",
-    rating: 5
-  },
-  {
-    id: 6,
-    name: "Elena T.",
-    position: "Senior Accountant, 123 Tax Consulting",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-    text: "ASSIST-ME has been an essential partner for my accounting firm. They not only answer our clients' calls but also handle appointment scheduling and send reminders, which has helped us improve organization and efficiency in our daily operations. Their service has been professional and personalized, helping us optimize our client communication.",
-    rating: 5
-  },
-  {
-    id: 7,
-    name: "Robert J",
-    position: "Financial Advisor",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&crop=face",
-    text: "In financial services, trust and reliability are everything. ASSIST ME delivers both, handling client calls with the care and expertise that my business requires. I couldn't be happier with their service.",
-    rating: 5
-  },
-  {
-    id: 8,
-    name: "Jennifer T",
-    position: "Healthcare Manager",
-    avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face",
-    text: "Healthcare requires immediate response and compassionate communication. ASSIST ME understands this perfectly, ensuring our patients always receive the prompt, caring service they deserve.",
-    rating: 5
-  }
-];
-
 const Testimonials: React.FC = () => {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  const testimonialsData: Testimonial[] = [
+    {
+      id: 1,
+      name: "Carlos L.",
+      position: t('testimonials.testimonial1.position'),
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      text: t('testimonials.testimonial1.text'),
+      rating: 5
+    },
+    {
+      id: 2,
+      name: "Ana G.",
+      position: t('testimonials.testimonial2.position'),
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+      text: t('testimonials.testimonial2.text'),
+      rating: 5
+    },
+    {
+      id: 3,
+      name: "Luis R.",
+      position: t('testimonials.testimonial3.position'),
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      text: t('testimonials.testimonial3.text'),
+      rating: 5
+    },
+    {
+      id: 4,
+      name: "María P.",
+      position: t('testimonials.testimonial4.position'),
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face",
+      text: t('testimonials.testimonial4.text'),
+      rating: 5
+    },
+    {
+      id: 5,
+      name: "Roberto M.",
+      position: t('testimonials.testimonial5.position'),
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      text: t('testimonials.testimonial5.text'),
+      rating: 5
+    },
+    {
+      id: 6,
+      name: "Elena T.",
+      position: t('testimonials.testimonial6.position'),
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      text: t('testimonials.testimonial6.text'),
+      rating: 5
+    }
+  ];
   
   // Duplicar testimonios para loop infinito
   const extendedTestimonials = [...testimonialsData, ...testimonialsData];
@@ -137,8 +123,8 @@ const Testimonials: React.FC = () => {
               className="linea-fondo-bg"
             />
           </div>
-          <p className="testimonials-subtitle">testimonial</p>
-          <h2 className="testimonials-title">What Our Clients Say</h2>
+          <p className="testimonials-subtitle">{t('testimonials.subtitle')}</p>
+          <h2 className="testimonials-title">{t('testimonials.title')}</h2>
         </div>
 
         {/* Testimonials Carousel */}

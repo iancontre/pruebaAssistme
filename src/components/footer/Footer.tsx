@@ -1,15 +1,17 @@
 import React from 'react';
-
 import './Footer.css';
 import { FaFacebook, FaInstagram, FaLinkedin, FaPhone } from 'react-icons/fa';
-import assistMeLogoBackground from '../../assets/images/logowhite.png'; 
+import assistMeLogoBackground from '../../assets/images/logowhite.png';
+import { useTranslation } from '../../hooks/useTranslation'; 
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <footer className="footer-container">
       <div className="footer-content">
         <div className="footer-left">
-          <button className="pricing-button">Pricing And Plans</button>
+          <button className="pricing-button">{t('footer.pricingAndPlans')}</button>
           <div className="social-icons">
             {/* Facebook Icon */}
             <a href="#facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="social-icon-link">
@@ -25,14 +27,14 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <div className="contact-infodos">
-            <h4>Contact Information</h4>
+            <h4>{t('footer.contactInformation')}</h4>
             <div className="phone-number">
               <FaPhone size={20} color="white" />
-              <span>Per Month : 888-675-8098</span>
+              <span>{t('footer.perMonth')} : 888-675-8098</span>
             </div>
             <div className="phone-number">
               <FaPhone size={20} color="white" />
-              <span>Per Month : 888-675-8098</span>
+              <span>{t('footer.perMonth')} : 888-675-8098</span>
             </div>
           </div>
         </div>
@@ -40,10 +42,10 @@ const Footer: React.FC = () => {
         <div className="footer-right">
           <nav className="footer-nav">
             <ul>
-              <li><a href="#">About us</a></li>
-              <li><a href="#">Why Choose Us</a></li>
-              <li><a href="#">Services</a></li>
-              <li><a href="#">Tutorials</a></li>
+              <li><a href="#">{t('footer.aboutUs')}</a></li>
+              <li><a href="#">{t('footer.whyChooseUs')}</a></li>
+              <li><a href="#">{t('footer.services')}</a></li>
+              <li><a href="#">{t('footer.tutorials')}</a></li>
             </ul>
           </nav>
         </div>

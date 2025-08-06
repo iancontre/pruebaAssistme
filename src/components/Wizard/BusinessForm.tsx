@@ -4,6 +4,7 @@ import { PricingPlan } from '../../services/apiService';
 import { fetchCountries, fetchAllStates, fetchAllCities, Country, State, City } from '../../services/apiService';
 import { FaFlag } from 'react-icons/fa';
 import { useFormValidation } from '../../hooks/useFormValidation';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface BusinessFormProps {
   onValidityChange: (isValid: boolean) => void;
@@ -22,9 +23,20 @@ interface BusinessFormProps {
   }) => void;
   selectedPlan?: PricingPlan;
   onValid?: () => void;
+  initialData?: {
+    company?: string;
+    address1?: string;
+    address2?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
+    mobileNumber?: string;
+  };
 }
 
-const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan: _selectedPlan, onValid }) => {
+const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataChange, selectedPlan: _selectedPlan, onValid, initialData }) => {
+  const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
   const [states, setStates] = useState<State[]>([]);
@@ -56,25 +68,25 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
     validateForm
   } = useFormValidation({
     initialFields: {
-      company: '',
-      address1: '',
-      address2: '',
-      city: '',
-      state: '',
-      zip: '',
-      country: '',
-      mobileNumber: '',
+      company: initialData?.company || '',
+      address1: initialData?.address1 || '',
+      address2: initialData?.address2 || '',
+      city: initialData?.city || '',
+      state: initialData?.state || '',
+      zip: initialData?.zip || '',
+      country: initialData?.country || '',
+      mobileNumber: initialData?.mobileNumber || '',
     },
     fieldTypes,
     additionalData: {
-      company: { fieldName: 'Company' },
-      address1: { fieldName: 'Address' },
-      address2: { fieldName: 'Address line 2' },
-      city: { fieldName: 'City' },
-      state: { fieldName: 'State' },
-      zip: { fieldName: 'Zip code' },
-      country: { fieldName: 'Country' },
-      mobileNumber: { fieldName: 'Mobile number' }
+      company: { fieldName: t('wizard.business.fields.company') },
+      address1: { fieldName: t('wizard.business.fields.address') },
+      address2: { fieldName: t('wizard.business.fields.address2') },
+      city: { fieldName: t('wizard.business.fields.city') },
+      state: { fieldName: t('wizard.business.fields.state') },
+      zip: { fieldName: t('wizard.business.fields.zip') },
+      country: { fieldName: t('wizard.business.fields.country') },
+      mobileNumber: { fieldName: t('wizard.business.fields.mobileNumber') }
     },
     validateOnChange: true,
     validateOnBlur: true
@@ -100,6 +112,12 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
 
     loadCountries();
   }, []);
+
+  // Cargar estados y ciudades si hay datos iniciales
+  useEffect(() => {
+    // Los datos iniciales se cargan automáticamente en el useFormValidation
+    // Los estados y ciudades se cargan automáticamente al montar el componente
+  }, [initialData?.country, initialData?.state]);
 
   // Cargar estados al montar el componente
   useEffect(() => {
@@ -307,10 +325,33 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <div className="wizard-form-bg" />
-      <div className="wizard-form-foreground">
+      <div className="wizard-form-foreground business-form">
+        {/* Título y subtítulo centrados al nivel del formulario */}
+                        <div className="wizard-title-container">
+          <h2 style={{ 
+            fontSize: '28px', 
+            fontWeight: 700, 
+            color: '#18344C', 
+            margin: '0 0 8px 0',
+            lineHeight: '1.2',
+            textAlign: 'center'
+          }}>
+            {t('business.title')}
+          </h2>
+          <p style={{ 
+            fontSize: '16px', 
+            color: '#666', 
+            margin: 0,
+            fontWeight: 400,
+            textAlign: 'center'
+          }}>
+            {t('business.subtitle')}
+          </p>
+        </div>
+        
         <form className="wizard-form" autoComplete="off" onSubmit={handleSubmit}>
           <div className="wizard-form-group">
-            <label>Company</label>
+            <label>{t('wizard.business.fields.company')}</label>
             <input 
               name="company" 
               type="text" 
@@ -318,14 +359,14 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               onChange={handleCustomChange}
               onBlur={handleBlur}
               className={getFieldClassName('company')}
-              placeholder="Enter your company name"
+              placeholder={t('wizard.business.placeholders.company')}
             />
             {(touched.company || submitted) && errors.company && (
               <span className="error-message">{errors.company}</span>
             )}
           </div>
           <div className="wizard-form-group">
-            <label>Address</label>
+            <label>{t('wizard.business.fields.address')}</label>
             <input 
               name="address1" 
               type="text" 
@@ -333,7 +374,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               onChange={handleCustomChange}
               onBlur={handleBlur}
               className={getFieldClassName('address1')}
-              placeholder="Enter your address"
+              placeholder={t('wizard.business.placeholders.address')}
               style={{ marginBottom: '0.7rem' }} 
             />
             {(touched.address1 || submitted) && errors.address1 && (
@@ -345,11 +386,11 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               value={fields.address2} 
               onChange={handleCustomChange}
               onBlur={handleBlur}
-              placeholder="Address line 2 (optional)"
+              placeholder={t('wizard.business.placeholders.address2')}
             />
           </div>
           <div className="wizard-form-group">
-            <label>Country</label>
+            <label>{t('wizard.business.fields.country')}</label>
             <select 
               name="country" 
               value={fields.country} 
@@ -359,7 +400,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               disabled={loadingCountries}
             >
               <option value="">
-                {loadingCountries ? 'Loading countries...' : 'Select a country'}
+                {loadingCountries ? t('wizard.business.loading.countries') : t('wizard.business.options.selectCountry')}
               </option>
               {countries.map((country) => (
                 <option key={country.id} value={country.name}>
@@ -373,7 +414,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
           </div>
           <div className="wizard-form-row">
             <div className="wizard-form-group">
-              <label>State {!hasStates && !loadingStates && <span style={{fontSize: '12px', color: '#666', fontWeight: 'normal'}}>(Optional)</span>}</label>
+              <label>{t('wizard.business.fields.state')} {!hasStates && !loadingStates && <span style={{fontSize: '12px', color: '#666', fontWeight: 'normal'}}>({t('wizard.business.optional')})</span>}</label>
               <select 
                 name="state" 
                 value={fields.state} 
@@ -384,10 +425,10 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               >
                 <option value="">
                   {loadingStates 
-                    ? 'Loading states...' 
+                    ? t('wizard.business.loading.states')
                     : hasStates
-                      ? 'Select a state'
-                      : 'No states available'
+                      ? t('wizard.business.options.selectState')
+                      : t('wizard.business.options.noStates')
                   }
                 </option>
                 {states.map((state) => (
@@ -401,7 +442,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               )}
             </div>
             <div className="wizard-form-group">
-              <label>City {!cities.length && !loadingCities && <span style={{fontSize: '12px', color: '#666', fontWeight: 'normal'}}>(Optional)</span>}</label>
+              <label>{t('wizard.business.fields.city')} {!cities.length && !loadingCities && <span style={{fontSize: '12px', color: '#666', fontWeight: 'normal'}}>({t('wizard.business.optional')})</span>}</label>
               <select 
                 name="city" 
                 value={fields.city} 
@@ -412,10 +453,10 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               >
                 <option value="">
                   {loadingCities 
-                    ? 'Loading cities...' 
+                    ? t('wizard.business.loading.cities')
                     : cities.length > 0
-                      ? 'Select a city'
-                      : 'No cities available'
+                      ? t('wizard.business.options.selectCity')
+                      : t('wizard.business.options.noCities')
                   }
                 </option>
                 {cities.map((city) => (
@@ -431,7 +472,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
           </div>
           <div className="wizard-form-row">
             <div className="wizard-form-group">
-              <label>Mobile Number</label>
+              <label>{t('wizard.business.fields.mobileNumber')}</label>
               <div style={{ position: 'relative' }}>
                 {(() => {
                   const selectedCountry = countries.find(country => country.name === fields.country);
@@ -473,7 +514,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                         onChange={handleCustomChange}
                         onBlur={handleBlur}
                         className={getFieldClassName('mobileNumber')}
-                        placeholder={phoneCode ? `Enter your mobile number` : "Select a country first"}
+                        placeholder={phoneCode ? t('wizard.business.placeholders.mobileNumber') : t('wizard.business.placeholders.selectCountryFirst')}
                         style={phoneCode ? { paddingLeft: '80px' } : {}}
                       />
                     </>
@@ -485,7 +526,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
               )}
             </div>
             <div className="wizard-form-group">
-              <label>Zip Code</label>
+              <label>{t('wizard.business.fields.zip')}</label>
               <input 
                 name="zip" 
                 type="text" 
@@ -493,7 +534,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onValidityChange, onDataCha
                 onChange={handleCustomChange}
                 onBlur={handleBlur}
                 className={getFieldClassName('zip')}
-                placeholder="Enter zip code"
+                placeholder={t('wizard.business.placeholders.zip')}
               />
               {(touched.zip || submitted) && errors.zip && (
                 <span className="error-message">{errors.zip}</span>

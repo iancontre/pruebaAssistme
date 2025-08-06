@@ -22,7 +22,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../../apis/staticSever/dist',
+    outDir: 'dist',
     cssCodeSplit: true,
     chunkSizeWarningLimit: 2000,
     minify: 'terser',
@@ -34,7 +34,7 @@ export default defineConfig({
     }
   },
   css: {
-    postcss: './postcss.config.cjs'
+    postcss: './postcss.config.js'
   },
   esbuild: {
     drop: ['console', 'debugger']

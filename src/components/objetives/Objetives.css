@@ -140,67 +140,62 @@
   .objetivo-1 .figure{
     background-color: #8DA9C9;
     margin-bottom: 4px;
-    position: relative;
+    position: absolute;
     width: 200px;
     height: 22px;
     border-bottom-left-radius: 5px;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
-    top:1px ;
-    right: 10.4%;
-    margin-top: 55px;
+    bottom: -5px;
+    left: 0;
   }
   .objetivo-2 .figure{
     background-color: #8DA9C9;
     margin-bottom: 4px;
-    position: relative;
+    position: absolute;
     width: 200px;
     height: 22px;
     border-bottom-left-radius: 5px;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
-    top:1px ;
-    margin-top: 17px;
-    right: 10.4%;
+    bottom: -5px;
+    left: 0;
   }
   .objetivo-3 .figure{
     background-color: #8DA9C9;
     margin-bottom: 4px;
-    position: relative;
+    position: absolute;
     width: 200px;
     height: 22px;
     border-bottom-left-radius: 5px;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
-    top:1px ;
-    margin-top: 1px;
-    right: 10.4%;
+    bottom: -5px;
+    left: 0;
   }
   .objetivo-4 .figure{
     background-color: #8DA9C9;
     margin-bottom: 4px;
-    position: relative;
+    position: absolute;
     width: 200px;
     height: 22px;
     border-bottom-left-radius: 5px;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
-    top:1px ;
-    margin-top: 15.6%;
-    right: 10.4%;
+    bottom: -5px;
+    left: 0;
   }
   .objetivo-5 .figure{
     background-color: #8DA9C9;
     margin-bottom: 4px;
-    position: relative;
+    position: absolute;
     width: 200px;
     height: 22px;
     border-bottom-left-radius: 5px;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 18px;
-    top:1px ;
-    margin-top: 15.6%;
-    right: 10.4%;
+    bottom: -5px;
+    left: 0;
   }
 
   @media (max-width: 992px) {
@@ -266,9 +261,8 @@
     }
     .objetivo-card .figure {
       position: absolute;
-      bottom: -2px;
-      left: 50%;
-      transform: translateX(-70.3%);
+      bottom: -5px;
+      left: 0;
       background-color: #8DA9C9;
       border-bottom-left-radius: 5px;
       border-top-right-radius: 18px;
@@ -276,6 +270,8 @@
       margin: 0;
       right: auto;
       top: auto;
+      width: 200px;
+      height: 22px;
 
     }
   }

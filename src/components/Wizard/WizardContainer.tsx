@@ -13,13 +13,7 @@ import { calculateTaxWithAPI } from '../../services/apiService';
 import { createCheckoutSession } from '../../services/stripeService';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
-
-const steps = [
-  { label: 'PROFILE', description: 'Tell us about yourself' },
-  { label: 'BUSINESS', description: 'Tell us about your business' },
-  { label: 'SUMMARY', description: 'Review your plan and details' },
-  { label: 'GET STARTED', description: `Let's get started setting up your account` },
-];
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface WizardContainerProps {
   selectedPlan?: PricingPlan;
@@ -29,7 +23,16 @@ interface WizardContainerProps {
 }
 
 const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepChange, onConfigWizardRequest, onWizardComplete }) => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
+  
+  const steps = [
+    { label: t('wizard.steps.profile.label'), description: t('wizard.steps.profile.description') },
+    { label: t('wizard.steps.business.label'), description: t('wizard.steps.business.description') },
+    { label: t('wizard.steps.summary.label'), description: t('wizard.steps.summary.description') },
+    { label: t('wizard.steps.getStarted.label'), description: t('wizard.steps.getStarted.description') },
+  ];
+  
   const [currentStep, setCurrentStep] = useState(0);
   const [customerData, setCustomerData] = useState<any>({});
   const [isProcessing, setIsProcessing] = useState(false);
@@ -125,28 +128,47 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
 
   // Combina los datos de perfil y negocio en customerData
   const handleProfileData = (data: any) => {
-    setCustomerData((prev: any) => ({ ...prev, ...data }));
+    setCustomerData((prev: any) => ({ 
+      ...prev, 
+      fullName: data.fullName,
+      lastName: data.lastName,
+      companyName: data.companyName,
+      officeNumber: data.officeNumber,
+      email: data.email,
+      industry: data.industry,
+      heardAbout: data.heardAbout
+    }));
   };
   const handleBusinessData = (data: any) => {
-    setCustomerData((prev: any) => ({ ...prev, ...data }));
+    setCustomerData((prev: any) => ({ 
+      ...prev, 
+      company: data.company,
+      address1: data.address1,
+      address2: data.address2,
+      city: data.city,
+      state: data.state,
+      zip: data.zip,
+      country: data.country,
+      mobileNumber: data.mobileNumber
+    }));
   };
 
   // Guardar datos en localStorage antes de redirigir a Stripe
   const handleProceedToPayment = async () => {
     if (!customerData || !selectedPlan) {
-      toast.error('Please complete all required information.');
+      toast.error(t('wizard.errors.completeRequiredInfo'));
       return;
     }
     setIsProcessing(true);
     try {
       let role_id = '';
-      try {
-        role_id = await fetchActiveRole();
-      } catch (e) {
-        toast.error('No se pudo obtener el rol activo');
-        setIsProcessing(false);
-        return;
-      }
+             try {
+         role_id = await fetchActiveRole();
+       } catch (e) {
+         toast.error(t('wizard.errors.roleError'));
+         setIsProcessing(false);
+         return;
+       }
 
       // GUARDA el role_id en customerData antes de guardar en localStorage
       const customerDataWithRole = { ...customerData, role_id };
@@ -167,32 +189,32 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     } catch (error) {
       console.error('Payment error:', error);
       
-      // Mostrar mensajes de error más específicos
-      let errorMessage = 'Failed to proceed to payment. Please try again.';
-      
-      if (error instanceof Error) {
-        if (error.message.includes('unavailable') || error.message.includes('not active')) {
-          errorMessage = 'This plan is currently unavailable. Please contact support or try a different plan.';
-        } else if (error.message.includes('configuration error')) {
-          errorMessage = 'There was an issue with the payment setup. Please contact support.';
-        } else if (error.message.includes('Payment setup failed')) {
-          errorMessage = error.message;
-        } else if (error.message.includes('Card error')) {
-          errorMessage = 'There was an issue with the payment method. Please try again.';
-        } else if (error.message.includes('Invalid request')) {
-          errorMessage = 'Invalid payment request. Please refresh the page and try again.';
-        }
-      }
+             // Mostrar mensajes de error más específicos
+       let errorMessage = t('wizard.errors.paymentFailed');
+       
+       if (error instanceof Error) {
+         if (error.message.includes('unavailable') || error.message.includes('not active')) {
+           errorMessage = t('wizard.errors.planUnavailable');
+         } else if (error.message.includes('configuration error')) {
+           errorMessage = t('wizard.errors.paymentSetupError');
+         } else if (error.message.includes('Payment setup failed')) {
+           errorMessage = error.message;
+         } else if (error.message.includes('Card error')) {
+           errorMessage = t('wizard.errors.paymentMethodError');
+         } else if (error.message.includes('Invalid request')) {
+           errorMessage = t('wizard.errors.invalidRequest');
+         }
+       }
       
       toast.error(errorMessage);
       
               // Si es un error de producto no activo, mostrar información adicional
         if (error instanceof Error && error.message.includes('not active')) {
           console.warn('Product not active error detected. Please check Stripe dashboard.');
-          // Opcional: mostrar un modal con información adicional
-          setTimeout(() => {
-            toast.info('If this issue persists, please contact our support team.');
-          }, 2000);
+                     // Opcional: mostrar un modal con información adicional
+           setTimeout(() => {
+             toast.info(t('wizard.errors.contactSupport'));
+           }, 2000);
         }
     } finally {
       setIsProcessing(false);
@@ -238,10 +260,10 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   const renderSummaryStep = () => {
     console.log('renderSummaryStep - selectedPlan:', selectedPlan, 'customerData:', customerData);
     
-    if (!selectedPlan) {
-      console.log('No selectedPlan available');
-      return <div>No plan selected</div>;
-    }
+         if (!selectedPlan) {
+       console.log('No selectedPlan available');
+       return <div>{t('wizard.errors.noPlanSelected')}</div>;
+     }
     
     const subtotal = selectedPlan.price;
     const taxAmount = taxCalculation?.tax_amount || 0;
@@ -249,93 +271,92 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     
     return (
       <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <div className="plan-summary-card" style={{ maxWidth: 900, width: '100%', marginLeft: '10rem' }}>
-          <div className="plan-summary-header">
-            <h4>Order Summary</h4>
-            <div className="plan-badge">{selectedPlan.name}</div>
-          </div>
-          <div className="plan-details">
-            <div className="plan-item">
-              <span>{selectedPlan.minutes} minutes included</span>
-              <span>{formatCurrency(selectedPlan.price)}</span>
-            </div>
-            <div className="plan-item">
-              <span>Additional minutes</span>
-              <span>${selectedPlan.addMinuteRate}/min</span>
-            </div>
-          </div>
-          {customerData?.state ? (
-            <div className="tax-breakdown">
-              <div className="breakdown-item">
-                <span>Subtotal</span>
-                <span>{formatCurrency(subtotal)}</span>
-              </div>
-              <div className="breakdown-item">
-                <span>Tax ({customerData.state})</span>
-                <span>
-                  {loadingTax ? (
-                    <span style={{ color: '#8DA9C9' }}>Calculating...</span>
-                  ) : (
-                    formatCurrency(taxAmount)
-                  )}
-                </span>
-              </div>
-              <div className="breakdown-item total">
-                <span>Total</span>
-                <span>
-                  {loadingTax ? (
-                    <span style={{ color: '#8DA9C9' }}>Calculating...</span>
-                  ) : (
-                    formatCurrency(total)
-                  )}
-                </span>
-              </div>
-              {taxCalculation && (
-                <div className="tax-note">
-                  <p>
-                    💡 <strong>Note:</strong> Tax rate: {(taxCalculation.tax_rate * 100).toFixed(2)}% 
-                    based on your location. Final amount will be confirmed on the payment page.
-                  </p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="tax-breakdown">
-              <div className="breakdown-item">
-                <span>Subtotal</span>
-                <span>{formatCurrency(subtotal)}</span>
-              </div>
-              <div className="breakdown-item">
-                <span>Tax</span>
-                <span>Will be calculated during checkout</span>
-              </div>
-              <div className="breakdown-item total">
-                <span>Total</span>
-                <span>{formatCurrency(subtotal)} + Tax</span>
-              </div>
-            </div>
-          )}
-          <div className="plan-features">
-            <h5>What's included:</h5>
-            <ul>
-              <li>✓ No Setup Fees</li>
-              <li>✓ 100% Bilingual</li>
-              <li>✓ 24/7/365 Answering</li>
-              <li>✓ Advanced Features</li>
-            </ul>
-          </div>
+                 <div className="plan-summary-card" style={{ maxWidth: 900, width: '100%', marginLeft: '10rem' }}>
+           <div className="plan-summary-header">
+             <h4>{t('wizard.summary.orderSummary')}</h4>
+             <div className="plan-badge">{selectedPlan.name}</div>
+           </div>
+           <div className="plan-details">
+             <div className="plan-item">
+               <span>{selectedPlan.minutes} {t('wizard.summary.minutesIncluded')}</span>
+               <span>{formatCurrency(selectedPlan.price)}</span>
+             </div>
+             <div className="plan-item">
+               <span>{t('wizard.summary.additionalMinutes')}</span>
+               <span>${selectedPlan.addMinuteRate}/min</span>
+             </div>
+           </div>
+                     {customerData?.state ? (
+             <div className="tax-breakdown">
+               <div className="breakdown-item">
+                 <span>{t('wizard.summary.subtotal')}</span>
+                 <span>{formatCurrency(subtotal)}</span>
+               </div>
+               <div className="breakdown-item">
+                 <span>{t('wizard.summary.tax')} ({customerData.state})</span>
+                 <span>
+                   {loadingTax ? (
+                     <span style={{ color: '#8DA9C9' }}>{t('wizard.summary.calculating')}</span>
+                   ) : (
+                     formatCurrency(taxAmount)
+                   )}
+                 </span>
+               </div>
+               <div className="breakdown-item total">
+                 <span>{t('wizard.summary.total')}</span>
+                 <span>
+                   {loadingTax ? (
+                     <span style={{ color: '#8DA9C9' }}>{t('wizard.summary.calculating')}</span>
+                   ) : (
+                     formatCurrency(total)
+                   )}
+                 </span>
+               </div>
+                                {taxCalculation && (
+                   <div className="tax-note">
+                     <p>
+                       {t('wizard.summary.taxNote').replace('{rate}', (taxCalculation.tax_rate * 100).toFixed(2))}
+                     </p>
+                   </div>
+                 )}
+             </div>
+           ) : (
+             <div className="tax-breakdown">
+               <div className="breakdown-item">
+                 <span>{t('wizard.summary.subtotal')}</span>
+                 <span>{formatCurrency(subtotal)}</span>
+               </div>
+               <div className="breakdown-item">
+                 <span>{t('wizard.summary.tax')}</span>
+                 <span>{t('wizard.summary.willBeCalculated')}</span>
+               </div>
+               <div className="breakdown-item total">
+                 <span>{t('wizard.summary.total')}</span>
+                 <span>{formatCurrency(subtotal)} + {t('wizard.summary.tax')}</span>
+               </div>
+             </div>
+           )}
+                     <div className="plan-features">
+             <h5>{t('wizard.summary.whatsIncluded')}</h5>
+             <ul>
+               <li>{t('wizard.summary.features.noSetupFees')}</li>
+               <li>{t('wizard.summary.features.bilingual')}</li>
+               <li>{t('wizard.summary.features.answering')}</li>
+               <li>{t('wizard.summary.features.advancedFeatures')}</li>
+             </ul>
+           </div>
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
-            <button
-              className="wizard-next-btn"
-              onClick={handleProceedToPayment}
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Processing...' : (
-                <>
-                  Pay Now <BsCreditCard style={{ color: '#0F384C', width: 20, height: 20 }} />
-                </>
-              )}
-            </button>
+                         <button
+               className="wizard-next-btn"
+               onClick={handleProceedToPayment}
+               disabled={isProcessing}
+             >
+               {isProcessing ? t('wizard.summary.processing') : (
+                 <>
+                   {t('wizard.summary.payNow')} <BsCreditCard style={{ color: '#0F384C', width: 20, height: 20 }} />
+                 </>
+               )}
+             </button>
           </div>
         </div>
       </div>
@@ -346,9 +367,37 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <ProfileForm onValidityChange={() => {}} onDataChange={handleProfileData} onValid={() => setCurrentStep(1)} />;
+        return <ProfileForm 
+          onValidityChange={() => {}} 
+          onDataChange={handleProfileData} 
+          onValid={() => setCurrentStep(1)}
+          initialData={{
+            fullName: customerData.fullName,
+            lastName: customerData.lastName,
+            companyName: customerData.companyName,
+            officeNumber: customerData.officeNumber,
+            email: customerData.email,
+            industry: customerData.industry,
+            heardAbout: customerData.heardAbout
+          }}
+        />;
       case 1:
-        return <BusinessForm onValidityChange={() => {}} onDataChange={handleBusinessData} selectedPlan={selectedPlan} onValid={() => setCurrentStep(2)} />;
+        return <BusinessForm 
+          onValidityChange={() => {}} 
+          onDataChange={handleBusinessData} 
+          selectedPlan={selectedPlan} 
+          onValid={() => setCurrentStep(2)}
+          initialData={{
+            company: customerData.company,
+            address1: customerData.address1,
+            address2: customerData.address2,
+            city: customerData.city,
+            state: customerData.state,
+            zip: customerData.zip,
+            country: customerData.country,
+            mobileNumber: customerData.mobileNumber
+          }}
+        />;
       case 2:
         return renderSummaryStep();
       case 3:
@@ -378,6 +427,11 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
               </button>
             )}
             {currentStep < 2 && (
+              <button className="wizard-next-btn" onClick={handleNextStep}>
+                Next Step <img src={nexicon} alt="Next" style={{ width: 24, height: 24 }} />
+              </button>
+            )}
+            {currentStep === 3 && (
               <button className="wizard-next-btn" onClick={handleNextStep}>
                 Next Step <img src={nexicon} alt="Next" style={{ width: 24, height: 24 }} />
               </button>

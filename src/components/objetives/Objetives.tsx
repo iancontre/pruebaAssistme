@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from '../../hooks/useTranslation';
 
 import './Objetives.css';
 import objetivesImage from '../../assets/images/imageObjetives.png'; // Cambia esta ruta por la correcta
 
 
 const ObjetivosEspecificos = () => {
+    const { t } = useTranslation();
+    
     // Variantes para las cards
     const cardVariants = {
         hidden: {
@@ -55,7 +58,7 @@ const ObjetivosEspecificos = () => {
         <div className="objetivos-contenedor">
           <div className="contenedor-principal">
 
-                         <h1>Specific Objectives</h1>
+                         <h1>{t('objectives.title')}</h1>
             <motion.img 
               src={objetivesImage} 
               alt="Objetivos estratégicos" 
@@ -76,7 +79,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                                 <p>Optimize customer service by implementing a virtual assistant service that answers calls in real time.</p>
+                                 <p>{t('objectives.objective1')}</p>
                      <div className='figure'></div>
               </motion.div>
               
@@ -89,7 +92,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                                 <p>Increase the operational efficiency of companies by reducing their administrative workload by 30%, allowing them to focus on negotiating and closing sales.</p>
+                                 <p>{t('objectives.objective2')}</p>
                 <div className='figure'></div>
               </motion.div>
               
@@ -102,7 +105,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                                 <p>Improve lead conversion through 24/7 call center support, ensuring a rapid response to interested parties, proactive follow-up, and filtering qualified prospects to increase sales opportunities.</p>
+                                 <p>{t('objectives.objective3')}</p>
                 <div className='figure'></div>
               </motion.div>
               
@@ -115,7 +118,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                                 <p>Understanding and anticipating customer needs, tailoring our services to exceed their expectations and foster lasting relationships.</p>
+                                 <p>{t('objectives.objective4')}</p>
                     <div className='figure'></div>
               </motion.div>
               
@@ -128,7 +131,7 @@ const ObjetivosEspecificos = () => {
                 viewport={{ once: true, margin: "-150px" }}
                 variants={cardVariants}
               >
-                                 <p>Promote responsible business practices that benefit both our customers and the environment, contributing to ethical and sustainable development in the sector.</p>
+                                 <p>{t('objectives.objective5')}</p>
                     <div className='figure'></div>
               </motion.div>
             </div>

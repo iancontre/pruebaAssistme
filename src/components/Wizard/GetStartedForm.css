@@ -334,6 +334,7 @@
   align-items: center;
   justify-content: center;
   background: #fff;
+  max-width: 900px;
 }
 
 .step4-main-layout {
@@ -360,7 +361,7 @@
 }
 
 .step4-welcome-title {
-  font-size: 2.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #0F384C;
   margin-bottom: 1.2rem;
@@ -417,6 +418,10 @@
   text-align: center;
   line-height: 1.2;
   z-index: 2;
+  max-width: 250px;
+  word-wrap: break-word;
+  white-space: normal;
+  padding: 0 10px;
 }
 
 .step4-image {
@@ -468,6 +473,10 @@
     margin-bottom: 1.5rem;
     text-align: center;
     font-size: 1.2rem;
+    max-width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+    padding: 0 20px;
   }
   .step4-image {
     position: static;
@@ -479,7 +488,53 @@
 
 @media (max-width: 900px) {
   .custom-step4-layout {
-    margin-left: 0;
+    margin-left: 0 !important;
+    min-width: 90vw;
+    max-width: 99vw;
+    padding: 1.5rem 0.7rem 1rem 0.7rem;
+  }
+  
+  .step4-thankyou-text {
+    max-width: 280px;
+    word-wrap: break-word;
+    white-space: normal;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-step4-layout {
+    margin-left: 0 !important;
+    min-width: 90vw;
+    max-width: 99vw;
+    padding: 1.5rem 0.7rem 1rem 0.7rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .custom-step4-layout {
+    margin-left: 0 !important;
+    min-width: 90vw;
+    max-width: 99vw;
+    padding: 1.5rem 0.7rem 1rem 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-step4-layout {
+    margin-left: 0 !important;
+    min-width: 90vw;
+    max-width: 99vw;
+    padding: 1.5rem 0.7rem 1rem 0.7rem;
+  }
+  
+  .step4-thankyou-text {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    max-width: 100%;
+    word-wrap: break-word;
+    white-space: normal;
+    padding: 0 10px;
   }
 } 
 

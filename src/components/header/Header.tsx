@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
+import { useTranslation } from "../../hooks/useTranslation";
 
 import "./Header.css";
 
@@ -21,27 +22,27 @@ import wizzardFinalConfig from '../../assets/images/wizzardFinalConfig.png';
 // Definir correctamente el objeto con una firma de índice
 const headersData: Record<string, { title: string; description: string; image: string; showButtons: boolean }> = {
   "/": {
-    title: "Never Miss An Important Call",
-    description: "24/7 Virtual receptionist & business answering services",
+    title: "", 
+    description: "", 
     image: imagenHome,
     showButtons: true,
   },
   "/blog": {
-    title: "OUR BLOG",
-    description: "Be part of our blog and posts about our progress in our commitment to customer service.",
+    title: "", 
+    description: "", 
     image: imagenBlog,
     showButtons: false,
   },
   "/faqs": {
-    title: "FAQ'S",
-    description: "Too many calls and not enough hands to answer them? ASSIST-ME ensures your business always remains responsive and professional. Our 24/7 virtual receptionist service answers every call with precision and care when your internal team is unavailable. Partner with ASSIST-ME to maintain consistent, high-quality client communication—so you can stay focused on strategic growth.",
+    title: "", 
+    description: "", 
     image: imagenFaqs ,
     showButtons: false,
   },
   "/customerService": {
-    title: "Customer Service",
-    description: "Due to the growing number of Spanish-speaking Americans, it can be very useful to have a 24/7 bilingual answering service for your business or practice. At Assist-me, we'll make sure that you don't miss out on any important calls or lose potential clients because of language barriers. Contact us today to learn more about the many benefits of using Assist-me virtual services.",
-    image: imagenCustomerService, // Using imagenHome temporarily as requested
+    title: "", 
+    description: "", 
+    image: imagenCustomerService, 
     showButtons: true,
   },
 };
@@ -49,25 +50,25 @@ const headersData: Record<string, { title: string; description: string; image: s
 // Datos específicos para cada paso del wizard
 const wizardHeaders = [
   {
-    title: '¡Fill out our form!',
+    title: '', 
     description: '',
     image: wizzardImageUno,
     showButtons: false,
   },
   {
-    title: 'What options do we have in the industry?',
+    title: '', 
     description: '',
     image: pasoDos,
     showButtons: false,
   },
   {
-    title: "You're Almost Done!",
+    title: '', 
     description: '',
     image: pasoTres,
     showButtons: false,
   },
   {
-    title: 'Welcome to Assist-me!',
+    title: '', 
     description: '',
     image: encabezado4,
     showButtons: false,
@@ -77,25 +78,25 @@ const wizardHeaders = [
 // Datos específicos para el wizard de configuración
 const configWizardHeaders = [
   {
-    title: "Let's continue with the process",
+    title: '', 
     description: '',
     image: wizarconfig1,
     showButtons: false,
   },
   {
-    title: 'We are almost finished',
+    title: '', 
     description: '',
     image: encabezadowizzard2,
     showButtons: false,
   },
   {
-    title: 'Select what is necessary to be the best',
+    title: '', 
     description: '',
     image: wizzardconfig3,
     showButtons: false,
   },
   {
-    title: 'Thank you for Choosing us',
+    title: '', 
     description: '',
     image: wizzardFinalConfig,
     showButtons: false,
@@ -114,6 +115,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = (props) => {
   const location = useLocation();
+  const { t } = useTranslation();
   
   // Obtener los datos del header según la ruta actual
   const currentPathData = headersData[location.pathname as keyof typeof headersData] || headersData["/"];
@@ -126,7 +128,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   
   if (props.isConfigWizard && props.wizardStep !== undefined) {
     const wizardData = configWizardHeaders[props.wizardStep] || configWizardHeaders[0];
-    title = props.title ?? wizardData.title;
+    title = props.title ?? t(`header.configWizard.step${props.wizardStep + 1}`);
     description = props.description ?? wizardData.description;
     image = props.image ?? wizardData.image;
     showButtons = props.showButtons ?? wizardData.showButtons;
@@ -135,7 +137,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     console.log('Header - Using config wizard data for step:', props.wizardStep, wizardData);
   } else if (props.isWizard && props.wizardStep !== undefined) {
     const wizardData = wizardHeaders[props.wizardStep] || wizardHeaders[0];
-    title = props.title ?? wizardData.title;
+    title = props.title ?? t(`header.wizard.step${props.wizardStep + 1}`);
     description = props.description ?? wizardData.description;
     image = props.image ?? wizardData.image;
     showButtons = props.showButtons ?? wizardData.showButtons;
@@ -143,8 +145,26 @@ const Header: React.FC<HeaderProps> = (props) => {
     // Debug: verificar qué datos se están usando
     console.log('Header - Using wizard data for step:', props.wizardStep, wizardData);
   } else {
-    title = props.title ?? currentPathData.title;
-    description = props.description ?? currentPathData.description;
+    // Obtener textos traducidos según la ruta
+    let translatedTitle = '';
+    let translatedDescription = '';
+    
+    if (location.pathname === '/') {
+      translatedTitle = t('header.homepage.title');
+      translatedDescription = t('header.homepage.description');
+    } else if (location.pathname === '/blog') {
+      translatedTitle = t('header.blog.title');
+      translatedDescription = t('header.blog.description');
+    } else if (location.pathname === '/faqs') {
+      translatedTitle = t('header.faqs.title');
+      translatedDescription = t('header.faqs.description');
+    } else if (location.pathname === '/customerService') {
+      translatedTitle = t('header.customerService.title');
+      translatedDescription = t('header.customerService.description');
+    }
+    
+    title = props.title ?? translatedTitle;
+    description = props.description ?? translatedDescription;
     image = props.image ?? currentPathData.image;
     showButtons = props.showButtons ?? currentPathData.showButtons;
   }
@@ -183,7 +203,7 @@ const Header: React.FC<HeaderProps> = (props) => {
       // Si estamos en otra página, navegamos a la home
       window.location.href = '/';
       
-      // Guardamos en localStorage qué sección queremos ver
+     
       localStorage.setItem('scrollToSection', sectionId);
     }
   };
@@ -208,11 +228,14 @@ const Header: React.FC<HeaderProps> = (props) => {
             className={`btn ${isCustomerService ? "customer-service" : "primary"}`}
             onClick={() => handleSectionNavigation('contact')}
           >
-            Contact us
+            {t('header.homepage.contactUs')}
           </button>
-          <Link to="/compra" className={`btn ${isCustomerService ? "customer-service-blue" : "secondary"}`}>
-            Pricing and Plans
-          </Link>
+          <button
+            className={`btn ${isCustomerService ? "customer-service-blue" : "secondary"}`}
+            onClick={() => handleSectionNavigation('pricing')}
+          >
+            {t('header.homepage.pricingPlans')}
+          </button>
             </div>
           )}
         </div>

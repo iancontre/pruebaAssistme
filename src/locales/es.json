@@ -1,0 +1,709 @@
+{
+  "nav": {
+    "aboutUs": "Sobre nosotros",
+    "ourMission": "Nuestra Misión",
+    "ourVision": "Nuestra Visión",
+    "ourBlog": "Nuestro Blog",
+    "services": "Servicios",
+    "faqsTestimonials": "Preguntas Frecuentes y Testimonios",
+    "customerService": "Servicio al Cliente",
+    "pricingPlans": "Precios y Planes",
+    "tutorials": "Tutoriales",
+    "whyChooseUs": "Por Qué Elegirnos",
+    "logIn": "Iniciar Sesión"
+  },
+  "header": {
+    "homepage": {
+      "title": "Nunca pierdas una llamada importante",
+      "description": "Asistente Virtual y Servicios de Contestación Telefónica para Empresas 24/7",
+      "contactUs": "Contáctanos",
+      "pricingPlans": "Precios y Planes"
+    },
+    "faqs": {
+      "title": "FAQS",
+      "description": "ASSIST-ME garantiza que tu empresa siempre se mantenga receptiva y profesional. Nuestro servicio de recepcionistas virtuales 24/7 responde cada llamada con precisión y cuidado cuando tu equipo interno no está disponible. Asóciate con ASSIST-ME para mantener una comunicación con tus clientes constante y de alta calidad, y así puedas enfocarte en el crecimiento estratégico de tu negocio.",
+      "questions": {
+        "q1": {
+          "question": "¿Qué tipo de llamadas pueden atender sus asistentes virtuales?",
+          "answer": "Nuestros asistentes virtuales están capacitados para manejar una amplia variedad de llamadas, incluyendo, pero no limitado a:\n• Consultas de servicio al cliente\n• Programación de pedidos y citas\n• Generación y seguimiento de prospectos\n• Soporte técnico y resolución de problemas\n• Consultas generales y solicitudes de información\n• Llamadas de emergencia o fuera de horario\n\nPodemos adaptarnos a cualquier necesidad específica o requerimiento del sector, asegurando que cada llamada sea atendida de manera profesional y eficiente, de acuerdo con los objetivos de tu negocio."
+        },
+        "q2": {
+          "question": "¿Ofrecen servicio de seguimiento a clientes potenciales?",
+          "answer": "Sí, ASSIST-ME ofrece servicios de seguimiento a clientes potenciales. Nuestros asistentes virtuales pueden encargarse de tareas como programar llamadas de seguimiento, enviar correos electrónicos recordatorios y asegurar que ningún prospecto sea olvidado, todo con un enfoque profesional y personalizado."
+        },
+        "q3": {
+          "question": "¿El equipo de atención al cliente de Assist-Me puede responder correos electrónicos y mensajes además de llamadas?",
+          "answer": "Absolutamente. Nuestro equipo está capacitado para gestionar no solo llamadas, sino también correos electrónicos y mensajes instantáneos. Garantizamos que todas las formas de comunicación sean manejadas eficientemente, ofreciendo una experiencia fluida para tus clientes en múltiples canales."
+        },
+        "q4": {
+          "question": "¿El servicio está disponible 24/7 o solo en horarios específicos?",
+          "answer": "ASSIST-ME ofrece disponibilidad 24/7, lo que significa que siempre estamos listos para apoyar tu negocio, ya sea durante el horario laboral o fuera de él. Nuestro servicio también puede personalizarse para adaptarse a tus necesidades de horario, garantizando cobertura cuando más lo necesites."
+        },
+        "q5": {
+          "question": "¿Los asistentes virtuales hablan inglés y español?",
+          "answer": "Sí, nuestros asistentes virtuales son bilingües en inglés y español, lo que permite una comunicación efectiva y profesional con una amplia variedad de clientes. Nos aseguramos de que el idioma nunca sea una barrera para ofrecer un servicio de alta calidad."
+        },
+        "q6": {
+          "question": "¿Cómo maneja Assist-Me un alto volumen de llamadas de sus clientes?",
+          "answer": "ASSIST-ME utiliza un sistema robusto diseñado para gestionar altos volúmenes de llamadas sin comprometer la calidad del servicio. Nuestro equipo está preparado para atender un gran flujo de llamadas, asegurando que cada una sea respondida de manera rápida y eficiente. Podemos escalar nuestros recursos según la demanda, garantizando que ninguna llamada quede sin contestar."
+        },
+        "q7": {
+          "question": "¿Cobran por llamada o tienen una tarifa mensual fija?",
+          "answer": "En ASSIST-ME ofrecemos modelos de precios flexibles que se ajustan a tus necesidades. Puedes elegir entre una tarifa mensual fija para un servicio integral o un modelo de pago por llamada, según el nivel de soporte requerido. Nuestro objetivo es brindarte soluciones rentables adaptadas a tu negocio."
+        },
+        "q8": {
+          "question": "¿Puedo personalizar los guiones y respuestas de los asistentes?",
+          "answer": "Sí, permitimos que personalices completamente los guiones y respuestas que utilizan nuestros asistentes virtuales al atender llamadas, mensajes o correos electrónicos. Esto garantiza que la comunicación esté perfectamente alineada con la voz de tu marca y cumpla con tus requerimientos específicos."
+        },
+        "q9": {
+          "question": "¿Cómo puedo desviar llamadas a mi teléfono?",
+          "answer": "Desviar llamadas a tu teléfono es sencillo con ASSIST-ME. Te proporcionamos instrucciones claras y soporte para asegurarnos de que las llamadas se redirijan sin problemas a tu teléfono, permitiéndote mantenerte conectado con tus clientes cuando lo necesites, estés donde estés."
+        }
+      },
+      "contactCard": {
+        "title": "¿Tienes más preguntas?",
+        "description": "Pagos y gestión financiera integrales en una única solución. Descubre la plataforma ideal para lograrlo.",
+        "button": "Contáctanos"
+      }
+    },
+    "blog": {
+      "title": "NUESTRO BLOG",
+      "description": "Sea parte de nuestro blog y publicaciones sobre su progreso en nuestro compromiso con el servicio al cliente."
+    },
+    "customerService": {
+      "title": "Servicio al Cliente",
+      "description": "Debido al creciente número de hispanohablantes en Estados Unidos, puede ser muy útil contar con un servicio de atención telefónica bilingüe disponible las 24 horas, los 7 días de la semana para su negocio o consultorio. En Assist-me, nos aseguraremos de que no pierda llamadas importantes ni clientes potenciales por las barreras del idioma. Contáctenos hoy mismo para conocer los numerosos beneficios de usar los servicios virtuales de ASSIST-ME."
+    },
+    "wizard": {
+      "step1": "¡Diligencia nuestro formulario!",
+      "step2": "¿Qué opciones tenemos en la industria?",
+      "step3": "¡Ya casi terminas!",
+      "step4": "¡Bienvenido a Assist-me!"
+    },
+    "configWizard": {
+      "step1": "Continuemos con el proceso",
+      "step2": "Ya casi terminamos",
+      "step3": "Selecciona lo que sea necesario para ser el mejor",
+      "step4": "Gracias por elegirnos"
+    }
+  },
+  "pricing": {
+    "perMonth": "Por mes",
+    "minutes": "MINUTOS",
+    "perMinuteAdditional": "por minuto adicional",
+    "features": {
+      "noSetupFees": "Sin tarifas de instalación",
+      "noContracts": "Sin contratos",
+      "bilingual": "100% Bilingüe",
+      "answering": "Atención 24/7/365",
+      "advancedFeatures": "Funciones avanzadas"
+    },
+    "signUp": "Registrarse",
+    "loading": "Cargando...",
+    "noPlansAvailable": "No hay planes disponibles en este momento. Por favor, inténtalo más tarde."
+  },
+  "about": {
+    "title": "Sobre Nosotros",
+    "description": "Somos una empresa de asistentes virtuales comprometida en ayudar a profesionales y negocios a optimizar su tiempo, mejorar su productividad y simplificar sus operaciones diarias. Contamos con un equipo de asistentes virtuales bilingües altamente capacitados que brindan atención personalizada en la recepción de llamadas para nuestros clientes. Nuestra misión es ofrecer un servicio confiable, eficiente y centrado en las personas, para que nuestros clientes puedan enfocarse en hacer crecer sus negocios."
+  },
+  "mission": {
+    "title": "Nuestra Misión",
+    "description": "Elevar la productividad de nuestros clientes optimizando la gestión de llamadas recibidas, utilizando tecnología de punta y un equipo altamente capacitado. En Assist-Me Virtual Services, transformamos la manera en que las empresas operan."
+  },
+  "vision": {
+    "title": "Nuestra Visión",
+    "description": "Aspiramos a convertirnos en la empresa de asistentes virtuales más grande de Estados Unidos para el año 2030."
+  },
+  "objectives": {
+    "title": "Objetivos específicos",
+    "objective1": "Optimizar el servicio al cliente mediante la implementación de un servicio de asistente virtual que conteste llamadas en tiempo real",
+    "objective2": "Incrementar la eficiencia operativa de las empresas reduciendo su carga administrativa en un 30%, permitiéndoles enfocarse en la negociación y cierre de ventas.",
+    "objective3": "Mejorar la conversión de prospectos a través de un centro de atención telefónica 24/7, garantizando una respuesta rápida a los interesados, seguimiento proactivo y filtrado de prospectos calificados para aumentar las oportunidades de venta",
+    "objective4": "Comprender y anticipar las necesidades de los clientes, adaptando nuestros servicios para superar sus expectativas y fomentar relaciones duraderas.",
+    "objective5": "Promover prácticas empresariales responsables que beneficien tanto a nuestros clientes como al medio ambiente, contribuyendo al desarrollo ético y sostenible del sector."
+  },
+  "choose": {
+    "title": "¿Por qué elegirnos?",
+    "valueProposition": "Propuesta de Valor",
+    "point1": "Ofrecemos atención personalizada a llamadas entrantes a través de nuestros asesores especializados.",
+    "point2": "Contestamos el 100% de las llamadas que reciben nuestros clientes.",
+    "point3": "Brindamos un servicio de alta calidad, además de herramientas como portal web, reportes personalizados y seguimiento de satisfacción del cliente.",
+    "point4": "Recopilamos la información de los llamantes para crear un historial de llamadas, evitando solicitar los mismos datos nuevamente, ahorrando tiempo y mejorando la experiencia del cliente en futuras interacciones con Assist-Me.",
+    "point5": "Se asigna un gestor de cuenta dedicado a los clientes VIP que pagan una tarifa adicional por este servicio premium."
+  },
+  "service": {
+    "title": "Servicios",
+    "mainServices": {
+      "title": "Servicios Principales",
+      "description": "En nuestra empresa de asistentes virtuales, ofrecemos soluciones integrales y flexibles para que puedas enfocarte en lo más importante: hacer crecer tu negocio. Nuestro equipo de profesionales altamente capacitados se encarga de la atención telefónica, gestión de llamadas, tareas administrativas, atención al cliente y mucho más, siempre con eficiencia, cercanía y un profundo entendimiento de tus necesidades. Ya sea que necesites apoyo en horario laboral o cobertura total 24/7, estamos aquí para optimizar tu tiempo, mejorar la experiencia del cliente y mantener tu operación funcionando sin interrupciones, estés donde estés.",
+      "service1": {
+        "title": "Atención Telefónica Personalizada",
+        "description": "Respondemos cada llamada en nombre de tu empresa, siguiendo el tono y protocolo que prefieras. Nuestro objetivo es brindar una primera impresión profesional y amigable que refuerce tu marca y genere confianza con cada cliente."
+      },
+      "service2": {
+        "title": "Toma de Mensajes y Entrega Instantánea",
+        "description": "Registramos con precisión cada llamada—nombre, motivo y datos de contacto—y te los enviamos de inmediato por correo electrónico o aplicación de mensajería, para que estés siempre al tanto, incluso si no puedes contestar."
+      },
+      "service3": {
+        "title": "Soporte Bilingüe (Inglés y Español)",
+        "description": "Nuestro equipo bilingüe facilita una comunicación fluida en inglés y español, ayudándote a conectar con una audiencia más amplia y asegurando que cada persona se sienta comprendida y atendida."
+      },
+      "service4": {
+        "title": "Cobertura 24/7 o en Horarios Personalizados",
+        "description": "¿Necesitas cobertura completa o solo en horarios específicos? Nos adaptamos a las necesidades de tu negocio, asegurando disponibilidad continua o programación personalizada, para que nunca pierdas una oportunidad."
+      }
+    },
+    "uniqueFeatures": {
+      "title": "Características Únicas",
+      "feature1": {
+        "title": "Plataforma de Visualización de Detalles del Plan",
+        "description": "Accede a nuestra plataforma en línea en cualquier momento para consultar el estado de tu plan, uso de minutos, historial de llamadas, reportes y más. Todo en un solo lugar, claro, seguro y fácil de navegar, para que tengas control total de tu servicio en tiempo real."
+      },
+      "feature2": {
+        "title": "Soporte Telefónico Personalizado",
+        "description": "Brindamos atención telefónica profesional y personalizada en nombre tuyo o de tu empresa, adaptándonos al protocolo que prefieras. Nuestro equipo se encarga de recibir y gestionar llamadas de forma eficiente, asegurando una experiencia cálida y efectiva para tus clientes, sin importar el volumen o la hora."
+      },
+      "feature3": {
+        "title": "Resúmenes de Llamadas por Correo Electrónico y SMS",
+        "description": "Recibe un resumen claro y conciso de cada llamada atendida, directamente en tu correo o vía mensaje de texto. Incluye datos clave como el nombre del contacto, motivo de la llamada y acciones tomadas o pendientes, para que siempre estés informado, incluso cuando no puedas contestar en tiempo real."
+      },
+      "feature4": {
+        "title": "Reportes del Historial de Llamadas",
+        "description": "Ofrecemos reportes detallados y periódicos de todas las llamadas recibidas, incluyendo fecha, hora, duración y motivo. Esta información te permite tener un control total sobre la comunicación con tus clientes, identificar patrones y tomar decisiones estratégicas basadas en datos reales."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "¿Alguna pregunta o comentario? ¡Solo escríbenos un mensaje!",
+    "info": {
+      "title": "Información de Contacto",
+      "description": "¡Di algo para iniciar un chat en vivo!"
+    },
+    "form": {
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "María",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "García",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "maria@assistme.com",
+      "phoneNumber": "Número de Teléfono",
+      "phoneNumberPlaceholder": "+1 012 3456 789",
+      "message": "Mensaje",
+      "messagePlaceholder": "Escribe tu mensaje...",
+      "sendMessage": "Enviar Mensaje"
+    }
+  },
+  "footer": {},
+  "intersection": {
+    "title": "¿Aún no conoces nuestros precios y planes?",
+    "button": "Precios y planes"
+  },
+  "testimonials": {
+    "title": "Lo que dicen nuestros clientes",
+    "subtitle": "Testimonios",
+    "testimonial1": {
+      "position": "Agente de Bienes Raíces, Grupo Inmobiliario XYZ",
+      "text": "Como agente de bienes raíces, la clave de mi éxito es responder rápidamente a las consultas de los clientes. Gracias a ASSIST-ME, puedo estar tranquilo sabiendo que cada llamada, ya sea de un cliente potencial o un comprador urgente, será atendida profesionalmente. Su atención personalizada 24/7 me ha permitido ofrecer un mejor servicio y cerrar más negocios sin preocuparme por las llamadas perdidas."
+    },
+    "testimonial2": {
+      "position": "Banquera Senior, Banco ABC",
+      "text": "En el mundo de la banca, cada llamada cuenta. Con ASSIST-ME, puedo garantizar que todas las consultas de mis clientes sean atendidas de manera rápida y eficiente. Ya sea para resolver dudas sobre productos financieros o agendar reuniones, el servicio de atención telefónica de ASSIST-ME ha mejorado enormemente nuestra capacidad de respuesta. ¡Definitivamente me ha ayudado a brindar una experiencia más fluida y profesional a nuestros clientes!"
+    },
+    "testimonial3": {
+      "position": "Contador Público, Firma Contable DEF",
+      "text": "Como contador, el tiempo es oro y mi agenda está siempre llena. ASSIST-ME se ha convertido en una extensión de mi oficina, manejando las llamadas y mensajes de mis clientes de forma impecable. Esto me permite concentrarme en el trabajo que realmente importa, mientras sé que mis clientes están siendo atendidos de manera profesional y eficiente. Su servicio de atención al cliente es insustituible para mi práctica."
+    },
+    "testimonial4": {
+      "position": "Agente Inmobiliaria, Inmobiliaria GHI",
+      "text": "La flexibilidad que ofrece ASSIST-ME es incomparable. Como agente de bienes raíces, a menudo recibo llamadas fuera del horario laboral, y gracias a su atención 24/7, nunca pierdo una oportunidad de negocio. La calidad del servicio es excelente, y los informes detallados de las llamadas me permiten hacer un seguimiento efectivo con mis clientes."
+    },
+    "testimonial5": {
+      "position": "Gerente de Sucursal, Banco XYZ",
+      "text": "La banca es un sector donde la atención al cliente debe ser impecable y constante. Con ASSIST-ME, no solo podemos brindar soporte en tiempo real, sino que también gestionan nuestras citas y consultas urgentes. Su capacidad para manejar altos volúmenes de llamadas durante los días más ajetreados ha sido fundamental para mantener un servicio de calidad en todo momento."
+    },
+    "testimonial6": {
+      "position": "Contadora Senior, Consultoría Fiscal 123",
+      "text": "ASSIST-ME ha sido un aliado esencial para mi firma contable. No solo responden las llamadas de nuestros clientes, sino que también manejan la programación de citas y envían recordatorios, lo que nos ha permitido mejorar la organización y la eficiencia de nuestro día a día. El servicio ha sido profesional y personalizado, ayudándonos a optimizar nuestra atención y comunicación con los clientes."
+    }
+  },
+  "teamsCustomer": {
+    "title": "Deja de preocuparte<br/>por las llamadas perdidas",
+    "description": "El panorama empresarial en los EE. UU. está en constante cambio, y para mantenerte competitivo en tu industria, es crucial contar con agentes bilingües que puedan comunicarse de manera fluida tanto en inglés como en español.<br/><br/>Ahí es donde ASSIST-ME entra en acción. Nuestro servicio de atención telefónica con operadores en vivo incluye profesionales bilingües que no solo ofrecen traducciones rápidas y precisas, sino que también brindan respuestas expertas sobre tus productos y servicios, garantizando un soporte al cliente de primera calidad."
+  },
+  "benefitCustomer": {
+    "title": "Beneficios de agentes<br/>de llamadas bilingües",
+    "description": "Al asociarse con ASSIST-ME, ya no tendrá que preocuparse por perder un cliente. Satisfaga las necesidades de su clientela ofreciendo un servicio de atención bilingüe, amable y profesional. Nuestros agentes bilingües pueden ofrecer los siguientes servicios:",
+    "services": {
+      "service1": "Recepción de mensajes",
+      "service2": "Conexión de llamadas",
+      "service3": "Servicio de atención telefónica en vivo",
+      "service4": "Captura de información de clientes potenciales",
+      "service5": "Gestión de llamadas fuera de horario y de exceso de llamadas",
+      "service6": "Atención al cliente"
+    }
+  },
+  "advantagesCustomer": {
+    "title": "Ventajas de tener un servicio<br/>de contestación de llamadas de asistente virtual",
+    "advantages": {
+      "advantage1": {
+        "title": "1. Ahorro de Costos",
+        "desc": "Ahorra dinero en la contratación y capacitación de personal interno. Un servicio de asistencia virtual es mucho más rentable que mantener un recepcionista a tiempo completo."
+      },
+      "advantage2": {
+        "title": "2. Disponibilidad 24/7",
+        "desc": "Con un asistente virtual, tu negocio puede estar disponible las 24 horas del día, los 7 días de la semana, asegurando que ninguna llamada quede sin respuesta, ya sea de día, noche o fines de semana."
+      },
+      "advantage3": {
+        "title": "3. Soporte Bilingüe",
+        "desc": "El acceso a asistentes bilingües (inglés/español) garantiza que puedas atender a una clientela diversa, mejorando la comunicación y la satisfacción del cliente."
+      },
+      "advantage4": {
+        "title": "4. Mejora en la Experiencia del Cliente",
+        "desc": "Contar con un servicio de atención profesional genera una impresión positiva, asegurando que cada llamada se sienta valorada y que sus necesidades se aborden de manera rápida y eficiente."
+      },
+      "advantage5": {
+        "title": "5. Mayor Eficiencia y Productividad",
+        "desc": "Con un asistente virtual manejando las llamadas, tú y tu equipo pueden concentrarse en las actividades principales del negocio, mejorando la productividad general y permitiendo una mejor gestión del tiempo."
+      },
+      "advantage6": {
+        "title": "6. Escalabilidad",
+        "desc": "Escala fácilmente tu servicio de atención para adaptarse al crecimiento de tu negocio. Un asistente virtual puede adaptarse rápidamente al aumento del volumen de llamadas sin necesidad de contratar personal adicional."
+      },
+      "advantage7": {
+        "title": "7. Reducción del Estrés para los Propietarios de Negocios",
+        "desc": "Ya no tendrás que preocuparte por llamadas perdidas o interrupciones durante tareas críticas. El asistente virtual asegura que tu comunicación se gestione de manera eficiente y organizada."
+      },
+      "advantage8": {
+        "title": "8. Imagen Profesional",
+        "desc": "Un asistente virtual otorga a tu negocio una imagen pulida y profesional, manejando las llamadas con profesionalismo y representando tu marca de la mejor manera."
+      },
+      "advantage9": {
+        "title": "9. Captura y Gestión de Prospectos",
+        "desc": "Los asistentes virtuales pueden capturar información importante de los prospectos, asegurando que nunca pierdas una oportunidad y puedas hacer un seguimiento con clientes potenciales."
+      },
+      "advantage10": {
+        "title": "10. Flexibilidad en los Servicios",
+        "desc": "Los asistentes virtuales pueden manejar diversas tareas además de contestar llamadas, como agendar citas, tomar mensajes, redirigir llamadas y más, brindando un soporte integral adaptado a las necesidades de tu negocio."
+      },
+      "advantage11": {
+        "title": "11. Sin Costos Adicionales",
+        "desc": "A diferencia de los empleados a tiempo completo, los asistentes virtuales no requieren espacio de oficina, equipo o costos adicionales. Trabajan de manera remota, ahorrando a tu negocio en gastos de infraestructura."
+      },
+      "advantage12": {
+        "title": "12. Guiones y Servicios Personalizables",
+        "desc": "Puedes personalizar los guiones y servicios de las llamadas de acuerdo con las necesidades específicas de tu negocio, asegurando que cada interacción esté alineada con la marca y el tono de tu empresa."
+      }
+    }
+  },
+      "profile": {
+      "title": "Registrarse Es Fácil",
+      "subtitle": "Primero cuéntanos un poco sobre ti"
+    },
+    "business": {
+      "title": "Cuéntanos Sobre Tu Negocio",
+      "subtitle": "Primero cuéntanos un poco sobre ti"
+    },
+    "getStarted": {
+      "title": "Comencemos a configurar tu cuenta"
+    },
+    "wizard": {
+      "getStarted": {
+      "welcome": {
+        "title": "Bienvenido",
+        "text": "en nombre del equipo de ASSIST-ME, nos gustaría darte la bienvenida<br/>como nuestro nuevo miembro. Estamos ansiosos por<br/>configurar tu cuenta y conocerte."
+      },
+      "nextStep": {
+        "title": "Siguiente Paso",
+        "text": "Solo tenemos algunas preguntas más para poder<br/>continuar configurando tu cuenta. El tiempo necesario para<br/>esto es de aproximadamente 3 - 5 minutos."
+      },
+      "thankYou": "¡Gracias por confiar en nosotros con tus clientes!"
+    },
+    "steps": {
+      "profile": {
+        "label": "PERFIL",
+        "description": "Cuéntanos sobre ti"
+      },
+      "business": {
+        "label": "NEGOCIO",
+        "description": "Cuéntanos sobre tu negocio"
+      },
+      "summary": {
+        "label": "RESUMEN",
+        "description": "Revisa tu plan y detalles"
+      },
+      "getStarted": {
+        "label": "COMENZAR",
+        "description": "Vamos a comenzar a configurar tu cuenta"
+      }
+    },
+    "sidebar": {
+      "step": "Paso",
+      "nextStep": "Siguiente Paso"
+    },
+    "profile": {
+      "fields": {
+        "fullName": "Nombre Completo",
+        "lastName": "Apellido",
+        "companyName": "Nombre de la Empresa",
+        "officeNumber": "Número de Oficina",
+        "email": "Correo Electrónico",
+        "industry": "Industria",
+        "heardAbout": "¿Cómo te enteraste de nosotros?"
+      },
+      "placeholders": {
+        "fullName": "Ingresa tu nombre completo",
+        "lastName": "Ingresa tu apellido",
+        "companyName": "Ingresa el nombre de tu empresa",
+        "officeNumber": "Ingresa tu número de teléfono de oficina",
+        "email": "Ingresa tu dirección de correo electrónico"
+      },
+      "options": {
+        "selectIndustry": "Selecciona una industria",
+        "selectOption": "Selecciona una opción",
+        "industries": {
+          "finance": "Finanzas",
+          "technology": "Tecnología",
+          "healthcare": "Salud",
+          "education": "Educación",
+          "manufacturing": "Manufactura",
+          "retail": "Comercio Minorista",
+          "realEstate": "Bienes Raíces",
+          "consulting": "Consultoría",
+          "other": "Otro"
+        },
+        "sources": {
+          "google": "Google",
+          "socialMedia": "Redes Sociales",
+          "referral": "Referencia",
+          "advertisement": "Publicidad",
+          "other": "Otro"
+        }
+      },
+      "errors": {
+        "fillRequiredFields": "Por favor completa todos los campos requeridos antes de proceder al siguiente paso."
+      }
+    },
+    "business": {
+      "fields": {
+        "company": "Empresa",
+        "address": "Dirección",
+        "address2": "Línea de dirección 2",
+        "city": "Ciudad",
+        "state": "Estado",
+        "zip": "Código Postal",
+        "country": "País",
+        "mobileNumber": "Número Móvil"
+      },
+      "placeholders": {
+        "company": "Ingresa el nombre de tu empresa",
+        "address": "Ingresa tu dirección",
+        "address2": "Línea de dirección 2 (opcional)",
+        "mobileNumber": "Ingresa tu número móvil",
+        "selectCountryFirst": "Selecciona un país primero",
+        "zip": "Ingresa el código postal"
+      },
+      "optional": "Opcional",
+      "loading": {
+        "countries": "Cargando países...",
+        "states": "Cargando estados...",
+        "cities": "Cargando ciudades..."
+      },
+      "options": {
+        "selectCountry": "Selecciona un país",
+        "selectState": "Selecciona un estado",
+        "selectCity": "Selecciona una ciudad",
+        "noStates": "No hay estados disponibles",
+        "noCities": "No hay ciudades disponibles"
+      }
+    },
+    "summary": {
+      "orderSummary": "Resumen del Pedido",
+      "minutesIncluded": "minutos incluidos",
+      "additionalMinutes": "Minutos adicionales",
+      "subtotal": "Subtotal",
+      "tax": "Impuestos",
+      "total": "Total",
+      "calculating": "Calculando...",
+      "willBeCalculated": "Se calculará durante el pago",
+      "taxNote": "💡 Nota: Tasa de impuestos: {rate}% basada en tu ubicación. El monto final será confirmado en la página de pago.",
+      "whatsIncluded": "Lo que está incluido:",
+      "features": {
+        "noSetupFees": "✓ Sin tarifas de instalación",
+        "bilingual": "✓ 100% Bilingüe",
+        "answering": "✓ Atención 24/7/365",
+        "advancedFeatures": "✓ Funciones avanzadas"
+      },
+      "payNow": "Pagar Ahora",
+      "processing": "Procesando..."
+    },
+    "errors": {
+      "completeRequiredInfo": "Por favor completa toda la información requerida.",
+      "roleError": "No se pudo obtener el rol activo",
+      "paymentFailed": "Error al proceder al pago. Por favor intenta de nuevo.",
+      "planUnavailable": "Este plan no está disponible actualmente. Por favor contacta soporte o prueba un plan diferente.",
+      "paymentSetupError": "Hubo un problema con la configuración del pago. Por favor contacta soporte.",
+      "paymentMethodError": "Hubo un problema con el método de pago. Por favor intenta de nuevo.",
+      "invalidRequest": "Solicitud de pago inválida. Por favor recarga la página e intenta de nuevo.",
+      "contactSupport": "Si este problema persiste, por favor contacta nuestro equipo de soporte.",
+      "noPlanSelected": "No se seleccionó ningún plan"
+    }
+  },
+      "footer": {
+    "pricingAndPlans": "Precios y Planes",
+    "contactInformation": "Información de Contacto",
+    "perMonth": "Por Mes",
+    "aboutUs": "Sobre Nosotros",
+    "whyChooseUs": "Por Qué Elegirnos",
+    "services": "Servicios",
+    "tutorials": "Tutoriales"
+  },
+  "wizardConfig": {
+      "title": "Personaliza Tu Saludo",
+      "subtitle": "¿Cómo te gustaría que respondamos tu llamada?",
+      "step2": {
+        "title": "Detalles del Servicio",
+        "subtitle": "¿Cómo planeas usar el servicio?"
+      },
+      "step3": {
+        "title": "Personaliza Tu Saludo",
+        "subtitle": "¿Cómo te gustaría que respondamos tu llamada?"
+      },
+
+      "steps": {
+      "setup": {
+        "label": "CONFIGURACIÓN",
+        "description": "Configura el manejo de llamadas"
+      },
+      "options": {
+        "label": "OPCIONES",
+        "description": "Elige tus preferencias"
+      },
+      "confirm": {
+        "label": "CONFIRMAR",
+        "description": "Revisa y confirma tu configuración"
+      }
+    },
+    "setup": {
+      "announcement": {
+        "label": "Muchos de nuestros clientes optan por tener un anuncio pregrabado seguido de música de espera antes de que un agente en vivo responda (este servicio es gratuito). Si te gustaría usar este servicio, ¿qué te gustaría que diga?",
+        "placeholder": "Escribe tu anuncio aquí..."
+      },
+      "greeting": {
+        "label": "Cuando un agente en vivo responda, ¿cómo te gustaría que salude a tu llamada?",
+        "placeholder": "Escribe tu saludo aquí..."
+      },
+      "goodbye": {
+        "label": "Cuando un agente en vivo se desconecte, ¿cómo te gustaría que el llamante se despida?",
+        "placeholder": "Escribe tu despedida aquí..."
+      },
+      "observations": {
+        "label": "¿Observaciones adicionales?",
+        "placeholder": "Observaciones adicionales (opcional)..."
+      }
+    },
+    "options": {
+      "timezone": {
+        "label": "¿En qué zona horaria está ubicado tu negocio?",
+        "placeholder": "Selecciona zona horaria"
+      },
+      "usage": {
+        "label": "¿Cómo planeas usar nuestro servicio?",
+        "options": {
+          "lunch": "Almuerzo",
+          "afterHours": "Después del horario",
+          "overflow": "Desbordamiento de llamadas/Ocupado",
+          "virtualReceptionist": "Recepcionista virtual 24/7",
+          "other": "Otro"
+        }
+      },
+      "businessHours": {
+        "label": "¿Son tus horarios de negocio los mismos<br/>Lunes - Viernes?",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "weekend": {
+        "label": "¿Estás abierto durante el fin de semana?",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "report": {
+        "description": "Proporcionamos un Reporte Resumen, sin costo, de los últimos 24 horas de mensajes.",
+        "frequency": {
+          "label": "¿Con qué frecuencia te gustaría recibir este reporte?",
+          "daily": "Diario",
+          "mondayFriday": "Lunes - Viernes"
+        },
+        "time": {
+          "label": "¿A qué hora te gustaría recibir el Reporte Resumen?"
+        },
+        "email": {
+          "label": "¿A qué correo electrónico te gustaría recibir el reporte?",
+          "placeholder": "Ingresa dirección de correo electrónico"
+        }
+      }
+    },
+    "confirm": {
+      "title": "Tu cuenta está siendo procesada, sin embargo nos gustaría programar un tiempo para que uno de nuestros especialistas de configuración te llame para revisar tus instrucciones y el manejo de tus llamadas",
+      "subtitle": "Por favor elige el horario que mejor te funcione",
+      "daySelection": {
+        "label": "Selecciona un día disponible"
+      },
+      "phoneConfirmation": {
+        "label": "¿Es el mejor número para contactarte el número que proporcionaste anteriormente, {phoneNumber}?",
+        "yes": "Sí",
+        "no": "No"
+      }
+    },
+    "finalize": {
+      "mainTitle": "Gracias Por Registrarte",
+      "welcome": "Bienvenido",
+      "welcomeText": "Queremos que sepas que estamos comprometidos a brindarte el mejor servicio a ti y a tus clientes. Entendemos que cada interacción cuenta y nunca damos menos del 100% a todos nuestros clientes y a todos sus clientes.",
+      "nextStep": "Siguiente Paso",
+      "nextStepText": "Un especialista de configuración te llamará al {phoneNumber} el {date} a las {time} EST para finalizar todo y ponerte en línea.<br/><br/>Esperamos hablar contigo.",
+      "title": "No podemos esperar a<br/>Comenzar a Trabajar<br/>para ti",
+      "button": "Finalizar y Enviar",
+      "sending": "Enviando..."
+    },
+    "navigation": {
+      "prev": "Anterior",
+      "nextStep": "Siguiente Paso"
+    },
+    "table": {
+      "open": "Abierto",
+      "day": "Día",
+      "hours": "Horas",
+      "lunch": "Almuerzo",
+      "mondayFriday": "Lunes-viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo",
+      "none": "ninguno"
+    },
+                "timeSelectors": {
+              "hour": "Hora",
+              "minute": "Minuto",
+              "am": "am",
+              "pm": "pm"
+            },
+            "days": {
+              "monday": "Lunes",
+              "tuesday": "Martes",
+              "wednesday": "Miércoles",
+              "thursday": "Jueves",
+              "friday": "Viernes",
+              "saturday": "Sábado",
+              "sunday": "Domingo"
+            },
+            "months": {
+              "january": "Enero",
+              "february": "Febrero",
+              "march": "Marzo",
+              "april": "Abril",
+              "may": "Mayo",
+              "june": "Junio",
+              "july": "Julio",
+              "august": "Agosto",
+              "september": "Septiembre",
+              "october": "Octubre",
+              "november": "Noviembre",
+              "december": "Diciembre"
+            },
+            "today": "Hoy"
+  },
+  "contentBlog": {
+    "title": "Nuestras Últimas Publicaciones del Blog",
+    "search": {
+      "placeholder": "Buscar aquí....",
+      "button": "Buscar"
+    },
+    "noResults": "No se encontraron artículos que coincidan con",
+    "seeMore": "Ver Más",
+    "category": "Categoría",
+    "posts": {
+      "post1": {
+        "title": "Por qué tu negocio necesita un recepcionista virtual",
+        "description": "En el mundo empresarial actual, cada llamada e interacción con un posible cliente es crucial. Ya seas un agente de bienes raíces, banquero o contador, una llamada perdida puede ser una oportunidad perdida. Ahí es donde entra un recepcionista virtual, ofreciendo una solución económica y confiable para garantizar que tu negocio se mantenga conectado en todo momento.",
+        "content": {
+          "introduction": "En el mundo empresarial actual, cada llamada e interacción con un posible cliente es crucial. Ya seas un agente de bienes raíces, banquero o contador, una llamada perdida puede ser una oportunidad perdida. Ahí es donde entra un recepcionista virtual, ofreciendo una solución económica y confiable para garantizar que tu negocio se mantenga conectado en todo momento. Vamos a explorar por qué tu negocio necesita un servicio de recepcionista virtual como ASSIST-ME.",
+          "benefitsTitle": "Beneficios de un recepcionista virtual:",
+          "benefit1": {
+            "title": "Económico:",
+            "content": "Contratar un recepcionista a tiempo completo puede ser costoso. Un servicio de recepcionista virtual como ASSIST-ME proporciona atención profesional a una fracción del costo, permitiéndote ahorrar dinero mientras mantienes un servicio al cliente de primer nivel."
+          },
+          "benefit2": {
+            "title": "Disponibilidad 24/7:",
+            "content": "Ya sea fuera del horario de trabajo, los fines de semana o días festivos, ASSIST-ME asegura que tus llamadas sean atendidas las 24 horas del día, los 7 días de la semana. Nunca pierdas la oportunidad de conectar con tus clientes, sin importar la hora."
+          },
+          "benefit3": {
+            "title": "Soporte bilingüe:",
+            "content": "En un mundo globalizado, ofrecer soporte bilingüe es esencial. ASSIST-ME proporciona asistentes virtuales que hablan tanto inglés como español, ayudándote a llegar a un público más amplio y asegurando que cada cliente sea escuchado y comprendido."
+          },
+          "conclusion": "Un servicio de recepcionista virtual puede llevar tu negocio al siguiente nivel, mejorando el servicio al cliente, ahorrando tiempo y reduciendo costos operativos. Si estás listo para optimizar tu comunicación, ¡ASSIST-ME tiene la solución que necesitas!"
+        }
+      },
+      "post2": {
+        "title": "Cómo ASSIST-ME puede ayudar a los agentes de bienes raíces a hacer crecer su negocio",
+        "description": "El sector inmobiliario es altamente competitivo, y estar a la vanguardia significa estar disponible siempre que tus clientes lo necesiten. Como agente, no puedes permitirte perder llamadas ni demorar respuestas. Ahí es donde ASSIST-ME entra en acción, ofreciendo servicios de recepcionista virtual 24/7 diseñados para impulsar tu negocio.",
+        "content": {
+          "introduction": "El sector inmobiliario es altamente competitivo, y estar a la vanguardia significa estar disponible siempre que tus clientes lo necesiten. Como agente, no puedes permitirte perder llamadas ni demorar respuestas. Ahí es donde ASSIST-ME entra en acción, ofreciendo servicios de recepcionista virtual 24/7 diseñados para impulsar tu negocio.",
+          "benefitsTitle": "Beneficios clave para los agentes de bienes raíces:",
+          "benefit1": {
+            "title": "Siempre disponible para tus prospectos:",
+            "content": "Los clientes no siempre llaman durante el horario laboral. Con ASSIST-ME, nunca perderás una llamada, ni siquiera los fines de semana o por la noche. Nuestro servicio de atención personalizada garantiza que cada prospecto sea atendido de manera rápida y profesional, ayudándote a cerrar más tratos."
+          },
+          "benefit2": {
+            "title": "Manejo de llamadas y programación de citas:",
+            "content": "Nos encargamos de tus llamadas y organizamos tus citas, dejándote libre para enfocarte en las visitas, negociaciones y trámites. Nuestro equipo asegura que tu agenda esté siempre llena y que estés en contacto con tu siguiente cliente potencial."
+          },
+          "benefit3": {
+            "title": "Captura de leads y seguimientos:",
+            "content": "ASSIST-ME no solo responde llamadas, sino que captura información valiosa y puede hacer seguimientos a los leads en tu nombre. Esto significa que nunca perderás el rastro de un cliente potencial y siempre tendrás los detalles más recientes para tu próxima conversación."
+          },
+          "conclusion": "Para los agentes de bienes raíces que buscan escalar su operación sin aumentar costos de personal, ASSIST-ME es la solución perfecta. Haz más, cierra más tratos y ofrece un servicio excepcional a cada cliente con nuestros servicios de recepcionista virtual."
+        }
+      },
+      "post3": {
+        "title": "Por qué cada contador necesita un asistente virtual",
+        "description": "Como contador, tus clientes dependen de ti para obtener asesoría puntual, orientación financiera y apoyo. Pero con tantos clientes y plazos que cumplir, puede ser complicado manejar todo por ti mismo. Un asistente virtual puede ayudar a aliviar esa carga, y ASSIST-ME ofrece un servicio especializado diseñado para contadores.",
+        "content": {
+          "introduction": "Como contador, tus clientes dependen de ti para obtener asesoría puntual, orientación financiera y apoyo. Pero con tantos clientes y plazos que cumplir, puede ser complicado manejar todo por ti mismo. Un asistente virtual puede ayudar a aliviar esa carga, y ASSIST-ME ofrece un servicio especializado diseñado para contadores.",
+          "benefitsTitle": "Cómo ASSIST-ME puede beneficiar a los contadores:",
+          "benefit1": {
+            "title": "Comunicación eficiente:",
+            "content": "Deja que ASSIST-ME se encargue de tus llamadas y mensajes, asegurando que cada consulta de tus clientes sea atendida de manera profesional. Ya sea para programar una cita, responder dudas sobre impuestos o gestionar solicitudes urgentes, nosotros te respaldamos."
+          },
+          "benefit2": {
+            "title": "Gestión del tiempo:",
+            "content": "Como contador, tu tiempo es valioso. ASSIST-ME te ayuda a mantenerte organizado, gestionando llamadas, programando citas y enviando recordatorios, lo que te permite enfocarte en las necesidades financieras de tus clientes y hacer crecer tu práctica."
+          },
+          "benefit3": {
+            "title": "Confidencialidad y profesionalismo:",
+            "content": "En ASSIST-ME entendemos la importancia de la privacidad y confidencialidad en el sector financiero. Nuestro equipo está capacitado para manejar información sensible de manera segura y mantener el más alto nivel de profesionalismo."
+          },
+          "conclusion": "Con el apoyo adecuado, los contadores pueden concentrarse en sus responsabilidades principales sin verse abrumados por tareas administrativas. Deja que ASSIST-ME sea tu socio confiable en la gestión de la comunicación con los clientes, para que puedas ofrecer un servicio excepcional sin sacrificar tu tiempo."
+        }
+      },
+      "post4": {
+        "title": "Los costos ocultos de perder llamadas de clientes y cómo evitarlos",
+        "description": "En cualquier negocio, perder llamadas de clientes puede traer consecuencias importantes: ventas perdidas, clientes insatisfechos y oportunidades desaprovechadas. Sin embargo, gestionar las llamadas de manera eficiente puede ser un desafío sin el apoyo adecuado. Ahí es donde ASSIST-ME puede ayudarte.",
+        "content": {
+          "introduction": "En cualquier negocio, perder llamadas de clientes puede traer consecuencias importantes: ventas perdidas, clientes insatisfechos y oportunidades desaprovechadas. Sin embargo, gestionar las llamadas de manera eficiente puede ser un desafío sin el apoyo adecuado. Ahí es donde ASSIST-ME puede ayudarte.",
+          "costsTitle": "El verdadero costo de las llamadas perdidas:",
+          "cost1": {
+            "title": "Ingresos perdidos:",
+            "content": "Para negocios como bienes raíces, banca y contabilidad, las llamadas perdidas suelen ser oportunidades perdidas para que los clientes pregunten sobre tus servicios, agenden reuniones o cierren negocios. Cada llamada perdida puede significar una pérdida de ingresos."
+          },
+          "cost2": {
+            "title": "Reputación dañada:",
+            "content": "Hoy en día, los clientes esperan respuestas rápidas. Perder llamadas puede afectar tu reputación y hacer que los clientes se vayan con la competencia que está más disponible."
+          },
+          "cost3": {
+            "title": "Estrés y desorganización:",
+            "content": "Intentar manejar todas las llamadas, correos electrónicos y citas por ti mismo puede generar agotamiento. ASSIST-ME te ofrece soporte continuo para mantener tus comunicaciones organizadas, permitiéndote enfocarte en lo que realmente importa."
+          },
+          "conclusion": "Los costos ocultos de perder llamadas pueden acumularse rápidamente, pero ASSIST-ME ofrece una solución económica. Con manejo de llamadas 24/7, soporte bilingüe y servicios personalizados, nunca más tendrás que preocuparte por perder una llamada."
+        }
+      }
+    }
+  }
+} 
