@@ -11,8 +11,7 @@ import {
 // Configuración para desarrollo vs producción
 const isDevelopment = import.meta.env.DEV;
 
-
-const API_BASE_URL = isDevelopment ? '' : 'https://myassist-me.com';
+const API_BASE_URL = isDevelopment ? 'http://localhost:5173' : 'https://myassist-me.com';
 
 // Configuración de retry
 const MAX_RETRIES = 3;
@@ -31,7 +30,7 @@ const logger = {
   }
 };
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -139,7 +138,7 @@ export async function getClientCredentialsToken(): Promise<string | null> {
 // Verificar el token real usando la API /oauth/auth/verify
 export const verifyToken = async (token: string) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       '/oauth/auth/verify',
       {},
       {
@@ -160,16 +159,8 @@ export const verifyToken = async (token: string) => {
 export const getValidToken = async () => {
   const token = localStorage.getItem(TOKEN_KEY);
   if (!token) return null;
-  // Verificar el token usando la API real
-  const result = await verifyToken(token);
-  if (result && result.valid) {
-    return token;
-  } else {
-    // Token inválido
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(TOKEN_EXPIRY_KEY);
-    return null;
-  }
+  // Retornar el token directamente sin verificar (como funcionaba antes)
+  return token;
 };
 
 // Interceptor para agregar token automáticamente
@@ -1290,3 +1281,254 @@ export const fetchCallRecords = async (
 };
 
 export default api; 
+
+// Función para obtener el stripe_customer_id del usuario
+export async function getUserStripeCustomerId(userId: string): Promise<string> {
+  try {
+    logger.info('Fetching user stripe customer ID for user:', userId);
+    
+    const jwtToken = getJWTToken();
+    if (!jwtToken) {
+      throw new Error('No JWT token available. Please log in again.');
+    }
+    
+    // Intentar primero con el endpoint de suscripciones
+    try {
+      const response = await api.get(`/db/subscriptions/user/${userId}`, {
+        headers: { Authorization: `Bearer ${jwtToken}` }
+      });
+      
+      logger.info('User subscription data received:', response.data);
+      console.log('🔍 Respuesta completa del endpoint:', response.data);
+      
+      // Buscar el stripe_customer_id en diferentes campos posibles
+      let stripeCustomerId = null;
+      
+      // Opción 1: Buscar en el nivel raíz
+      if (response.data.stripe_customer_id) {
+        stripeCustomerId = response.data.stripe_customer_id;
+        console.log('✅ Encontrado en stripe_customer_id:', stripeCustomerId);
+      }
+      // Opción 2: Buscar en customer_id
+      else if (response.data.customer_id) {
+        stripeCustomerId = response.data.customer_id;
+        console.log('✅ Encontrado en customer_id:', stripeCustomerId);
+      }
+      // Opción 3: Buscar en stripe.customer_id
+      else if (response.data.stripe && response.data.stripe.customer_id) {
+        stripeCustomerId = response.data.stripe.customer_id;
+        console.log('✅ Encontrado en stripe.customer_id:', stripeCustomerId);
+      }
+      // Opción 4: Buscar en subscription.stripe_customer_id
+      else if (response.data.subscription && response.data.subscription.stripe_customer_id) {
+        stripeCustomerId = response.data.subscription.stripe_customer_id;
+        console.log('✅ Encontrado en subscription.stripe_customer_id:', stripeCustomerId);
+      }
+      // Opción 5: Buscar en cualquier campo que contenga "customer"
+      else {
+        const customerFields = Object.keys(response.data).filter(key => 
+          key.toLowerCase().includes('customer') || 
+          key.toLowerCase().includes('stripe')
+        );
+        
+        console.log('🔍 Campos que podrían contener customer ID:', customerFields);
+        
+        for (const field of customerFields) {
+          if (response.data[field] && typeof response.data[field] === 'string' && 
+              response.data[field].startsWith('cus_')) {
+            stripeCustomerId = response.data[field];
+            console.log(`✅ Encontrado en ${field}:`, stripeCustomerId);
+            break;
+          }
+        }
+      }
+      
+      if (stripeCustomerId) {
+        logger.info('Stripe customer ID found:', stripeCustomerId);
+        return stripeCustomerId;
+      }
+      
+    } catch (error) {
+      console.log('⚠️ Endpoint de suscripciones falló, intentando métodos alternativos...');
+    }
+    
+    // Si no se encontró, usar el fallback
+    try {
+      console.log('🔄 Intentando métodos alternativos...');
+      return await getStripeCustomerIdFallback(userId);
+    } catch (error) {
+      console.log('⚠️ Métodos alternativos fallaron, intentando búsqueda exhaustiva...');
+    }
+    
+    // Último recurso: búsqueda exhaustiva
+    console.log('🔄 Iniciando búsqueda exhaustiva...');
+    return await findStripeCustomerIdExhaustive(userId);
+    
+  } catch (error) {
+    logger.error('Error fetching user stripe customer ID:', error);
+    throw error;
+  }
+} 
+
+// Función de respaldo para buscar el customer ID en otros endpoints
+export async function getStripeCustomerIdFallback(userId: string): Promise<string> {
+  try {
+    logger.info('Trying fallback methods to get stripe customer ID for user:', userId);
+    
+    const jwtToken = getJWTToken();
+    if (!jwtToken) {
+      throw new Error('No JWT token available. Please log in again.');
+    }
+    
+    // Intentar diferentes endpoints que podrían tener el customer ID
+    
+    // Opción 1: Endpoint de usuario
+    try {
+      const userResponse = await api.get(`/db/user/${userId}`, {
+        headers: { Authorization: `Bearer ${jwtToken}` }
+      });
+      
+      if (userResponse.data.stripe_customer_id) {
+        console.log('✅ Encontrado en /db/user/:', userResponse.data.stripe_customer_id);
+        return userResponse.data.stripe_customer_id;
+      }
+    } catch (error) {
+      console.log('⚠️ Endpoint /db/user/ no disponible');
+    }
+    
+    // Opción 2: Endpoint de perfil
+    try {
+      const profileResponse = await api.get(`/db/profile/${userId}`, {
+        headers: { Authorization: `Bearer ${jwtToken}` }
+      });
+      
+      if (profileResponse.data.stripe_customer_id) {
+        console.log('✅ Encontrado en /db/profile/:', profileResponse.data.stripe_customer_id);
+        return profileResponse.data.stripe_customer_id;
+      }
+    } catch (error) {
+      console.log('⚠️ Endpoint /db/profile/ no disponible');
+    }
+    
+    // Opción 3: Endpoint de customer
+    try {
+      const customerResponse = await api.get(`/db/customer/${userId}`, {
+        headers: { Authorization: `Bearer ${jwtToken}` }
+      });
+      
+      if (customerResponse.data.stripe_customer_id) {
+        console.log('✅ Encontrado en /db/customer/:', customerResponse.data.stripe_customer_id);
+        return customerResponse.data.stripe_customer_id;
+      }
+    } catch (error) {
+      console.log('⚠️ Endpoint /db/customer/ no disponible');
+    }
+    
+    throw new Error('No se pudo encontrar el stripe_customer_id en ningún endpoint');
+    
+  } catch (error) {
+    logger.error('Error in fallback methods:', error);
+    throw error;
+  }
+} 
+
+// Función para búsqueda exhaustiva del customer ID
+export async function findStripeCustomerIdExhaustive(userId: string): Promise<string> {
+  try {
+    logger.info('Starting exhaustive search for stripe customer ID for user:', userId);
+    
+    const jwtToken = getJWTToken();
+    if (!jwtToken) {
+      throw new Error('No JWT token available. Please log in again.');
+    }
+    
+    const headers = { Authorization: `Bearer ${jwtToken}` };
+    
+    // Lista de endpoints a probar
+    const endpointsToTry = [
+      `/db/subscriptions/user/${userId}`,
+      `/db/user/${userId}`,
+      `/db/profile/${userId}`,
+      `/db/customer/${userId}`,
+      `/db/stripe/customer/${userId}`,
+      `/db/billing/user/${userId}`,
+      `/db/account/${userId}`,
+      `/db/user/${userId}/subscription`,
+      `/db/user/${userId}/billing`,
+      `/db/user/${userId}/stripe`
+    ];
+    
+    console.log('🔍 Probando endpoints:', endpointsToTry);
+    
+    for (const endpoint of endpointsToTry) {
+      try {
+        console.log(`🔄 Probando endpoint: ${endpoint}`);
+        
+        const response = await api.get(endpoint, { headers });
+        
+        if (response.data) {
+          console.log(`📋 Respuesta de ${endpoint}:`, response.data);
+          
+          // Buscar customer ID en la respuesta
+          const customerId = findCustomerIdInResponse(response.data);
+          
+          if (customerId) {
+            console.log(`✅ Customer ID encontrado en ${endpoint}:`, customerId);
+            return customerId;
+          }
+        }
+        
+      } catch (error) {
+        console.log(`⚠️ Endpoint ${endpoint} no disponible o falló`);
+      }
+    }
+    
+    throw new Error('No se pudo encontrar el stripe_customer_id en ningún endpoint');
+    
+  } catch (error) {
+    logger.error('Error in exhaustive search:', error);
+    throw error;
+  }
+}
+
+// Función auxiliar para buscar customer ID en cualquier respuesta
+function findCustomerIdInResponse(data: any): string | null {
+  // Buscar en campos comunes
+  const commonFields = [
+    'stripe_customer_id',
+    'customer_id', 
+    'stripe_customer',
+    'stripe_customerId',
+    'stripeCustomerId',
+    'stripeCustomer'
+  ];
+  
+  for (const field of commonFields) {
+    if (data[field] && typeof data[field] === 'string' && data[field].startsWith('cus_')) {
+      return data[field];
+    }
+  }
+  
+  // Buscar en objetos anidados
+  if (data.stripe && data.stripe.customer_id) {
+    return data.stripe.customer_id;
+  }
+  
+  if (data.subscription && data.subscription.stripe_customer_id) {
+    return data.subscription.stripe_customer_id;
+  }
+  
+  if (data.billing && data.billing.stripe_customer_id) {
+    return data.billing.stripe_customer_id;
+  }
+  
+  // Buscar recursivamente en objetos
+  for (const key in data) {
+    if (typeof data[key] === 'object' && data[key] !== null) {
+      const found = findCustomerIdInResponse(data[key]);
+      if (found) return found;
+    }
+  }
+  
+  return null;
+} 

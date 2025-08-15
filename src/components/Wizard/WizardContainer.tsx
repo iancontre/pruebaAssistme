@@ -162,13 +162,13 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
     setIsProcessing(true);
     try {
       let role_id = '';
-             try {
-         role_id = await fetchActiveRole();
-       } catch (e) {
-         toast.error(t('wizard.errors.roleError'));
-         setIsProcessing(false);
-         return;
-       }
+      try {
+        role_id = await fetchActiveRole();
+      } catch (e) {
+        toast.error(t('wizard.errors.roleError'));
+        setIsProcessing(false);
+        return;
+      }
 
       // GUARDA el role_id en customerData antes de guardar en localStorage
       const customerDataWithRole = { ...customerData, role_id };
@@ -182,38 +182,40 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
         amount: selectedPlan.price,
         customerEmail: customerData.email,
         customerName: customerData.fullName || customerData.name || '',
+        state: customerData.state || '',
+        country: customerData.country || '',
         successUrl: `${window.location.origin}/compra?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancelUrl: `${window.location.origin}/compra?canceled=true`,
-        // Puedes pasar role_id aquí si Stripe lo necesita, si no, omítelo
       });
-    } catch (error) {
-      console.error('Payment error:', error);
       
-             // Mostrar mensajes de error más específicos
-       let errorMessage = t('wizard.errors.paymentFailed');
-       
-       if (error instanceof Error) {
-         if (error.message.includes('unavailable') || error.message.includes('not active')) {
-           errorMessage = t('wizard.errors.planUnavailable');
-         } else if (error.message.includes('configuration error')) {
-           errorMessage = t('wizard.errors.paymentSetupError');
-         } else if (error.message.includes('Payment setup failed')) {
-           errorMessage = error.message;
-         } else if (error.message.includes('Card error')) {
-           errorMessage = t('wizard.errors.paymentMethodError');
-         } else if (error.message.includes('Invalid request')) {
-           errorMessage = t('wizard.errors.invalidRequest');
-         }
-       }
+    } catch (error) {
+      console.error('❌ ERROR EN createCheckoutSession:', error);
+      
+      // Mostrar mensajes de error más específicos
+      let errorMessage = t('wizard.errors.paymentFailed');
+      
+      if (error instanceof Error) {
+        if (error.message.includes('unavailable') || error.message.includes('not active')) {
+          errorMessage = t('wizard.errors.planUnavailable');
+        } else if (error.message.includes('configuration error')) {
+          errorMessage = t('wizard.errors.paymentSetupError');
+        } else if (error.message.includes('Payment setup failed')) {
+          errorMessage = error.message;
+        } else if (error.message.includes('Card error')) {
+          errorMessage = t('wizard.errors.paymentMethodError');
+        } else if (error.message.includes('Invalid request')) {
+          errorMessage = t('wizard.errors.invalidRequest');
+        }
+      }
       
       toast.error(errorMessage);
       
-              // Si es un error de producto no activo, mostrar información adicional
-        if (error instanceof Error && error.message.includes('not active')) {
-          console.warn('Product not active error detected. Please check Stripe dashboard.');
-                     // Opcional: mostrar un modal con información adicional
-           setTimeout(() => {
-             toast.info(t('wizard.errors.contactSupport'));
+      // Si es un error de producto no activo, mostrar información adicional
+      if (error instanceof Error && error.message.includes('not active')) {
+        console.warn('Product not active error detected. Please check Stripe dashboard.');
+        // Opcional: mostrar un modal con información adicional
+        setTimeout(() => {
+          toast.info(t('wizard.errors.contactSupport'));
            }, 2000);
         }
     } finally {
@@ -348,7 +350,7 @@ const WizardContainer: React.FC<WizardContainerProps> = ({ selectedPlan, onStepC
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
                          <button
                className="wizard-next-btn"
-               onClick={handleProceedToPayment}
+                       onClick={handleProceedToPayment}
                disabled={isProcessing}
              >
                {isProcessing ? t('wizard.summary.processing') : (

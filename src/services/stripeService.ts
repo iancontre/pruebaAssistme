@@ -1,39 +1,127 @@
+
 import { loadStripe, Stripe } from '@stripe/stripe-js';
-import { fetchAllPlansWithStripe, PlanWithStripe } from './apiService';
+import { fetchAllPlansWithStripe, PlanWithStripe, getJWTToken, api } from './apiService';
 import { supportsScrollTimeline } from 'framer-motion';
 
-// Clave pública de Stripe desde variables de entorno
-const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-
-// Validar de la clave
-if (!STRIPE_PUBLISHABLE_KEY) {
-  throw new Error('VITE_STRIPE_PUBLISHABLE_KEY is not configured in environment variables');
+// Interfaz para la configuración del endpoint externo
+interface StripeConfig {
+  stripe_publishable_key: string;
+  [key: string]: any; 
 }
+
+// Variable para almacenar la clave en caché
+let cachedStripeKey: string | null = null;
+let cacheExpiry: number | null = null;
+const CACHE_DURATION = 24 * 60 * 60 * 1000; 
+
+
+const getStripeConfig = async (): Promise<string> => {
+  try {
+    // Verificar si tenemos una clave en caché válida
+    if (cachedStripeKey && cacheExpiry && Date.now() < cacheExpiry) {
+      console.log('✅ Usando clave de Stripe en caché');
+      return cachedStripeKey;
+    }
+
+    console.log('🔄 Obteniendo configuración de Stripe desde endpoint externo...');
+    
+    // Realizar la petición al endpoint externo
+    const response = await fetch('https://myassist-me.com/config.json', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al obtener configuración: ${response.status} ${response.statusText}`);
+    }
+
+    const config: StripeConfig = await response.json();
+    
+    if (!config.stripe_publishable_key) {
+      throw new Error('La configuración no contiene la clave pública de Stripe');
+    }
+
+    // Almacenar en caché con tiempo de expiración
+    cachedStripeKey = config.stripe_publishable_key;
+    cacheExpiry = Date.now() + CACHE_DURATION;
+    
+    console.log('✅ Configuración de Stripe obtenida y almacenada en caché');
+    return cachedStripeKey;
+    
+  } catch (error) {
+    console.error('❌ Error al obtener configuración de Stripe:', error);
+    throw new Error(`No se pudo obtener la clave pública de Stripe desde el endpoint externo: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+};
+
+// Función para obtener la clave pública de Stripe
+const getStripePublishableKey = async (): Promise<string> => {
+  return await getStripeConfig();
+};
+
+// Función para limpiar el caché manualmente
+export const clearStripeCache = (): void => {
+  cachedStripeKey = null;
+  cacheExpiry = null;
+  console.log('🗑️ Caché de Stripe limpiado');
+};
+
+// Función para verificar el estado del caché
+export const getStripeCacheStatus = (): { hasCache: boolean; expiresAt: string | null } => {
+  const hasCache = !!(cachedStripeKey && cacheExpiry && Date.now() < cacheExpiry);
+  const expiresAt = cacheExpiry ? new Date(cacheExpiry).toISOString() : null;
+  
+  return { hasCache, expiresAt };
+};
+
+// Función para forzar la actualización del caché
+export const refreshStripeConfig = async (): Promise<string> => {
+  console.log('🔄 Forzando actualización de configuración de Stripe...');
+  clearStripeCache();
+  return await getStripeConfig();
+};
 
 let stripePromise: Promise<Stripe | null>;
 
 export const getStripe = async (): Promise<Stripe | null> => {
   try {
-    console.log('🔍 Loading Stripe with key:', STRIPE_PUBLISHABLE_KEY ? `${STRIPE_PUBLISHABLE_KEY.substring(0, 10)}...` : 'NOT SET');
+    console.log('🔄 Inicializando Stripe...');
+    const publishableKey = await getStripePublishableKey();
     
-    if (!STRIPE_PUBLISHABLE_KEY) {
+    if (!publishableKey) {
       throw new Error('Stripe publishable key is not configured');
     }
     
-  if (!stripePromise) {
-      console.log(' Creating new Stripe promise...');
-    stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
-  }
+    console.log('✅ Clave pública de Stripe obtenida');
+    
+    if (!stripePromise) {
+      stripePromise = loadStripe(publishableKey);
+    }
     
     const stripe = await stripePromise;
+    
     if (!stripe) {
       throw new Error('Stripe failed to initialize');
     }
     
-    console.log('Stripe loaded successfully');
+    console.log('✅ Stripe inicializado correctamente');
     return stripe;
   } catch (error) {
-    console.error(' Error loading Stripe:', error);
+    console.error('❌ Error loading Stripe:', error);
+    
+    // Proporcionar información más detallada sobre el error
+    if (error instanceof Error) {
+      if (error.message.includes('fetch')) {
+        throw new Error('Error de conexión al obtener configuración de Stripe. Verifique su conexión a internet.');
+      } else if (error.message.includes('configuración')) {
+        throw new Error('Error al obtener configuración de Stripe desde el servidor. Contacte al administrador.');
+      } else {
+        throw new Error(`Failed to load Stripe.js: ${error.message}`);
+      }
+    }
+    
     throw new Error(`Failed to load Stripe.js: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };
@@ -41,21 +129,15 @@ export const getStripe = async (): Promise<Stripe | null> => {
 // Función para obtener los planes directamente desde la API (sin caché)
 export const getPlansWithStripe = async (): Promise<PlanWithStripe[]> => {
   try {
-    console.log(' Fetching plans with Stripe data from API...');
     const plans = await fetchAllPlansWithStripe();
-    
-    console.log(' Plans with Stripe data fetched from API:', plans);
     return plans;
   } catch (error) {
-    console.error(' Error fetching plans with Stripe data:', error);
+    console.error('❌ Error fetching plans with Stripe data:', error);
     throw error;
   }
 };
 
-export interface CheckoutSession {
-  id: string;
-  url: string;
-}
+
 
 export interface CreateCheckoutSessionRequest {
   planId: string;
@@ -64,58 +146,36 @@ export interface CreateCheckoutSessionRequest {
   customerEmail: string;
   customerName: string;
   // Información de dirección para Stripe Tax
-  address?: {
-    line1: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    country: string;
-  };
+  state: string;
+  country: string;
   successUrl: string;
   cancelUrl: string;
 }
 
-
-
-
-
 // Función para crear checkout session con configuración básica
-export const createCheckoutSession = async (request: CreateCheckoutSessionRequest): Promise<CheckoutSession> => {
+export const createCheckoutSession = async (request: CreateCheckoutSessionRequest): Promise<void> => {
   try {
-    console.log(' Creating checkout session for:', request);
-    
+    // 1. Cargar Stripe
     const stripe = await getStripe();
     if (!stripe) {
       throw new Error('Stripe failed to load');
     }
-    console.log(' Stripe loaded successfully');
 
-    // Obtener el price ID desde la API usando el planId
+    // 2. Obtener planes
     const plans = await getPlansWithStripe();
-    console.log(' All plans from API:', plans.map(p => ({ name: p.name, priceId: p.stripe_price_id })));
     
-    const selectedPlan = plans.find(plan => plan.id === request.planId || plan.name.toUpperCase() === request.planName.toUpperCase());
-    console.log(' Selected plan:', selectedPlan);
+    // 3. Encontrar el plan seleccionado
+    const selectedPlan = plans.find(plan => plan.id === request.planId);
     
     if (!selectedPlan || !selectedPlan.stripe_price_id) {
-      throw new Error(`Price ID not found for plan: ${request.planName} (${request.planId})`);
+      throw new Error(`Price ID not found for plan: ${request.planName}`);
     }
     
     const priceId = selectedPlan.stripe_price_id;
-    console.log(' Price ID found for plan:', request.planName, '->', priceId);
 
-    // Los price IDs vienen de la API y ya están validados
-    console.log(' Using price ID from API:', priceId);
-
-    // Crear la seión de checkout usando el método correcto
-    console.log(' Redirecting to Stripe checkout...');
+    // 4. Redirigir a Stripe
     const { error } = await stripe.redirectToCheckout({
-      lineItems: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      lineItems: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       successUrl: request.successUrl,
       cancelUrl: request.cancelUrl,
@@ -124,80 +184,31 @@ export const createCheckoutSession = async (request: CreateCheckoutSessionReques
     });
 
     if (error) {
-      console.error(' Stripe redirect error:', error);
-      
-      // Manejar errores específicos de Stripe
-      if (error.type === 'validation_error') {
-        throw new Error(`Payment configuration error: ${error.message}`);
-      } else if (error.type === 'card_error') {
-        throw new Error(`Card error: ${error.message}`);
-      } else if (error.type === 'invalid_request_error') {
-        throw new Error(`Invalid request: ${error.message}`);
-      } else {
-        throw new Error(`Payment error: ${error.message}`);
-      }
-    }
-    
-    console.log(' Stripe redirect successful', supportsScrollTimeline);
-
-    // Retornar un objeto mock ya que redirectToCheckout no retorna session
-    return {
-      id: 'redirecting_to_stripe',
-      url: 'redirecting_to_stripe'
-    };
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
-    
-    // Proporcionar mensajes de error más específicos
-    if (error instanceof Error) {
-      if (error.message.includes('not active') || error.message.includes('not available')) {
-        throw new Error('This plan is currently unavailable. Please contact support or try a different plan.');
-      } else if (error.message.includes('Price ID not found')) {
-        throw new Error('Plan configuration error. Please contact support.');
-      } else {
-        throw new Error(`Payment setup failed: ${error.message}`);
-      }
-    }
-    
-    throw new Error('An unexpected error occurred while setting up payment. Please try again.');
-  }
-};
-
-export const redirectToCheckout = async (sessionId: string) => {
-  try {
-    const stripe = await getStripe();
-    if (!stripe) {
-      throw new Error('Stripe failed to load');
-    }
-
-    const { error } = await stripe.redirectToCheckout({
-      sessionId: sessionId,
-    });
-
-    if (error) {
+      console.error('❌ Error de Stripe:', error);
       throw error;
     }
+
+    // La redirección debería ocurrir automáticamente
   } catch (error) {
-    console.error('Error redirecting to checkout:', error);
+    console.error('❌ ERROR en createCheckoutSession:', error);
     throw error;
   }
 };
 
-export const generateInvoice = async (_sessionId: string) => {
+// Función para generar factura
+export const generateInvoice = async (sessionId: string): Promise<any> => {
   try {
-    // Mock de generación de factura
-    const invoiceNumber = `INV-${Date.now()}`;
-    const downloadUrl = `https://yourdomain.com/invoices/${invoiceNumber}.pdf`;
-
+    console.log(' Generating invoice for session:', sessionId);
+    
+    // Aquí deberías llamar a tu backend para generar la factura
+    // Por ahora, solo retornamos un mock
     return {
-      invoiceNumber,
-      downloadUrl,
-      amount: 0,
-      taxAmount: 0,
-      total: 0,
+      success: true,
+      message: 'Invoice generation initiated',
+      sessionId
     };
   } catch (error) {
-    console.error('Error generating invoice:', error);
+    console.error(' Error generating invoice:', error);
     throw error;
   }
 }; 
@@ -209,14 +220,53 @@ export const getStripePriceId = async (planName: string): Promise<string | null>
     const plan = plans.find((p: PlanWithStripe) => p.name.toUpperCase() === planName.toUpperCase());
     
     if (plan && plan.stripe_price_id) {
-      console.log(`✅ Found Stripe price ID for plan ${planName}:`, plan.stripe_price_id);
       return plan.stripe_price_id;
     }
     
-    console.warn(` No Stripe price ID found for plan: ${planName}`);
     return null;
   } catch (error) {
-    console.error('Error getting Stripe price ID from API:', error);
+    console.error('❌ Error getting Stripe price ID from API:', error);
     throw new Error(`Failed to get Stripe price ID for plan ${planName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}; 
+
+// Función para redirigir al portal de facturación de Stripe
+export const redirectToStripeBillingPortal = async (userId: string): Promise<void> => {
+  try {
+    // Obtener el JWT token
+    const jwtToken = localStorage.getItem('jwt_token');
+    if (!jwtToken) {
+      throw new Error('Usuario no autenticado');
+    }
+    
+    // Usar la misma configuración que apiService.ts
+    const isDevelopment = import.meta.env.DEV;
+    const API_BASE_URL = isDevelopment ? '' : 'https://myassist-me.com';
+    
+    // Llamar al endpoint del backend que crea la sesión del portal
+    const response = await fetch(`${API_BASE_URL}/api/create-portal-session`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`
+      },
+      body: JSON.stringify({ userId })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error del servidor: ${response.status}`);
+    }
+
+    const { url } = await response.json();
+    
+    if (!url) {
+      throw new Error('No se recibió URL del portal de facturación');
+    }
+
+    window.location.href = url;
+    
+  } catch (error) {
+    console.error('❌ Error al acceder al portal de facturación:', error);
+    throw error;
   }
 }; 

@@ -10,6 +10,14 @@ const createProxyConfig = (path: string, rewrite?: (path: string) => string) => 
   ...(rewrite && { rewrite })
 })
 
+// Configuración específica para OAuth
+const oauthProxyConfig = {
+  target: 'https://myassist-me.com',
+  changeOrigin: true,
+  secure: false,
+  rewrite: (path: string) => path
+}
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -17,8 +25,9 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': createProxyConfig('/api', (path) => path.replace(/^\/api/, '')),
-      '/oauth': createProxyConfig('/oauth'),
+      '/oauth': oauthProxyConfig,
       '/db': createProxyConfig('/db'),
+      '/config.json': createProxyConfig('/config.json'),
     }
   },
   build: {

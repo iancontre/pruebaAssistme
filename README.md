@@ -35,11 +35,10 @@ npm install
 yarn install
 ```
 
-3. **Configura las variables de entorno:**
-```bash
-# Crea un archivo .env en la raíz del proyecto
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
-```
+3. **Configuración de Stripe:**
+   - Asegúrate de que el endpoint `https://myassist-me.com/config.json` esté disponible
+   - El archivo debe contener la configuración de Stripe en formato JSON
+   - No se requieren variables de entorno locales
 
 ## 📜 Scripts Disponibles
 
@@ -177,71 +176,7 @@ El proyecto incluye un widget de Zendesk para el soporte al cliente, implementad
 ### 💳 Integración con Stripe
 El proyecto incluye una integración completa con Stripe para el procesamiento de pagos:
 
-#### ⚙️ Configuración de Stripe
-- 🔑 **Clave Pública**: Configurada a través de variables de entorno (`VITE_STRIPE_PUBLISHABLE_KEY`)
-- 🧪 **Modo**: Desarrollo con tarjetas de prueba de Stripe
-- ⚡ **Funcionalidades**: Checkout sessions, generación de facturas, cálculo de impuestos
-
-#### 🔌 Endpoints de Stripe Consumidos
-
-##### 1️⃣ Crear Checkout Session
-**Endpoint:** `POST /api/create-checkout-session`
-
-**Request Body:**
-```json
-{
-  "planId": "starter",
-  "planName": "STARTER",
-  "amount": 82.16,
-  "taxAmount": 3.16,
-  "customerEmail": "customer@example.com",
-  "customerName": "John Doe",
-  "state": "California",
-  "successUrl": "https://yourdomain.com/compra?success=true&session_id={CHECKOUT_SESSION_ID}",
-  "cancelUrl": "https://yourdomain.com/compra?canceled=true"
-}
-```
-
-**Response:**
-```json
-{
-  "id": "cs_test_...",
-  "url": "https://checkout.stripe.com/pay/cs_test_..."
-}
-```
-
-##### 2️⃣ Generar Factura
-**Endpoint:** `POST /api/generate-invoice`
-
-**Request Body:**
-```json
-{
-  "sessionId": "cs_test_..."
-}
-```
-
-**Response:**
-```json
-{
-  "invoiceNumber": "INV-2024-001",
-  "downloadUrl": "https://yourdomain.com/invoices/INV-2024-001.pdf",
-  "amount": 82.16,
-  "taxAmount": 3.16,
-  "total": 85.32
-}
-```
-
-#### 🔄 Flujo de Pago con Stripe
-
-1. 👤 **Usuario selecciona plan** en el tercer paso del wizard
-2. 🧮 **Se calcula el impuesto** basado en el estado seleccionado
-3. 🛒 **Se crea una Checkout Session** en Stripe con los detalles del plan e impuestos
-4. 🔀 **Usuario es redirigido** a la página de pago de Stripe
-5. ✅ **Después del pago exitoso**, Stripe redirige de vuelta a la aplicación
-6. 📄 **Se genera la factura** automáticamente
-7. 🎉 **Usuario ve la confirmación** en el paso final del wizard
-
-### 🎨 Componentes de UI
+#### 🎨 Componentes de UI
 - 🎨 Utiliza Material-UI y PrimeReact para componentes de interfaz de usuario
 - 📱 Implementa Bootstrap para el diseño responsivo
 - 🎯 Incluye iconos de Bootstrap y React Icons
@@ -484,16 +419,118 @@ El proyecto utiliza autenticación OAuth2 con `client_credentials`:
 
 ## 💳 Configuración de Stripe
 
-### 🔧 Variables de Entorno Requeridas
-```env
-VITE_STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key_here
+### 🔧 Configuración Centralizada
+El proyecto ahora obtiene la configuración de Stripe desde un endpoint externo centralizado, eliminando la necesidad de variables de entorno locales:
+
+#### 🌐 Endpoint de Configuración
+- **URL**: `https://myassist-me.com/config.json`
+- **Método**: GET
+- **Formato**: JSON
+- **Cobertura**: Funciona tanto en desarrollo local como en producción
+
+#### 📋 Estructura del Endpoint
+El archivo `config.json` debe contener:
+```json
+{
+  "stripe_publishable_key": "pk_test_...",
+  "stripe_secret_key": "sk_test_...",
+  "webhook_secret": "whsec_...",
+  "currency": "usd",
+  "api_version": "2023-10-16"
+}
 ```
 
-### ⚙️ Configuración en el Backend
-El backend debe tener configurado:
-```env
-STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+**Nota**: Solo se utiliza `stripe_publishable_key` en el frontend. Los otros campos son para uso del backend.
+
+### 🚀 Sistema de Caché Inteligente
+- **Duración**: 24 horas para evitar peticiones repetidas
+- **Gestión**: Automática con expiración
+- **Beneficio**: Optimiza el rendimiento y reduce la carga del servidor
+
+### 🔧 Funciones de Gestión del Caché
+El servicio exporta funciones para gestionar el caché manualmente:
+
+```typescript
+// Limpiar caché manualmente
+clearStripeCache();
+
+// Verificar estado del caché
+getStripeCacheStatus();
+
+// Forzar actualización de configuración
+refreshStripeConfig();
+```
+
+### ✅ Ventajas de la Nueva Implementación
+1. **Configuración centralizada**: Un solo lugar para gestionar la configuración
+2. **Sin variables de entorno**: No más archivos .env para configurar
+3. **Consistencia entre entornos**: Misma configuración en desarrollo y producción
+4. **Fácil mantenimiento**: Cambios de configuración sin redeploy
+5. **Caché inteligente**: Optimiza las peticiones al endpoint
+
+### 🔄 Flujo de Pago con Stripe
+
+1. 👤 **Usuario selecciona plan** en el tercer paso del wizard
+2. 🧮 **Se calcula el impuesto** basado en el estado seleccionado
+3. 🛒 **Se crea una Checkout Session** en Stripe con los detalles del plan e impuestos
+4. 🔀 **Usuario es redirigido** a la página de pago de Stripe
+5. ✅ **Después del pago exitoso**, Stripe redirige de vuelta a la aplicación
+6. 📄 **Se genera la factura** automáticamente
+7. 🎉 **Usuario ve la confirmación** en el paso final del wizard
+
+### 🛡️ Consideraciones de Seguridad
+1. **Solo claves públicas**: El frontend solo accede a claves públicas de Stripe
+2. **HTTPS obligatorio**: El endpoint debe estar disponible solo por HTTPS
+3. **Caché local**: La clave se almacena en memoria del navegador, no en localStorage
+4. **Expiración automática**: El caché se renueva automáticamente cada 24 horas
+
+### 🔌 Endpoints de Stripe Consumidos
+
+#### 1️⃣ Crear Checkout Session
+**Endpoint:** `POST /api/create-checkout-session`
+
+**Request Body:**
+```json
+{
+  "planId": "starter",
+  "planName": "STARTER",
+  "amount": 82.16,
+  "taxAmount": 3.16,
+  "customerEmail": "customer@example.com",
+  "customerName": "John Doe",
+  "state": "California",
+  "successUrl": "https://yourdomain.com/compra?success=true&session_id={CHECKOUT_SESSION_ID}",
+  "cancelUrl": "https://yourdomain.com/compra?canceled=true"
+}
+```
+
+**Response:**
+```json
+{
+  "id": "cs_test_...",
+  "url": "https://checkout.stripe.com/pay/cs_test_..."
+}
+```
+
+#### 2️⃣ Generar Factura
+**Endpoint:** `POST /api/generate-invoice`
+
+**Request Body:**
+```json
+{
+  "sessionId": "cs_test_..."
+}
+```
+
+**Response:**
+```json
+{
+  "invoiceNumber": "INV-2024-001",
+  "downloadUrl": "https://yourdomain.com/invoices/INV-2024-001.pdf",
+  "amount": 82.16,
+  "taxAmount": 3.16,
+  "total": 85.32
+}
 ```
 
 ### 🌐 URLs de Desarrollo
@@ -508,15 +545,17 @@ cancelUrl: `${window.location.origin}/compra?canceled=true`,
 ### 💳 Stripe
 - 🔒 **Nunca expongas la clave secreta** en el frontend
 - ✅ **Valida todos los datos** en el backend antes de crear la sesión
-- 🔐 **Usa HTTPS** en producción
+- 🔐 **Usa HTTPS** en producción para el endpoint de configuración
 - 🔔 **Implementa webhooks** para manejar eventos de pago de forma asíncrona
 - 💾 **Guarda los datos de pago** en tu base de datos para auditoría
+- 🛡️ **Endpoint seguro**: El archivo `config.json` debe estar protegido y solo contener claves públicas
 
 ### 🌐 API
 - 🔐 **Autenticación OAuth2** con client_credentials
 - 🔑 **Tokens JWT** para autenticación de usuarios
 - ✅ **Validación de respuestas** en el frontend
 - 🛡️ **Manejo seguro de errores** sin exponer información sensible
+- 🔒 **HTTPS obligatorio** para todas las comunicaciones en producción
 
 ## 🔧 Solución de Problemas
 
