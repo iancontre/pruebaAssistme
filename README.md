@@ -36,9 +36,10 @@ yarn install
 ```
 
 3. **Configuración de Stripe:**
-   - Asegúrate de que el endpoint `https://myassist-me.com/config.json` esté disponible
-   - El archivo debe contener la configuración de Stripe en formato JSON
-   - No se requieren variables de entorno locales
+   - **Endpoint externo**: Asegúrate de que `https://myassist-me.com/config.json` esté disponible
+   - **Archivo config.json**: Debe contener la configuración de Stripe en formato JSON
+   - **Variables de entorno**: Opcional como respaldo (VITE_STRIPE_PUBLISHABLE_KEY)
+   - **Proxy local**: En desarrollo, Vite redirige `/config.json` al endpoint externo
 
 ## 📜 Scripts Disponibles
 
@@ -419,14 +420,15 @@ El proyecto utiliza autenticación OAuth2 con `client_credentials`:
 
 ## 💳 Configuración de Stripe
 
-### 🔧 Configuración Centralizada
-El proyecto ahora obtiene la configuración de Stripe desde un endpoint externo centralizado, eliminando la necesidad de variables de entorno locales:
+### 🔧 Configuración Centralizada con Endpoint Externo
+El proyecto ahora obtiene la configuración de Stripe desde un endpoint externo centralizado, con sistema de caché inteligente:
 
 #### 🌐 Endpoint de Configuración
 - **URL**: `https://myassist-me.com/config.json`
 - **Método**: GET
 - **Formato**: JSON
 - **Cobertura**: Funciona tanto en desarrollo local como en producción
+- **Proxy local**: En desarrollo usa `/config.json` (redirigido por Vite)
 
 #### 📋 Estructura del Endpoint
 El archivo `config.json` debe contener:
@@ -446,6 +448,7 @@ El archivo `config.json` debe contener:
 - **Duración**: 24 horas para evitar peticiones repetidas
 - **Gestión**: Automática con expiración
 - **Beneficio**: Optimiza el rendimiento y reduce la carga del servidor
+- **Fallback**: Si falla el endpoint, usa la clave del `.env` como respaldo
 
 ### 🔧 Funciones de Gestión del Caché
 El servicio exporta funciones para gestionar el caché manualmente:
@@ -463,10 +466,10 @@ refreshStripeConfig();
 
 ### ✅ Ventajas de la Nueva Implementación
 1. **Configuración centralizada**: Un solo lugar para gestionar la configuración
-2. **Sin variables de entorno**: No más archivos .env para configurar
-3. **Consistencia entre entornos**: Misma configuración en desarrollo y producción
-4. **Fácil mantenimiento**: Cambios de configuración sin redeploy
-5. **Caché inteligente**: Optimiza las peticiones al endpoint
+2. **Sistema de caché**: Evita peticiones repetidas al endpoint
+3. **Fallback seguro**: Respaldado por la configuración del `.env`
+4. **Consistencia entre entornos**: Misma configuración en desarrollo y producción
+5. **Fácil mantenimiento**: Cambios de configuración sin redeploy
 
 ### 🔄 Flujo de Pago con Stripe
 
@@ -478,77 +481,49 @@ refreshStripeConfig();
 6. 📄 **Se genera la factura** automáticamente
 7. 🎉 **Usuario ve la confirmación** en el paso final del wizard
 
-### 🛡️ Consideraciones de Seguridad
-1. **Solo claves públicas**: El frontend solo accede a claves públicas de Stripe
-2. **HTTPS obligatorio**: El endpoint debe estar disponible solo por HTTPS
-3. **Caché local**: La clave se almacena en memoria del navegador, no en localStorage
-4. **Expiración automática**: El caché se renueva automáticamente cada 24 horas
+### 🛡️ Content Security Policy (CSP)
+El proyecto incluye un **CSP robusto** que es **CRÍTICO** para que Stripe funcione en producción:
 
-### 🔌 Endpoints de Stripe Consumidos
+#### 🚨 ¿Por qué es Necesario?
+- ✅ **Permite scripts de Stripe**: `js.stripe.com`, `checkout.stripe.com`
+- ✅ **Permite APIs de Stripe**: `api.stripe.com`
+- ✅ **Permite frames de Stripe**: Para el proceso de checkout
+- ✅ **Bloquea recursos maliciosos**: Previene XSS y otros ataques
 
-#### 1️⃣ Crear Checkout Session
-**Endpoint:** `POST /api/create-checkout-session`
-
-**Request Body:**
-```json
-{
-  "planId": "starter",
-  "planName": "STARTER",
-  "amount": 82.16,
-  "taxAmount": 3.16,
-  "customerEmail": "customer@example.com",
-  "customerName": "John Doe",
-  "state": "California",
-  "successUrl": "https://yourdomain.com/compra?success=true&session_id={CHECKOUT_SESSION_ID}",
-  "cancelUrl": "https://yourdomain.com/compra?canceled=true"
-}
+#### 🔧 Directivas Implementadas
+```html
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' 
+    https://js.stripe.com https://m.stripe.com https://checkout.stripe.com;
+  connect-src 'self' https://api.stripe.com https://m.stripe.com 
+    https://checkout.stripe.com https://myassist-me.com;
+  frame-src 'self' https://js.stripe.com https://m.stripe.com https://checkout.stripe.com;
+  form-action 'self' https://checkout.stripe.com;
+  object-src 'none';
+  base-uri 'self';
+  upgrade-insecure-requests;
+" />
 ```
 
-**Response:**
-```json
-{
-  "id": "cs_test_...",
-  "url": "https://checkout.stripe.com/pay/cs_test_..."
-}
+#### 📋 Dominios Permitidos
+- **Stripe**: `js.stripe.com`, `m.stripe.com`, `checkout.stripe.com`, `api.stripe.com`
+- **Configuración**: `myassist-me.com` (tu endpoint de configuración)
+- **Recursos locales**: `'self'` (tu aplicación)
+
+#### 🧪 Testing del CSP
+```bash
+# Verificar en desarrollo
+npm run dev
+# Abrir DevTools → Console y verificar que no hay errores de CSP
+
+# Verificar en producción
+npm run build
+npm run preview
+# Probar el flujo completo de Stripe
 ```
 
-#### 2️⃣ Generar Factura
-**Endpoint:** `POST /api/generate-invoice`
-
-**Request Body:**
-```json
-{
-  "sessionId": "cs_test_..."
-}
-```
-
-**Response:**
-```json
-{
-  "invoiceNumber": "INV-2024-001",
-  "downloadUrl": "https://yourdomain.com/invoices/INV-2024-001.pdf",
-  "amount": 82.16,
-  "taxAmount": 3.16,
-  "total": 85.32
-}
-```
-
-### 🌐 URLs de Desarrollo
-Para desarrollo local, las URLs de éxito y cancelación apuntan a la aplicación:
-```typescript
-successUrl: `${window.location.origin}/compra?success=true&session_id={CHECKOUT_SESSION_ID}`,
-cancelUrl: `${window.location.origin}/compra?canceled=true`,
-```
-
-## 🛡️ Consideraciones de Seguridad
-
-### 💳 Stripe
-- 🔒 **Nunca expongas la clave secreta** en el frontend
-- ✅ **Valida todos los datos** en el backend antes de crear la sesión
-- 🔐 **Usa HTTPS** en producción para el endpoint de configuración
-- 🔔 **Implementa webhooks** para manejar eventos de pago de forma asíncrona
-- 💾 **Guarda los datos de pago** en tu base de datos para auditoría
-- 🛡️ **Endpoint seguro**: El archivo `config.json` debe estar protegido y solo contener claves públicas
+**⚠️ IMPORTANTE**: Sin el CSP configurado, Stripe **NO funcionará** en producción. El navegador bloqueará todos los recursos de Stripe.
 
 ### 🌐 API
 - 🔐 **Autenticación OAuth2** con client_credentials

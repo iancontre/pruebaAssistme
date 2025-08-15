@@ -3,98 +3,61 @@ import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { fetchAllPlansWithStripe, PlanWithStripe, getJWTToken, api } from './apiService';
 import { supportsScrollTimeline } from 'framer-motion';
 
-// Interfaz para la configuración del endpoint externo
-interface StripeConfig {
-  stripe_publishable_key: string;
-  [key: string]: any; 
-}
-
 // Variable para almacenar la clave en caché
 let cachedStripeKey: string | null = null;
-let cacheExpiry: number | null = null;
-const CACHE_DURATION = 24 * 60 * 60 * 1000; 
 
-
+// Función para obtener la configuración de Stripe desde el endpoint externo
 const getStripeConfig = async (): Promise<string> => {
   try {
-    // Verificar si tenemos una clave en caché válida
-    if (cachedStripeKey && cacheExpiry && Date.now() < cacheExpiry) {
-      console.log('✅ Usando clave de Stripe en caché');
+    // Si ya tenemos la clave en caché, usarla
+    if (cachedStripeKey) {
       return cachedStripeKey;
     }
 
-    console.log('🔄 Obteniendo configuración de Stripe desde endpoint externo...');
+    // Determinar la URL del endpoint según el entorno
+    const isDevelopment = import.meta.env.DEV;
+    const configUrl = isDevelopment ? '/config.json' : 'https://myassist-me.com/config.json';
     
     // Realizar la petición al endpoint externo
-    const response = await fetch('https://myassist-me.com/config.json', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
+    const response = await fetch(configUrl);
+    
     if (!response.ok) {
-      throw new Error(`Error al obtener configuración: ${response.status} ${response.statusText}`);
+      throw new Error(`Error al obtener configuración: ${response.status}`);
     }
 
-    const config: StripeConfig = await response.json();
+    const config = await response.json();
     
     if (!config.stripe_publishable_key) {
       throw new Error('La configuración no contiene la clave pública de Stripe');
     }
 
-    // Almacenar en caché con tiempo de expiración
-    cachedStripeKey = config.stripe_publishable_key;
-    cacheExpiry = Date.now() + CACHE_DURATION;
-    
-    console.log('✅ Configuración de Stripe obtenida y almacenada en caché');
+    // Almacenar en caché
+    cachedStripeKey = config.stripe_publishable_key as string;
     return cachedStripeKey;
     
   } catch (error) {
-    console.error('❌ Error al obtener configuración de Stripe:', error);
-    throw new Error(`No se pudo obtener la clave pública de Stripe desde el endpoint externo: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Error al obtener configuración de Stripe:', error);
+    
+    // Fallback a la clave del .env si falla la obtención desde el endpoint
+    const fallbackKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (fallbackKey) {
+      console.log('Usando clave de fallback desde .env');
+      return fallbackKey;
+    }
+    
+    throw new Error('No se pudo obtener la clave pública de Stripe');
   }
-};
-
-// Función para obtener la clave pública de Stripe
-const getStripePublishableKey = async (): Promise<string> => {
-  return await getStripeConfig();
-};
-
-// Función para limpiar el caché manualmente
-export const clearStripeCache = (): void => {
-  cachedStripeKey = null;
-  cacheExpiry = null;
-  console.log('🗑️ Caché de Stripe limpiado');
-};
-
-// Función para verificar el estado del caché
-export const getStripeCacheStatus = (): { hasCache: boolean; expiresAt: string | null } => {
-  const hasCache = !!(cachedStripeKey && cacheExpiry && Date.now() < cacheExpiry);
-  const expiresAt = cacheExpiry ? new Date(cacheExpiry).toISOString() : null;
-  
-  return { hasCache, expiresAt };
-};
-
-// Función para forzar la actualización del caché
-export const refreshStripeConfig = async (): Promise<string> => {
-  console.log('🔄 Forzando actualización de configuración de Stripe...');
-  clearStripeCache();
-  return await getStripeConfig();
 };
 
 let stripePromise: Promise<Stripe | null>;
 
 export const getStripe = async (): Promise<Stripe | null> => {
   try {
-    console.log('🔄 Inicializando Stripe...');
-    const publishableKey = await getStripePublishableKey();
+    const publishableKey = await getStripeConfig();
     
     if (!publishableKey) {
       throw new Error('Stripe publishable key is not configured');
     }
-    
-    console.log('✅ Clave pública de Stripe obtenida');
     
     if (!stripePromise) {
       stripePromise = loadStripe(publishableKey);
@@ -106,22 +69,9 @@ export const getStripe = async (): Promise<Stripe | null> => {
       throw new Error('Stripe failed to initialize');
     }
     
-    console.log('✅ Stripe inicializado correctamente');
     return stripe;
   } catch (error) {
-    console.error('❌ Error loading Stripe:', error);
-    
-    // Proporcionar información más detallada sobre el error
-    if (error instanceof Error) {
-      if (error.message.includes('fetch')) {
-        throw new Error('Error de conexión al obtener configuración de Stripe. Verifique su conexión a internet.');
-      } else if (error.message.includes('configuración')) {
-        throw new Error('Error al obtener configuración de Stripe desde el servidor. Contacte al administrador.');
-      } else {
-        throw new Error(`Failed to load Stripe.js: ${error.message}`);
-      }
-    }
-    
+    console.error('Error loading Stripe:', error);
     throw new Error(`Failed to load Stripe.js: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 };
@@ -136,8 +86,6 @@ export const getPlansWithStripe = async (): Promise<PlanWithStripe[]> => {
     throw error;
   }
 };
-
-
 
 export interface CreateCheckoutSessionRequest {
   planId: string;
