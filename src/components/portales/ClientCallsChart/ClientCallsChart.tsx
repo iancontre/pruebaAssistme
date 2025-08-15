@@ -12,20 +12,44 @@ interface ClientCallsChartProps {
 const ClientCallsChart: React.FC<ClientCallsChartProps> = ({ userId, startDate, endDate }) => {
   const [data, setData] = useState<any[]>([]);
   const [totalValue, setTotalValue] = useState<string>('0');
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
+    // Resetear el flag cuando cambien las fechas o userId
+    setHasLoaded(false);
+  }, [userId, startDate, endDate]);
+
+  useEffect(() => {
+    // Si ya se cargó con estos parámetros, no hacer nada
+    if (hasLoaded && !isLoading) {
+      return;
+    }
+
+    // Si no hay userId válido, usar datos de ejemplo
+    if (!userId || userId === 'demo-user') {
+      generateDemoData();
+      setHasLoaded(true);
+      return;
+    }
+
+    // Crear un AbortController para cancelar requests anteriores
+    const abortController = new AbortController();
+
+    // Función interna para cargar datos
     const loadData = async () => {
       console.log('ClientCallsChart - Loading data with dates:', { startDate, endDate, userId });
       
-      // Si no hay userId válido, usar datos de ejemplo
-      if (!userId || userId === 'demo-user') {
-        generateDemoData();
-        return;
-      }
+      setIsLoading(true);
 
       try {
         // Consumir el API con las fechas del filtro
         const response = await fetchClientCallsByDay(userId, startDate, endDate);
+        
+        // Verificar si la request fue cancelada
+        if (abortController.signal.aborted) {
+          return;
+        }
         
         if (response.resumen_diario && response.resumen_diario.length > 0) {
           // Transformar solo los primeros 5 días para no saturar
@@ -47,13 +71,25 @@ const ClientCallsChart: React.FC<ClientCallsChartProps> = ({ userId, startDate, 
         }
       } catch (err) {
         // Si hay error, usar datos de ejemplo sin mostrar error
-        console.log('API error, using demo data');
+        console.log('API error, using demo data:', err);
         generateDemoData();
+      } finally {
+        // Solo actualizar estado si no fue cancelado
+        if (!abortController.signal.aborted) {
+          setIsLoading(false);
+          setHasLoaded(true);
+        }
       }
     };
 
+    // Ejecutar inmediatamente
     loadData();
-  }, [userId, startDate, endDate]);
+
+    // Cleanup: cancelar request si el componente se desmonta o cambian las props
+    return () => {
+      abortController.abort();
+    };
+  }, [userId, startDate, endDate, hasLoaded, isLoading]);
 
   // Función para transformar datos del API
   const transformApiData = (resumenDiario: any[]): any[] => {

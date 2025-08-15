@@ -9,9 +9,10 @@ import {
 } from '../utils/cookieUtils';
 
 // Configuración para desarrollo vs producción
+// En desarrollo usar proxy de Vite para evitar CORS
+// En producción usar directamente https://myassist-me.com
 const isDevelopment = import.meta.env.DEV;
-
-const API_BASE_URL = isDevelopment ? 'http://localhost:5173' : 'https://myassist-me.com';
+const API_BASE_URL = isDevelopment ? '' : 'https://myassist-me.com';
 
 // Configuración de retry
 const MAX_RETRIES = 3;
@@ -1175,28 +1176,57 @@ export async function fetchClientCallsByDay(
   endDate: string
 ): Promise<ClientCallResponse> {
   try {
-    // Usar el token JWT del usuario
-    const jwtToken = getJWTToken();
-    if (!jwtToken) {
-      throw new Error('No JWT token available. Please log in again.');
+    // Usar el mismo token OAuth que funciona en otras APIs
+    const token = await getClientCredentialsToken();
+    if (!token) {
+      throw new Error('No se pudo obtener el token de autenticación');
     }
 
-    // Verificar si el token JWT es válido
-    if (!isAuthenticated()) {
-      throw new Error('JWT token has expired. Please log in again.');
+    // Verificar que los parámetros sean válidos
+    if (!userId) {
+      throw new Error('Missing required parameter: userId');
     }
 
+    logger.info(`Fetching client calls for user ${userId}`);
+    logger.info(`Using OAuth token: ${token ? 'Token present' : 'No token'}`);
+
+    // PRIMERO: Obtener la suscripción del usuario para obtener el paymentId correcto
+    logger.info(`Getting user subscription to extract paymentId...`);
+    const subscriptionResponse = await retryRequest(() =>
+      api.get(`/db/subscriptions/user/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        timeout: 15000,
+      })
+    );
+
+    // Extraer el paymentId del primer pago activo
+    const subscription = subscriptionResponse.data;
+    const activePayment = subscription.payments?.find((p: any) => p.status === 'completed');
+    
+    if (!activePayment) {
+      throw new Error('No active payment found for this user');
+    }
+
+    const paymentId = activePayment.id;
+    logger.info(`Found paymentId: ${paymentId}`);
+    logger.info(`Request URL: /db/call-usage/clients/by-day`);
+    logger.info(`Request params:`, { paymentId, userId });
+
+    // SEGUNDO: Usar el paymentId correcto en la API de llamadas
     const response = await retryRequest(() =>
       api.get<ClientCallResponse>(`/db/call-usage/clients/by-day`, {
         headers: {
-          'Authorization': `Bearer ${jwtToken}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         params: {
-          startDate,
-          endDate,
+          paymentId: paymentId, // ✅ El paymentId real de la suscripción
           userId
-        }
+        },
+        timeout: 15000,
       })
     );
 
@@ -1204,6 +1234,36 @@ export async function fetchClientCallsByDay(
     return response.data;
   } catch (error) {
     logger.error('Error fetching client calls by day:', error);
+    
+    // Manejo específico de errores con más detalles
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+      const data = error.response?.data;
+      
+      logger.error(`HTTP Status: ${status}`);
+      logger.error(`Response Data:`, data);
+      logger.error(`Request URL: ${error.config?.url}`);
+      logger.error(`Request Method: ${error.config?.method}`);
+      
+      if (status === 500) {
+        logger.error('Backend error (500) - Server internal error');
+        logger.error('This usually means:');
+        logger.error('- Database connection issue');
+        logger.error('- Invalid SQL query');
+        logger.error('- Server configuration problem');
+        throw new Error(`Backend service error (500): ${data?.message || 'Internal server error'}`);
+      } else if (status === 401) {
+        logger.error('Authentication error (401) - Token expired or invalid');
+        throw new Error('Authentication failed. Please log in again.');
+      } else if (status === 404) {
+        logger.error('Endpoint not found (404)');
+        throw new Error('Service endpoint not found. Please contact support.');
+      } else if (status === 400) {
+        logger.error('Bad request (400) - Invalid parameters');
+        throw new Error(`Bad request: ${data?.message || 'Invalid parameters'}`);
+      }
+    }
+    
     throw error;
   }
 }

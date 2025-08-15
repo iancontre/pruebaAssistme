@@ -26,7 +26,7 @@ export default defineConfig({
     proxy: {
       '/api': createProxyConfig('/api', (path) => path.replace(/^\/api/, '')),
       '/oauth': oauthProxyConfig,
-      '/db': createProxyConfig('/db'),
+      '/db': createProxyConfig('/db', (path) => path),
       '/config.json': createProxyConfig('/config.json'),
     }
   },

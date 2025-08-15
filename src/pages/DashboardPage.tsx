@@ -48,7 +48,7 @@ const DashboardPage: React.FC = () => {
   };
 
   // Obtener el ID del usuario del localStorage
-  const userId = localStorage.getItem('userId') || '';
+  const [userId, setUserId] = React.useState<string>('');
   
   // Calcular fechas por defecto: últimos 30 días
   const getDefaultDateRange = () => {
@@ -63,6 +63,12 @@ const DashboardPage: React.FC = () => {
   };
   
   const [dateRange, setDateRange] = React.useState(getDefaultDateRange());
+
+  // Obtener userId solo una vez al montar el componente
+  React.useEffect(() => {
+    const storedUserId = localStorage.getItem('userId') || '';
+    setUserId(storedUserId);
+  }, []);
 
   // Debug: Ver las fechas por defecto
   console.log('DashboardPage - Default date range:', dateRange);
@@ -127,7 +133,7 @@ const DashboardPage: React.FC = () => {
     };
   }, []);
 
-  const handleDateChange = (startDate: string, endDate: string) => {
+  const handleDateChange = React.useCallback((startDate: string, endDate: string) => {
     console.log('DashboardPage - Date filter changed:', { startDate, endDate });
     // Actualizar el rango de fechas para la gráfica
     const startDateObj = new Date(startDate);
@@ -140,7 +146,7 @@ const DashboardPage: React.FC = () => {
     
     console.log('DashboardPage - Setting new date range:', newDateRange);
     setDateRange(newDateRange);
-  };
+  }, []);
 
   return (
     <div className="dashboard-layout">

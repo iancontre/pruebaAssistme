@@ -14,7 +14,7 @@ const getStripeConfig = async (): Promise<string> => {
       return cachedStripeKey;
     }
 
-    // Determinar la URL del endpoint según el entorno
+    // Usar proxy en desarrollo para evitar CORS
     const isDevelopment = import.meta.env.DEV;
     const configUrl = isDevelopment ? '/config.json' : 'https://myassist-me.com/config.json';
     
