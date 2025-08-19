@@ -9,10 +9,11 @@ import {
 } from '../utils/cookieUtils';
 
 // Configuración para desarrollo vs producción
-// En desarrollo usar proxy de Vite para evitar CORS
-// En producción usar directamente https://myassist-me.com
+// En desarrollo y GitHub Pages usar proxy de Vite para evitar CORS
+// Solo en producción real usar directamente https://myassist-me.com
 const isDevelopment = import.meta.env.DEV;
-const API_BASE_URL = isDevelopment ? '' : 'https://myassist-me.com';
+const isGitHubPages = window.location.hostname === 'iancontre.github.io';
+const API_BASE_URL = (isDevelopment || isGitHubPages) ? '' : 'https://myassist-me.com';
 
 // Configuración de retry
 const MAX_RETRIES = 3;
