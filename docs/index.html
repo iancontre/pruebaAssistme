@@ -57,8 +57,8 @@
         https://checkout.stripe.com;
       upgrade-insecure-requests;
     " /> -->
-    <!-- Pegar en public/index.html dentro del <head>, antes de scripts -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://js.stripe.com https://.stripe.com https://m.stripe.com https://checkout.stripe.com https://static.zdassets.com https://widget.zdassets.com; script-src-elem 'self' https://js.stripe.com https://.stripe.com https://m.stripe.com https://checkout.stripe.com; script-src-attr 'self'; connect-src 'self' https://api.stripe.com https://.stripe.com https://m.stripe.com https://checkout.stripe.com https://static.zdassets.com https://widget.zdassets.com https://api.zendesk.com https://myassist-me.com; img-src 'self' data: blob: https://js.stripe.com https://.stripe.com https://m.stripe.com https://checkout.stripe.com https://static.zdassets.com https://widget.zdassets.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://static.zdassets.com; font-src 'self' https://fonts.gstatic.com https://.stripe.com https://static.zdassets.com; frame-src https://js.stripe.com https://.stripe.com https://m.stripe.com https://checkout.stripe.com https://static.zdassets.com https://widget.zdassets.com; object-src 'none'; base-uri 'self'; form-action 'self' https://checkout.stripe.com;">
+    <!-- Content Security Policy simplificado para desarrollo -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://myassist-me.com;">
     <!-- Meta tags básicos -->
     <meta name="description" content="ASSIST-ME - Soluciones tecnológicas integrales para tu negocio. Descubre nuestros servicios y contenido especializado en nuestro blog." />
     <meta name="keywords" content="ASSIST-ME, tecnología, servicios, soluciones, blog, negocio" />
