@@ -34,7 +34,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'dist',
+    outDir: 'docs',
     cssCodeSplit: true,
     chunkSizeWarningLimit: 2000,
     minify: 'terser',

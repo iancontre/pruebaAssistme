@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:prod": "vite build --outDir ../../apis/staticSever/dist",
+    "build:prod": "vite build --outDir ../../apis/staticSever/docs",
     "lint": "eslint .",
     "preview": "vite preview",
     "clean": "node clean-css.cjs",
