@@ -20,6 +20,9 @@ const oauthProxyConfig = {
 
 export default defineConfig({
   plugins: [react()],
+  // Base dinámica para despliegues bajo subruta (p. ej. GitHub Pages)
+  // Si VITE_BASE no está definida, usa la raíz '/'
+  base: process.env.VITE_BASE || '/',
   server: {
     host: true,
     port: 5173,
