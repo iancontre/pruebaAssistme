@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
 import Blog from '../pages/BlogPage';
 import BlogPostPage from '../pages/BlogPostPage';
@@ -12,7 +12,7 @@ import ReporteLlamadasPage from '../pages/ReporteLlamadasPage';
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/blog" element={<Blog/>} />
@@ -26,7 +26,7 @@ const AppRoutes = () => {
 
         {/* Aquí puedes agregar más rutas según necesites */}
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
